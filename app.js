@@ -7,7 +7,7 @@ let keywords = [];
 let namePrompted = false;
 
 const API_KEY = 'AIzaSyCNn7GZMsQPCdRSfgz_o08M1YV63CkA3Ow';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzslE8ADsQXNuROKKyLxERmIMZffgkvzs7_pMXZyUak9CTimJwov5Dv13NRicnzEimv/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzASArzF9Layy98GKorOBVxYUMtB-7tl972ZrBvbQNktK7f1D6cRfdaGy6tq1EzzlChPw/exec';
 
 const nameData = {
   'ורד': {
