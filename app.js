@@ -1,7 +1,7 @@
 console.log('מנסה לגשת לגיליון עם קונפיג:', JSON.stringify(config));
 const CONFIG = {
   API_KEY: 'AIzaSyCNn7GZMsQPCdRSfgz_o08M1YV63CkA3Ow', // מפתח גישה ל-Google Sheets API
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzme8vydKchE5H8yyy3nHW5vO1rsuYNbVHyytyJGtVez6bDTwsmHnhrpnkASI4BXDdd1g/exec', // כתובת ה-Web App
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzR5nQe8CabIIYoU5YyVEd4WbgD0r0-qpaduryL-PgVEDXcPKmg1TVzGAgAM2bthtL49A/exec', // כתובת ה-Web App
   SHEETS: {
     RESPONSES: '13fP3cH_npVSYz-cHZWL27-cGwHldBP3VdnBdFZq4wN0', // גיליון תשובות
     PRODUCTS: '1T14O3eVJzJqBXe6pr5flLckvpM4TGRycTYp5Elq2KSY' // גיליון מוצרים
