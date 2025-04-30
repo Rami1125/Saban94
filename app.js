@@ -86,7 +86,7 @@ function preloadImages() {
 async function fetchResponses() {
   try {
     const sheetId = '13fP3cH_npVSYz-cHZWL27-cGwHldBP3VdnBdFZq4wN0';
-    const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:D1000?key=${API_KEY}`);
+    const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:D1000?key=${AIzaSyCNn7GZMsQPCdRSfgz_o08M1YV63CkA3Ow}`);
     const data = await response.json();
     if (!data.values || data.values.length < 2) throw new Error('No responses found');
     responses = data.values.slice(1).map(row => ({
@@ -107,7 +107,7 @@ async function fetchResponses() {
 async function fetchProducts() {
   try {
     const sheetId = '1T14O3eVJzJqBXe6pr5flLckvpM4TGRycTYp5Elq2KSY';
-    const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:E1000?key=${API_KEY}`);
+    const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:E1000?key=${AIzaSyCNn7GZMsQPCdRSfgz_o08M1YV63CkA3Ow}`);
     const data = await response.json();
     if (!data.values || data.values.length < 2) throw new Error('No products found');
     products = data.values.slice(1).map(row => ({
