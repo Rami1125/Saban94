@@ -1,13 +1,32 @@
-let userName = '';
-let userPhone = '';
-let conversation = [];
-let responses = [];
-let products = [];
-let keywords = [];
-let namePrompted = false;
+const CONFIG = {
+  API_KEY: 'AIzaSyCNn7GZMsQPCdRSfgz_o08M1YV63CkA3Ow', // מפתח גישה ל-Google Sheets API
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzASArzF9Layy98GKorOBVxYUMtB-7tl972ZrBvbQNktK7f1D6cRfdaGy6tq1EzzlChPw/exec', // כתובת ה-Web App
+  SHEETS: {
+    RESPONSES: '13fP3cH_npVSYz-cHZWL27-cGwHldBP3VdnBdFZq4wN0', // גיליון תשובות
+    PRODUCTS: '1T14O3eVJzJqBXe6pr5flLckvpM4TGRycTYp5Elq2KSY' // גיליון מוצרים
+  },
+  VERSION: '2.0.1'
+};
 
-const API_KEY = 'AIzaSyCNn7GZMsQPCdRSfgz_o08M1YV63CkA3Ow';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzASArzF9Layy98GKorOBVxYUMtB-7tl972ZrBvbQNktK7f1D6cRfdaGy6tq1EzzlChPw/exec';
+// ===== מצב המערכת ===== //
+let systemState = {
+  user: {
+    name: '',
+    phone: '',
+    sessionStart: new Date().toISOString(),
+    isAuthenticated: false
+  },
+  conversation: [],
+  responses: [],
+  products: [],
+  keywords: [],
+  ui: {
+    namePrompted: false,
+    currentPopup: null
+  }
+};
+
+
 
 const nameData = {
   'ורד': {
