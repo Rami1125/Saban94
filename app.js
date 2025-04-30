@@ -1,6 +1,6 @@
 const CONFIG = {
   API_KEY: 'AIzaSyCNn7GZMsQPCdRSfgz_o08M1YV63CkA3Ow', // מפתח גישה ל-Google Sheets API
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzASArzF9Layy98GKorOBVxYUMtB-7tl972ZrBvbQNktK7f1D6cRfdaGy6tq1EzzlChPw/exec', // כתובת ה-Web App
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzgptWR4HFwk5Q5_CprFcQBzcO2POWRzxUfEapZ9atJ1O8HhukqGEeKNPbg-NhVSIjCJg/exec', // כתובת ה-Web App
   SHEETS: {
     RESPONSES: '13fP3cH_npVSYz-cHZWL27-cGwHldBP3VdnBdFZq4wN0', // גיליון תשובות
     PRODUCTS: '1T14O3eVJzJqBXe6pr5flLckvpM4TGRycTYp5Elq2KSY' // גיליון מוצרים
