@@ -4,7 +4,7 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ח.סבן חומרי בניין - צ'אט מונפש</title>
+  <title>ח.סבן חומרי בניין - צ'אט מונפש משודרג</title>
   <style>
     :root {
       --primary-color: #075e54;
@@ -15,6 +15,10 @@
       --error-color: #ff4d4d;
       --keyword-bg: linear-gradient(45deg, #25d366, #128c7e);
       --fallback-bg: url('https://via.placeholder.com/380x760?text=WhatsApp+Background');
+      --glass-bg: rgba(255, 255, 255, 0.2);
+      --glass-border: 1px solid rgba(255, 255, 255, 0.3);
+      --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      --glass-backdrop: blur(8px);
     }
 
     * {
@@ -153,43 +157,88 @@
       50% { transform: translateY(-10px); }
     }
 
+    /* עיצוב חדש לכפתורי זכוכית */
     #keywordsContainer {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 300px;
-      height: 300px;
-      display: none;
-    }
-
-    #keywordsContainer.active {
-      display: block;
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px;
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      backdrop-filter: var(--glass-backdrop);
+      -webkit-backdrop-filter: var(--glass-backdrop);
+      margin: 10px auto;
+      max-width: 90%;
     }
 
     .keyword-btn {
-      position: absolute;
-      padding: 10px 20px;
-      background: var(--keyword-bg);
-      color: white;
-      border: none;
+      padding: 12px 20px;
+      border: var(--glass-border);
       border-radius: 20px;
-      cursor: pointer;
-      font-size: 14px;
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-backdrop);
+      -webkit-backdrop-filter: var(--glass-backdrop);
+      box-shadow: var(--glass-shadow);
+      color: white;
       font-weight: bold;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
       transition: all 0.3s ease;
-      animation: spin 10s linear infinite;
+      position: relative;
+      overflow: hidden;
+      min-width: 100px;
+      text-align: center;
     }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg) translateX(150px) rotate(0deg); }
-      100% { transform: rotate(360deg) translateX(150px) rotate(-360deg); }
+    .keyword-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, 
+        rgba(255,255,255,0.1) 0%, 
+        rgba(255,255,255,0.3) 50%, 
+        rgba(255,255,255,0.1) 100%);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
     }
 
-    @keyframes throwEffect {
-      0% { transform: translate(0, 0) scale(1); opacity: 1; }
-      100% { transform: translate(100px, -100px) scale(0.5); opacity: 0; }
+    .keyword-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .keyword-btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    /* צבעים שונים לכפתורים */
+    .keyword-btn:nth-child(4n+1) {
+      background: linear-gradient(45deg, rgba(37, 211, 102, 0.7), rgba(18, 140, 126, 0.7));
+    }
+    .keyword-btn:nth-child(4n+2) {
+      background: linear-gradient(45deg, rgba(255, 193, 7, 0.7), rgba(255, 152, 0, 0.7));
+    }
+    .keyword-btn:nth-child(4n+3) {
+      background: linear-gradient(45deg, rgba(156, 39, 176, 0.7), rgba(103, 58, 183, 0.7));
+    }
+    .keyword-btn:nth-child(4n+4) {
+      background: linear-gradient(45deg, rgba(233, 30, 99, 0.7), rgba(194, 24, 91, 0.7));
+    }
+
+    /* אנימציה לחיצה על כפתור */
+    @keyframes buttonClick {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+
+    .keyword-btn:active {
+      animation: buttonClick 0.3s ease;
     }
 
     #chatFooter {
@@ -371,6 +420,12 @@
         border: none;
         border-radius: 0;
       }
+      
+      .keyword-btn {
+        padding: 10px 15px;
+        min-width: 80px;
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -494,13 +549,17 @@
     let namePrompted = false;
 
     const API_KEY = 'AIzaSyCNn7GZMsQPCdRSfgz_o08M1YV63CkA3Ow'; // החלף במפתח API של Google Sheets
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9xYK_CbMugVsIgaBlo2q3LKFlfMQe2mYOBnoc2IeURCgoS6hthex4sT3fRS_atClKNQ/exec'; // החלף ב-URL של ה-Web App
+    const SCRIPT_URL = 'YOUR_NEW_SCRIPT_URL'; // החלף ב-URL של ה-Web App
 
     const fallbackKeywords = [
       { label: 'בלוקים', question: 'מידע על בלוקים' },
       { label: 'צבעים', question: 'מידע על צבעים' },
       { label: 'כלים', question: 'מידע על כלים' },
-      { label: 'הזמנה', question: 'פתח טופס הזמנה' }
+      { label: 'הזמנה', question: 'פתח טופס הזמנה' },
+      { label: 'מחירים', question: 'רשימת מחירים' },
+      { label: 'שעות', question: 'שעות פתיחה' },
+      { label: 'מיקום', question: 'איפה אתם נמצאים?' },
+      { label: 'משלוח', question: 'מידע על משלוחים' }
     ];
 
     const nameData = {
