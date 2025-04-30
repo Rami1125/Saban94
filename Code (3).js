@@ -1,5 +1,5 @@
 function doGet(e) {
-  return ContentService.createTextOutput(JSON.stringify({ status: 'הצלחה', message: 'ה-API פועל' }))
+  return ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'AIzaSyCNn7GZMsQPCdRSfgz_o08M1YV63CkA3Ow' }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -51,21 +51,12 @@ function doPost(e) {
           data.orderCount || 0
         ]);
 
-      case 'addResponse':
-        spreadsheetId = '13fP3cH_npVSYz-cHZWL27-cGwHldBP3VdnBdFZq4wN0';
-        return saveToSheet(spreadsheetId, sheetName, [
-          data.question || '',
-          data.answer || '',
-          data.keywords || '',
-          data.synonyms || ''
-        ]);
-
       default:
-        return ContentService.createTextOutput(JSON.stringify({ status: 'שגיאה', message: 'פעולה לא תקינה' }))
+        return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'פעולה לא תקינה' }))
           .setMimeType(ContentService.MimeType.JSON);
     }
   } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ status: 'שגיאה', message: err.message }))
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: err.message }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
@@ -78,10 +69,10 @@ function saveToSheet(spreadsheetId, sheetName, data) {
       sheet = spreadsheet.insertSheet(sheetName);
     }
     sheet.appendRow(data);
-    return ContentService.createTextOutput(JSON.stringify({ status: 'הצלחה', message: 'הנתונים נשמרו בהצלחה' }))
+    return ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'הנתונים נשמרו בהצלחה' }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ status: 'שגיאה', message: err.message }))
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: err.message }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
