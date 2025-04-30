@@ -1,6 +1,7 @@
+console.log('מנסה לגשת לגיליון עם קונפיג:', JSON.stringify(config));
 const CONFIG = {
   API_KEY: 'AIzaSyCNn7GZMsQPCdRSfgz_o08M1YV63CkA3Ow', // מפתח גישה ל-Google Sheets API
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwYhw6k07urpbk70poy_tKq1YkHKc62EKIUPzhq4CUU2TcNizLSdrPUPHce2Aw8KtL4/exec', // כתובת ה-Web App
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzme8vydKchE5H8yyy3nHW5vO1rsuYNbVHyytyJGtVez6bDTwsmHnhrpnkASI4BXDdd1g/exec', // כתובת ה-Web App
   SHEETS: {
     RESPONSES: '13fP3cH_npVSYz-cHZWL27-cGwHldBP3VdnBdFZq4wN0', // גיליון תשובות
     PRODUCTS: '1T14O3eVJzJqBXe6pr5flLckvpM4TGRycTYp5Elq2KSY' // גיליון מוצרים
@@ -98,6 +99,13 @@ function preloadImages() {
     const img = new Image();
     img.src = image.src;
     img.onerror = () => { img.src = image.fallback; };
+  });
+}
+function getProducts() {
+  return getSheetData({
+    id: '1T14O3eVJzJqBXe6pr5flLckvpM4TGRycTYp5Elq2KSY',
+    sheetName: 'מוצרים',
+    columns: ['id', 'name', 'category', 'price', 'stock']
   });
 }
 
