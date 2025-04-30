@@ -549,7 +549,7 @@
     let namePrompted = false;
 
     const API_KEY = 'AIzaSyCNn7GZMsQPCdRSfgz_o08M1YV63CkA3Ow'; // החלף במפתח API של Google Sheets
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9xYK_CbMugVsIgaBlo2q3LKFlfMQe2mYOBnoc2IeURCgoS6hthex4sT3fRS_atClKNQ/exec'; // החלף ב-URL של ה-Web App
+    const SCRIPT_URL = 'YOUR_NEW_SCRIPT_URL'; // החלף ב-URL של ה-Web App
 
     const fallbackKeywords = [
       { label: 'בלוקים', question: 'מידע על בלוקים' },
@@ -609,7 +609,7 @@
         quip: 'לינה, ראמי אומר שאת הבלוק הכי יפה במחסן! 😍'
       },
       'שרון': {
-        traits: 'צרפתיה מרעננה, תמיד עם סטייל וחיוך!',
+        traits: 'צרפתיה מרעננת, תמיד עם סטייל וחיוך!',
         ramiThought: 'שרון מביאה קלאסה למחסן, כמו צבע פרימיום! 🎨',
         quip: 'שרון, עם הסטייל שלך, את יכולה למכור בלוקים בתצוגת אופנה! 😅'
       },
@@ -623,7 +623,7 @@
     function preloadImages() {
       const images = [
         { src: 'https://i.postimg.cc/t4Q91FDQ/Screenshot-20250427-160448-Whats-App-Business.jpg', fallback: 'https://via.placeholder.com/380x760?text=WhatsApp+Background' },
-        { src: 'https://i.postimg.cc/t4Q91FDQ/Screenshot-20250427-160448-Whats-App-Business.jpg', fallback: 'https://via.placeholder.com/24?text=Stylus' },
+        { src: 'https://i.postimg.cc/3J9Y4b0Z/blocks.jpg', fallback: 'https://via.placeholder.com/24?text=Stylus' },
         { src: 'https://i.postimg.cc/5y3t8QzT/paint.jpg', fallback: 'https://via.placeholder.com/220?text=Paint' },
         { src: 'https://i.postimg.cc/4yqP2R9Z/tools.jpg', fallback: 'https://via.placeholder.com/220?text=Tools' }
       ];
@@ -912,17 +912,18 @@
       if (!currentKeywords.length) {
         currentKeywords.push(...fallbackKeywords);
       }
+      
       currentKeywords.forEach((keyword, index) => {
         const btn = document.createElement('button');
         btn.className = 'keyword-btn';
-        btn.style.transform = `rotate(${index * (360 / currentKeywords.length)}deg) translateX(150px) rotate(-${index * (360 / currentKeywords.length)}deg)`;
-        btn.style.animationDelay = `${index * 0.2}s`;
         btn.textContent = keyword.label;
         btn.onclick = () => {
-          sendMessage(keyword.question);
-          btn.style.animation = 'throwEffect 0.5s ease forwards';
-          setTimeout(() => updateKeywords(), 500);
-          displayBotMessage('וואו, הכפתור זרח כמו הבלוקים של ראמי! ✨');
+          btn.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            btn.style.transform = '';
+            sendMessage(keyword.question);
+            displayBotMessage('וואו, הכפתור זרח כמו הבלוקים של ראמי! ✨');
+          }, 200);
         };
         keywordsContainer.appendChild(btn);
       });
