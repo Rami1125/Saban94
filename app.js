@@ -1,32 +1,48 @@
-console.log('מנסה לגשת לגיליון עם קונפיג:', JSON.stringify(config));
-const CONFIG = {
-  API_KEY: 'AIzaSyCNn7GZMsQPCdRSfgz_o08M1YV63CkA3Ow', // מפתח גישה ל-Google Sheets API
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzR5nQe8CabIIYoU5YyVEd4WbgD0r0-qpaduryL-PgVEDXcPKmg1TVzGAgAM2bthtL49A/exec', // כתובת ה-Web App
-  SHEETS: {
-    RESPONSES: '13fP3cH_npVSYz-cHZWL27-cGwHldBP3VdnBdFZq4wN0', // גיליון תשובות
-    PRODUCTS: '1T14O3eVJzJqBXe6pr5flLckvpM4TGRycTYp5Elq2KSY' // גיליון מוצרים
-  },
-  VERSION: '2.0.1'
-};
+const express = require('express');
+const { google } = require('googleapis');
+const cors = require('cors');
+require('dotenv').config();
 
-// ===== מצב המערכת ===== //
-let systemState = {
-  user: {
-    name: '',
-    phone: '',
-    sessionStart: new Date().toISOString(),
-    isAuthenticated: false
-  },
-  conversation: [],
-  responses: [],
-  products: [],
-  keywords: [],
-  ui: {
-    namePrompted: false,
-    currentPopup: null
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// הגדרת Google Sheets API
+const sheets = google.sheets('v4');
+const auth = new google.auth.GoogleAuth({
+  keyFile: process.env.GOOGLE_CREDENTIALS, // קובץ JSON מהדאשבורד של Google Cloud
+  scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+});
+
+// נתיב לשליפת נתונים מהגיליון
+app.get('/api/products', async (req, res) => {
+  try {
+    const authClient = await auth.getClient();
+    const spreadsheetId = process.env.SPREADSHEET_ID;'13fP3cH_npVSYz-cHZWL27-cGwHldBP3VdnBdFZq4wN0' // ה-ID של הגיליון
+    const range = 'Sheet1!A1:D1000'; // הטווח הרצוי
+
+    const response = await sheets.spreadsheets.values.get({
+      auth: authClient,
+      spreadsheetId,
+      range,
+    });
+
+    res.json(response.data.values);
+  } catch (error) {
+    console.error('שגיאה בשליפת מוצרים:', error);
+    res.status(403).json({ error: 'אין הרשאה לגשת לגיליון' });
   }
-};
+});
 
+// נתיב בסיסי לבדיקת פעילות השרת
+app.get('/', (req, res) => {
+  res.send('השרת פעיל!');
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`השרת רץ על פורט ${PORT}`);
+});
 
 
 const nameData = {
