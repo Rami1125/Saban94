@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מחלקת הזמנות - ח.סבן חומרי בניין</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #25D366;
+      --primary-dark: #128C7E;
+      --accent: #FFD700;
+      --accent-dark: #FFC000;
+      --neon-white: #ffffff;
+      --dark: #1a1a1a;
+      --light: #f8f9fa;
+      --glass-bg: rgba(0, 0, 0, 0.3);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      --section-bg: rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Rubik', sans-serif;
+      background: url('https://i.postimg.cc/x1w81pNq/image.png') no-repeat center/cover fixed;
+      color: white;
+      min-height: 100vh;
+      position: relative;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* כותרת עם לוגו */
+    .header-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .logo-container {
+      position: relative;
+      margin-bottom: 15px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .logo-img {
+      width: 180px;
+      height: auto;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 20px var(--accent), 
+                  0 0 40px rgba(255, 215, 0, 0.3),
+                  inset 0 0 20px rgba(255, 215, 0, 0.2);
+      transition: var(--transition);
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+    }
+
+    .logo-container:hover .logo-img {
+      transform: scale(1.05) rotate(5deg);
+      box-shadow: 0 0 30px var(--accent), 
+                  0 0 60px rgba(255, 215, 0, 0.4),
+                  inset 0 0 30px rgba(255, 215, 0, 0.3);
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+    }
+
+    .logo-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(255,215,0,0) 70%);
+      opacity: 0;
+      transition: var(--transition);
+      pointer-events: none;
+    }
+
+    .logo-container:hover .logo-glow {
+      opacity: 0.6;
+      animation: pulse-glow 2s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.6; }
+      50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.8; }
+      100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.6; }
+    }
+
+    .popup-title {
+      position: relative;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--neon-white);
+      text-shadow: 0 0 10px var(--neon-white),
+                   0 0 20px var(--neon-white),
+                   0 0 30px var(--neon-white);
+      margin-bottom: 20px;
+      text-align: center;
+      padding: 15px 30px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      border: 2px solid var(--neon-white);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+                  inset 0 0 20px rgba(255, 255, 255, 0.2);
+      animation: neon-flicker 3s infinite alternate;
+      transform: translateY(0);
+      transition: var(--transition);
+    }
+
+    @keyframes neon-flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow: 0 0 10px var(--neon-white),
+                     0 0 20px var(--neon-white),
+                     0 0 30px var(--neon-white);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+                    inset 0 0 20px rgba(255, 255, 255, 0.2);
+      }
+      20%, 24%, 55% {
+        text-shadow: 0 0 5px var(--neon-white),
+                     0 0 10px var(--neon-white),
+                     0 0 15px var(--neon-white);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3),
+                    inset 0 0 10px rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .popup-title::before,
+    .popup-title::after {
+      content: '✧';
+      position: absolute;
+      color: var(--accent);
+      font-size: 1.5rem;
+      animation: spin 4s linear infinite;
+    }
+
+    .popup-title::before {
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .popup-title::after {
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    @keyframes spin {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    /* רשת כפתורים */
+    .buttons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 10px;
+      border-radius: 10px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      text-decoration: none;
+      color: white;
+      transition: var(--transition);
+      overflow: hidden;
+      min-height: 100px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      transition: var(--transition);
+      z-index: -1;
+    }
+
+    .btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    /* אפקט הברקה */
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0.1),
+        transparent
+      );
+      transform: translateX(-100%);
+      transition: 0.6s ease;
+    }
+
+    .btn:hover::after {
+      transform: translateX(100%);
+    }
+
+    .btn-icon {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+      transition: var(--transition);
+    }
+
+    .btn:hover .btn-icon {
+      transform: scale(1.15);
+      filter: drop-shadow(0 0 8px currentColor);
+    }
+
+    .btn-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .btn:hover .btn-text {
+      color: var(--accent);
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    }
+
+    .neon-line {
+      position: absolute;
+      bottom: 0;
+      left: 15%;
+      right: 15%;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: var(--transition);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .btn:hover .neon-line {
+      transform: scaleX(1);
+    }
+
+    /* צבעים מיוחדים לכפתורים */
+    .btn-order { color: #25D366; }
+    .btn-order:hover .btn-text { color: #25D366; text-shadow: 0 0 8px rgba(37, 211, 102, 0.5); }
+    .btn-order .neon-line { background: #25D366; box-shadow: 0 0 8px #25D366; }
+
+    .btn-waste { color: #FF7043; }
+    .btn-waste:hover .btn-text { color: #FF7043; text-shadow: 0 0 8px rgba(255, 112, 67, 0.5); }
+    .btn-waste .neon-line { background: #FF7043; box-shadow: 0 0 8px #FF7043; }
+
+    .btn-consult { color: #42A5F5; }
+    .btn-consult:hover .btn-text { color: #42A5F5; text-shadow: 0 0 8px rgba(66, 165, 245, 0.5); }
+    .btn-consult .neon-line { background: #42A5F5; box-shadow: 0 0 8px #42A5F5; }
+
+    .btn-reviews { color: #FFCA28; }
+    .btn-reviews:hover .btn-text { color: #FFCA28; text-shadow: 0 0 8px rgba(255, 202, 40, 0.5); }
+    .btn-reviews .neon-line { background: #FFCA28; box-shadow: 0 0 8px #FFCA28; }
+
+    .btn-contact { color: #AB47BC; }
+    .btn-contact:hover .btn-text { color: #AB47BC; text-shadow: 0 0 8px rgba(171, 71, 188, 0.5); }
+    .btn-contact .neon-line { background: #AB47BC; box-shadow: 0 0 8px #AB47BC; }
+
+    .btn-projects { color: #26C6DA; }
+    .btn-projects:hover .btn-text { color: #26C6DA; text-shadow: 0 0 8px rgba(38, 198, 218, 0.5); }
+    .btn-projects .neon-line { background: #26C6DA; box-shadow: 0 0 8px #26C6DA; }
+
+    .btn-planning { color: #FF5252; }
+    .btn-planning:hover .btn-text { color: #FF5252; text-shadow: 0 0 8px rgba(255, 82, 82, 0.5); }
+    .btn-planning .neon-line { background: #FF5252; box-shadow: 0 0 8px #FF5252; }
+
+    .btn-branches { color: #7C4DFF; }
+    .btn-branches:hover .btn-text { color: #7C4DFF; text-shadow: 0 0 8px rgba(124, 77, 255, 0.5); }
+    .btn-branches .neon-line { background: #7C4DFF; box-shadow: 0 0 8px #7C4DFF; }
+
+    /* כפתור צף */
+    .floating-btn {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      z-index: 100;
+      border: 1px solid rgba(255,255,255,0.2);
+      animation: pulse 2s infinite;
+    }
+
+    .floating-btn .icon {
+      margin-right: 8px;
+      transition: var(--transition);
+    }
+
+    .floating-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      animation: none;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    }
+
+    .floating-btn:hover .icon {
+      transform: rotate(10deg);
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+      70% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
+
+    /* חלקיקים */
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .btn:hover .particles {
+      opacity: 0.3;
+    }
+
+    .particle {
+      position: absolute;
+      background: currentColor;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+      50% { opacity: 0.8; }
+      100% { transform: translate(var(--random-x), var(--random-y)) rotate(360deg); opacity: 0; }
+    }
+
+    /* צוות ניהול */
+    .team-section {
+      background: var(--section-bg);
+      border-radius: 16px;
+      padding: 30px;
+      margin: 30px 0;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+      color: var(--accent);
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      border-radius: 3px;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+    }
+
+    .team-member {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-member:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      border-color: var(--accent);
+    }
+
+    .member-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+      margin-bottom: 20px;
+      transition: var(--transition);
+    }
+
+    .team-member:hover .member-img {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    }
+
+    .member-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--accent);
+      text-align: center;
+    }
+
+    .member-position {
+      font-size: 1rem;
+      color: #ddd;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .member-services {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .services-title {
+      font-size: 1rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .services-list {
+      list-style-type: none;
+      padding-right: 15px;
+    }
+
+    .services-list li {
+      position: relative;
+      padding-right: 20px;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .services-list li::before {
+      content: '•';
+      position: absolute;
+      right: 0;
+      color: var(--accent);
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 10px 20px;
+      margin-top: 20px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .whatsapp-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    }
+
+    .whatsapp-btn i {
+      margin-left: 8px;
+      font-size: 1.2rem;
+    }
+
+    /* סניפים */
+    .branches-section {
+      background: var(--section-bg);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .branches-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+    }
+
+    .branch-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .branch-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      border-color: var(--accent);
+    }
+
+    .branch-map {
+      height: 250px;
+      width: 100%;
+      border: none;
+    }
+
+    .branch-info {
+      padding: 20px;
+    }
+
+    .branch-name {
+      font-size: 1.3rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .branch-name i {
+      margin-left: 10px;
+    }
+
+    .branch-detail {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .branch-detail i {
+      margin-left: 10px;
+      color: var(--accent);
+      width: 20px;
+      text-align: center;
+    }
+
+    .branch-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #7C4DFF, #512DA8);
+      color: white;
+      padding: 10px 20px;
+      margin-top: 15px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .branch-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(135deg, #512DA8, #7C4DFF);
+    }
+
+    .branch-button i {
+      margin-left: 8px;
+    }
+
+    /* רספונסיביות */
+    @media (max-width: 768px) {
+      .buttons-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      
+      .btn {
+        min-height: 90px;
+        padding: 12px 8px;
+      }
+      
+      .btn-icon {
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+      }
+      
+      .btn-text {
+        font-size: 0.85rem;
+      }
+
+      .logo-img {
+        width: 150px;
+      }
+
+      .popup-title {
+        font-size: 1.6rem;
+        padding: 12px 20px;
+      }
+
+      .team-grid, .branches-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .member-img {
+        width: 100px;
+        height: 100px;
+      }
+
+      .branch-map {
+        height: 200px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .buttons-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .btn {
+        min-height: 80px;
+      }
+
+      .floating-btn {
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.9rem;
+        padding: 10px 16px;
+      }
+
+      .logo-img {
+        width: 130px;
+      }
+
+      .popup-title {
+        font-size: 1.4rem;
+        padding: 10px 15px;
+      }
+
+      .popup-title::before,
+      .popup-title::after {
+        font-size: 1.2rem;
+      }
+
+      .team-member, .branch-card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-container">
+      <div class="logo-container">
+        <img src="https://i.postimg.cc/NjhWzHjM/1000101077.jpg" alt="ח.סבן לוגו" class="logo-img">
+        <div class="logo-glow"></div>
+      </div>
+      
+      <div class="popup-title">מחלקת הזמנות ח.סבן חומרי בנין</div>
+    </div>
+
+    <div class="buttons-grid">
+      <!-- שורה ראשונה -->
+      <a href="https://sites.google.com/view/sidor-hsaban/%D7%94%D7%96%D7%9E%D7%A0%D7%94-%D7%97%D7%93%D7%A9%D7%94_1" class="btn btn-order" target="_blank">
+        <div class="btn-icon"><i class="fas fa-bolt"></i></div>
+        <div class="btn-text">הזמנה מהירה</div>
+        <div class="neon-line"></div>
+        <div class="particles" id="particles1"></div>
+      </a>
+      
+      <a href="https://sites.google.com/view/sidor-hsaban/%D7%AA%D7%9B%D7%A0%D7%95%D7%9F-%D7%91%D7%A0%D7%99%D7%94" class="btn btn-planning" target="_blank">
+        <div class="btn-icon"><i class="fas fa-pencil-ruler"></i></div>
+        <div class="btn-text">תכנון בנייה</div>
+        <div class="neon-line"></div>
+        <div class="particles" id="particles2"></div>
+      </a>
+      
+      <a href="https://sites.google.com/view/sidor-hsaban/%D7%A4%D7%99%D7%A0%D7%95%D7%99-%D7%A4%D7%A1%D7%95%D7%9C%D7%AA" class="btn btn-waste" target="_blank">
+        <div class="btn-icon"><i class="fas fa-trash-alt"></i></div>
+        <div class="btn-text">פינוי פסולת</div>
+        <div class="neon-line"></div>
+        <div class="particles" id="particles3"></div>
+      </a>
+      
+      <!-- שורה שנייה -->
+      <a href="https://did.li/BVEZH" class="btn btn-consult" target="_blank">
+        <div class="btn-icon"><i class="fas fa-hard-hat"></i></div>
+        <div class="btn-text">ייעוץ מקצועי</div>
+        <div class="neon-line"></div>
+        <div class="particles" id="particles4"></div>
+      </a>
+      
+      <a href="tel:097602010" class="btn btn-contact">
+        <div class="btn-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="btn-text">צור קשר</div>
+        <div class="neon-line"></div>
+        <div class="particles" id="particles5"></div>
+      </a>
+      
+      <a href="#branches" class="btn btn-branches">
+        <div class="btn-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="btn-text">סניפים</div>
+        <div class="neon-line"></div>
+        <div class="particles" id="particles6"></div>
+      </a>
+      
+      <!-- שורה שלישית -->
+      <a href="#" class="btn btn-reviews" id="reviews-btn">
+        <div class="btn-icon"><i class="fas fa-star"></i></div>
+        <div class="btn-text">ביקורות</div>
+        <div class="neon-line"></div>
+        <div class="particles" id="particles7"></div>
+      </a>
+      
+      <a href="#" class="btn btn-projects" id="projects-btn">
+        <div class="btn-icon"><i class="fas fa-building"></i></div>
+        <div class="btn-text">פרויקטים</div>
+        <div class="neon-line"></div>
+        <div class="particles" id="particles8"></div>
+      </a>
+    </div>
+
+    <!-- צוות ניהול -->
+    <section class="team-section">
+      <h2 class="section-title">צוות ניהול מחלקת ההזמנות</h2>
+      
+      <div class="team-grid">
+        <div class="team-member">
+          <img src="https://i.postimg.cc/RVY7DrvR/Screenshot-20250211-042634-Whats-App-Business.jpg" alt="ראמי מסארוה" class="member-img">
+          <h3 class="member-name">ראמי מסארוה</h3>
+          <p class="member-position">מנהל סידור, שירות לקוחות והובלות</p>
+          
+          <div class="member-services">
+            <h4 class="services-title">שירותים ואחריות:</h4>
+            <ul class="services-list">
+              <li>ניהול צוות הובלות בפריסה ארצית</li>
+              <li>תיאום משלוחים עם נהגי מכולות</li>
+              <li>פתרון בעיות לוגיסטיות בזמן אמת</li>
+              <li>ניהול תלונות ושירות לקוחות</li>
+              <li>תיאום בין מחסנים ונהגים</li>
+              <li>מעקב אחר משלוחים בזמן אמת</li>
+            </ul>
+          </div>
+          
+          <a href="https://wa.me/message/EQDUELY7ZR3IO1" class="whatsapp-btn" target="_blank">
+            <span>צור קשר בוואטסאפ</span>
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+        
+        <div class="team-member">
+          <img src="https://via.placeholder.com/400x400?text=יואב" alt="יואב" class="member-img">
+          <h3 class="member-name">יואב כהן</h3>
+          <p class="member-position">מנהל שירות לקוחות והובלות</p>
+          
+          <div class="member-services">
+            <h4 class="services-title">שירותים ואחריות:</h4>
+            <ul class="services-list">
+              <li>ניהול צוות נהגים ומפעילי מנופים</li>
+              <li>תיאום משלוחים מיוחדים ומסובכים</li>
+              <li>פתרון בעיות אספקה בזמן אמת</li>
+              <li>ניהול תיקי לקוחות עסקיים</li>
+              <li>תיאום בין סניפים ומחסנים</li>
+              <li>בקרת איכות שירות</li>
+            </ul>
+          </div>
+          
+          <a href="tel:097602010" class="whatsapp-btn">
+            <span>התקשר עכשיו</span>
+            <i class="fas fa-phone"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- סניפים -->
+    <section class="branches-section" id="branches">
+      <h2 class="section-title">סניפי החברה</h2>
+      
+      <div class="branches-grid">
+        <div class="branch-card">
+          <iframe class="branch-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3364.3245342509334!2d34.89983887573536!3d32.15740511747278!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151d38257da6385b%3A0x34b1c300a0e4570b!2z15zXqNeZINeo15XXmdeaINeV16HXmdeZICzXldeq15nXlCDXqtei16jXmdeU16jXldec15Qg15XXl9eU!5e0!3m2!1sen!2sil!4v1707823456789" allowfullscreen></iframe>
+          <div class="branch-info">
+            <h3 class="branch-name"><i class="fas fa-store"></i> סניף הוד השרון - התלמיד 6</h3>
+            
+            <div class="branch-detail">
+              <i class="fas fa-phone"></i>
+              <span>טלפון: <a href="tel:09-7602010" style="color: white; text-decoration: none;">09-7602010</a></span>
+            </div>
+            
+            <div class="branch-detail">
+              <i class="fas fa-clock"></i>
+              <span>שעות פעילות: א'-ה': 06:00-18:00, ו': 06:00-14:00</span>
+            </div>
+            
+            <div class="branch-detail">
+              <i class="fas fa-truck"></i>
+              <span>שירות הובלות: עד 500 טון, מנופים עד 100 מטר</span>
+            </div>
+            
+            <a href="https://www.google.com/maps/dir//32.1574051,34.9024138/@32.157405,34.902414,17z?entry=ttu" class="branch-button" target="_blank">
+              <span>נווט לסניף</span>
+              <i class="fas fa-directions"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div class="branch-card">
+          <iframe class="branch-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3364.3288500412585!2d34.8998426155857!3d32.15720128011981!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151d382571234567%3A0xa1b2c3d4e5f67890!2sHaHarash%2010%2C%20Hod%20HaSharon!5e0!3m2!1sen!2sil!4v1707823456789" allowfullscreen></iframe>
+          <div class="branch-info">
+            <h3 class="branch-name"><i class="fas fa-store"></i> סניף הוד השרון - החרש 10</h3>
+            
+            <div class="branch-detail">
+              <i class="fas fa-phone"></i>
+              <span>טלפון: <a href="tel:09-7402575" style="color: white; text-decoration: none;">09-7402575</a></span>
+            </div>
+            
+            <div class="branch-detail">
+              <i class="fas fa-clock"></i>
+              <span>שעות פעילות: א'-ה': 06:30-16:00, ו': 06:30-13:30</span>
+            </div>
+            
+            <div class="branch-detail">
+              <i class="fas fa-warehouse"></i>
+              <span>איסוף עצמי: חומרים לכל סוגי הבנייה</span>
+            </div>
+            
+            <a href="https://www.google.com/maps/dir//32.1572013,34.9020174/@32.157201,34.902017,17z?entry=ttu" class="branch-button" target="_blank">
+              <span>נווט לסניף</span>
+              <i class="fas fa-directions"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- כפתור צף -->
+  <a href="https://wa.me/972097602010?text=שלום,%20אני%20מעוניין%20בייעוץ%20מקצועי" class="floating-btn" target="_blank">
+    <span class="icon"><i class="fab fa-whatsapp"></i></span>
+    <span>שלחו הודעה</span>
+  </a>
+
+  <script>
+    // יצירת חלקיקים אנימטיביים
+    function createParticles() {
+      const buttons = document.querySelectorAll('.btn');
+      
+      buttons.forEach((button, index) => {
+        const container = button.querySelector('.particles');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        const particleCount = 8;
+        const color = getComputedStyle(button).color;
+        
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement('div');
+          particle.classList.add('particle');
+          
+          const size = Math.random() * 4 + 2;
+          const posX = Math.random() * 100;
+          const posY = Math.random() * 100;
+          const duration = Math.random() * 3 + 2;
+          const delay = Math.random() * 2;
+          
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          particle.style.left = `${posX}%`;
+          particle.style.top = `${posY}%`;
+          particle.style.setProperty('--random-x', `${Math.random() * 100 - 50}px`);
+          particle.style.setProperty('--random-y', `${Math.random() * 100 - 50}px`);
+          particle.style.animationDuration = `${duration}s`;
+          particle.style.animationDelay = `${delay}s`;
+          particle.style.color = color;
+          
+          container.appendChild(particle);
+        }
+      });
+    }
+    
+    // הוספת אירועים ללחיצה על כפתורים
+    document.addEventListener('DOMContentLoaded', function() {
+      createParticles();
+      
+      document.getElementById('reviews-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('פונקציונליות ביקורות תתווסף בקרוב!');
+      });
+      
+      document.getElementById('projects-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('פונקציונליות פרויקטים תתווסף בקרוב!');
+      });
+
+      // אנימציה ללוגו בעת טעינת הדף
+      const logo = document.querySelector('.logo-container');
+      setTimeout(() => {
+        logo.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+          logo.style.transform = 'scale(1)';
+        }, 300);
+      }, 500);
+    });
+  </script>
+</body>
+</html>
