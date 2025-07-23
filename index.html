@@ -3,57 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>טופס הזמנה חדשה - משודרג</title>
+    <title>טופס הזמנה חדשה - פרימיום+++</title>
     <!-- Tailwind CSS CDN for basic styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Define CSS Variables for a consistent color palette */
+        :root {
+            --color-bg-light: #e0f2f7; /* Light blue background for body */
+            --color-primary-blue: #3498db; /* Standard vibrant blue */
+            --color-dark-blue: #2980b9; /* Darker blue for accents */
+            --color-text-dark: #1a202c; /* Dark text for headings */
+            --color-text-medium: #2d3748; /* Medium dark text for labels */
+            --color-text-light: #4a5568; /* Light text for inputs */
+            --color-border-light-blue: #90cdf4; /* Light blue border */
+            --color-focus-blue: #3182ce; /* Deeper blue on focus */
+            --color-glass-bg: rgba(255, 255, 255, 0.15); /* White with transparency for glass effect */
+            --color-glass-border: rgba(255, 255, 255, 0.2); /* White with transparency for glass border */
+            --color-glass-shadow-1: rgba(0, 0, 0, 0.15);
+            --color-glass-shadow-2: rgba(0, 0, 0, 0.08);
+            --color-table-header-bg: #e2f2f7; /* Light blue-gray for table header */
+            --color-table-row-odd: rgba(240, 248, 255, 0.5); /* AliceBlue with transparency */
+            --color-table-row-even: rgba(230, 240, 250, 0.5); /* Slightly darker light blue with transparency */
+            --color-feedback-success: #4CAF50;
+            --color-feedback-error: #f44336;
+            --color-feedback-info: #2196F3; /* Blue for info messages */
+        }
+
         /* Custom styles for Inter font and general layout */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #e0f2f7; /* Light blue background */
+            background: linear-gradient(135deg, var(--color-bg-light) 0%, #cce7f0 100%); /* Subtle gradient background */
             display: flex;
             justify-content: center;
             align-items: flex-start; /* Align to top for better content flow */
             min-height: 100vh; /* Full viewport height */
             padding: 2rem; /* Padding around the content */
             direction: rtl; /* Ensure RTL for the entire body */
+            overflow-x: hidden; /* Prevent horizontal scroll on small screens */
         }
         .container {
-            background-color: #fcfcfc; /* Creamy white background for the form container */
+            background-color: var(--color-glass-bg); /* Glass background */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(10px); /* Safari support */
             padding: 3rem; /* Increased padding */
             border-radius: 1.5rem; /* More rounded corners */
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15), 0 8px 16px -5px rgba(0, 0, 0, 0.08); /* More pronounced shadow */
+            border: 1px solid var(--color-glass-border); /* Subtle light border */
+            box-shadow: 0 20px 40px -10px var(--color-glass-shadow-1), 0 8px 16px -5px var(--color-glass-shadow-2); /* More pronounced shadow */
             max-width: 1200px; /* Increased max width for larger page */
             width: 100%;
             text-align: right; /* Align text to the right for RTL */
-            border: 2px solid #a7d9ed; /* Light blue border for the container */
+            position: relative; /* For z-index context */
+            z-index: 1;
         }
+
+        /* New section-box for consistent styling of logical blocks */
+        .section-box {
+            background-color: rgba(255, 255, 255, 0.1); /* Slightly more opaque for inner boxes */
+            backdrop-filter: blur(5px); /* Frosted glass effect for inner boxes */
+            -webkit-backdrop-filter: blur(5px);
+            border-radius: 1rem; /* Rounded corners for inner boxes */
+            border: 1px solid rgba(255, 255, 255, 0.25); /* Lighter border for inner boxes */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* Subtle shadow for inner boxes */
+            padding: 1.5rem; /* Padding inside inner boxes */
+            margin-bottom: 2rem; /* Space between sections */
+        }
+
         h1, h2 {
-            color: #1a202c; /* Darker gray for headings */
+            color: var(--color-text-dark); /* Darker gray for headings */
             margin-bottom: 1.5rem;
             text-align: center; /* Center headings */
             font-weight: 700; /* Bolder headings */
+            text-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle text shadow for depth */
         }
         label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600; /* Bolder labels */
-            color: #2d3748; /* Medium dark gray for labels */
+            color: var(--color-text-medium); /* Medium dark gray for labels */
         }
         input[type="text"], input[type="number"], input[type="email"], input[type="tel"], input[type="date"], input[type="time"], select, textarea {
             width: 100%;
             padding: 0.85rem; /* Slightly more padding */
             margin-bottom: 1rem;
-            border: 1px solid #90cdf4; /* Light blue border */
+            border: 1px solid var(--color-border-light-blue); /* Light blue border */
             border-radius: 0.75rem; /* More rounded corners for inputs */
             font-size: 1rem;
-            color: #4a5568; /* Darker gray for input text */
-            background-color: #ffffff; /* White background */
-            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            color: var(--color-text-light); /* Darker gray for input text */
+            background-color: rgba(255, 255, 255, 0.7); /* Slightly transparent white input background */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
         }
         input[type="text"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="date"]:focus, input[type="time"]:focus, select:focus, textarea:focus {
-            border-color: #3182ce; /* Deeper blue border on focus */
+            border-color: var(--color-focus-blue); /* Deeper blue border on focus */
             box-shadow: 0 0 0 4px rgba(49, 130, 206, 0.25); /* More prominent focus ring */
+            background-color: #ffffff; /* Solid white on focus */
             outline: none;
         }
 
@@ -61,7 +103,7 @@
         .smart-button {
             position: relative;
             overflow: hidden;
-            background-color: #4299e1; /* Blue button */
+            background-color: var(--color-primary-blue); /* Blue button */
             color: white;
             padding: 0.9rem 2rem; /* Larger padding */
             border-radius: 0.75rem; /* More rounded corners */
@@ -70,9 +112,10 @@
             cursor: pointer;
             border: none;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Default shadow */
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Subtle text shadow */
         }
         .smart-button:hover {
-            background-color: #3182ce; /* Even darker blue on hover */
+            background-color: var(--color-dark-blue); /* Even darker blue on hover */
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08); /* Larger shadow on hover */
             transform: translateY(-2px); /* Slight lift effect */
         }
@@ -114,21 +157,25 @@
         #whatsappShareBtn:hover { background-color: #1da851; }
         #clearFormBtn { background-color: #6b7280; } /* Gray */
         #clearFormBtn:hover { background-color: #4b5563; }
+        #insertFreeOrderBtn { background-color: #8a2be2; } /* BlueViolet */
+        #insertFreeOrderBtn:hover { background-color: #6a1aab; }
+
 
         .message-box {
-            background-color: #e0f7fa; /* Light cyan background */
-            color: #006064; /* Dark cyan text */
+            background-color: var(--color-feedback-info); /* Light cyan background */
+            color: white; /* Dark cyan text */
             padding: 1rem;
             border-radius: 0.75rem;
             margin-top: 1.5rem;
-            border: 1px solid #80deea; /* Cyan border */
+            border: 1px solid rgba(255,255,255,0.3); /* Cyan border */
             text-align: center;
             font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .error-message {
-            background-color: #ffebee; /* Light red background */
-            color: #c62828; /* Dark red text */
-            border: 1px solid #ef9a9a; /* Red border */
+            background-color: var(--color-feedback-error); /* Light red background */
+            color: white; /* Dark red text */
+            border: 1px solid rgba(255,255,255,0.3); /* Red border */
         }
         .product-row {
             display: flex;
@@ -159,17 +206,16 @@
 
         .autocomplete-suggestions {
             position: absolute;
-            background-color: white;
-            border: 1px solid #90cdf4; /* Light blue border */
+            background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
+            border: 1px solid var(--color-border-light-blue); /* Light blue border */
             border-radius: 0.75rem;
             box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             max-height: 200px;
             overflow-y: auto;
             z-index: 10;
-            /* Adjusted positioning */
-            left: 0; /* Align to the left edge of the relative parent */
-            width: 100%; /* Take full width of the relative parent */
-            top: calc(100% + 0.25rem); /* Position slightly below the input, considering its margin-bottom */
+            left: 0;
+            width: 100%;
+            top: calc(100% + 0.25rem);
         }
         .autocomplete-suggestions div {
             padding: 0.75rem 1rem;
@@ -180,7 +226,7 @@
             border-bottom: none;
         }
         .autocomplete-suggestions div:hover, .autocomplete-suggestions div.highlighted {
-            background-color: #ebf8ff; /* Lighter blue on hover/highlight */
+            background-color: var(--color-table-row-odd); /* Lighter blue on hover/highlight */
         }
 
         /* Table specific styles for better readability */
@@ -189,22 +235,29 @@
             border-spacing: 0;
         }
         table thead th {
-            background-color: #e2f2f7; /* Light blue-gray for table header */
-            color: #2d3748; /* Darker text */
+            background-color: var(--color-table-header-bg); /* Light blue-gray for table header */
+            color: var(--color-text-medium); /* Darker text */
             font-weight: 700;
             padding: 1rem;
-            border-bottom: 2px solid #90cdf4; /* Blue border */
+            border-bottom: 2px solid var(--color-border-light-blue); /* Blue border */
         }
         table tbody td {
             padding: 0.9rem 1rem;
             border-bottom: 1px solid #e2e8f0;
-            color: #4a5568;
+            color: var(--color-text-light);
         }
         table tbody tr:last-child td {
             border-bottom: none;
         }
+        /* Alternating row colors for premium look */
+        table tbody tr:nth-child(odd) {
+            background-color: var(--color-table-row-odd);
+        }
+        table tbody tr:nth-child(even) {
+            background-color: var(--color-table-row-even);
+        }
         table tbody tr:hover {
-            background-color: #f7fafc; /* Subtle hover effect */
+            background-color: rgba(190, 220, 240, 0.6); /* More pronounced hover effect */
         }
         /* Align specific columns */
         table th:nth-child(1), table td:nth-child(1) { text-align: right; } /* שם פריט */
@@ -231,7 +284,7 @@
             width: 100%;
             height: 100%;
             padding: 0.5rem; /* Adjust padding to fit cell */
-            border: 1px solid #3182ce;
+            border: 1px solid var(--color-focus-blue);
             border-radius: 0.5rem;
             box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.25);
             background-color: white;
@@ -248,7 +301,7 @@
             width: 100%;
             height: 100%;
             padding: 0.5rem;
-            border: 1px solid #3182ce;
+            border: 1px solid var(--color-focus-blue);
             border-radius: 0.5rem;
             box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.25);
             background-color: white;
@@ -257,8 +310,8 @@
         }
         .autocomplete-suggestions-in-table {
             position: absolute;
-            background-color: white;
-            border: 1px solid #90cdf4;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--color-border-light-blue);
             border-radius: 0.75rem;
             box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.1);
             max-height: 150px;
@@ -277,7 +330,7 @@
             border-bottom: none;
         }
         .autocomplete-suggestions-in-table div:hover, .autocomplete-suggestions-in-table div.highlighted {
-            background-color: #ebf8ff;
+            background-color: var(--color-table-row-odd);
         }
 
         /* Responsive adjustments */
@@ -291,6 +344,17 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 1rem; /* Less padding on small screens */
+            }
+            .container {
+                padding: 1.5rem;
+                border-radius: 1rem; /* Slightly less rounded on small screens */
+            }
+            .section-box {
+                padding: 1rem; /* Smaller padding for inner boxes on mobile */
+                margin-bottom: 1.5rem; /* Less space between sections on mobile */
+            }
             .product-row {
                 flex-direction: column;
                 align-items: stretch;
@@ -300,9 +364,6 @@
             }
             .product-row button {
                 width: 100%;
-            }
-            .container {
-                padding: 1.5rem;
             }
             h1 {
                 font-size: 1.75rem;
@@ -416,7 +477,7 @@
             }
             th, td {
                 border: 2px solid #000; /* Thicker black border for cells */
-                padding: 8px; /* Increased padding for print */
+                padding: 8px;
                 text-align: right;
                 vertical-align: top;
                 font-weight: 500;
@@ -458,7 +519,7 @@
             position: fixed;
             bottom: 1.5rem;
             right: 1.5rem;
-            background-color: #4CAF50;
+            background-color: var(--color-feedback-success);
             color: white;
             padding: 0.75rem 1.25rem;
             border-radius: 0.75rem;
@@ -484,11 +545,18 @@
             content: '✅';
         }
         #feedbackPopup.error {
-            background-color: #f44336;
+            background-color: var(--color-feedback-error);
         }
         #feedbackPopup.error #feedbackEmoji {
             animation: none;
             content: '❌';
+        }
+        #feedbackPopup.info {
+            background-color: var(--color-feedback-info);
+        }
+        #feedbackPopup.info #feedbackEmoji {
+            animation: none;
+            content: 'ℹ️'; /* Info icon */
         }
 
         @keyframes spin {
@@ -506,7 +574,7 @@
         </div>
 
         <!-- Customer Details Section -->
-        <div class="mb-6 border-b pb-4 border-gray-200">
+        <div class="section-box">
             <h2 class="text-xl font-semibold mb-4 text-right">פרטי לקוח</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -545,7 +613,7 @@
         </div>
 
         <!-- Delivery Details Section -->
-        <div class="mb-6 border-b pb-4 border-gray-200">
+        <div class="section-box">
             <h2 class="text-xl font-semibold mb-4 text-right">פרטי אספקה</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -582,7 +650,7 @@
         </div>
 
         <!-- Product Selection Section -->
-        <div class="mb-6 border-b pb-4 border-gray-200">
+        <div class="section-box">
             <h2 class="text-xl font-semibold mb-4 text-right">הוספת מוצרים</h2>
             <div class="product-input-group">
                 <label for="productSearchInput">בחר מוצר (הקלד 2 אותיות לחיפוש או הקלדה חופשית):</label>
@@ -599,22 +667,8 @@
             </div>
         </div>
 
-        <!-- Free Text Order Input Section -->
-        <div class="mb-6 border-b pb-4 border-gray-200">
-            <h2 class="text-xl font-semibold mb-4 text-right">הדבקת הזמנה בטקסט חופשי</h2>
-            <label for="freeTextOrderInput">הדבק כאן את טקסט ההזמנה (שם מוצר וכמות בשורה נפרדת או באותה שורה):</label>
-            <textarea id="freeTextOrderInput" rows="6" placeholder="דוגמאות:
-שק גדול 2
-אגרגט 25 קג 10
-מוצר מיוחד 5 יח'
-ברקוד 123456789 3"></textarea>
-            <button id="insertFreeOrderBtn" class="smart-button mt-4 w-full">
-                הכנס הזמנה מהטקסט
-            </button>
-        </div>
-
         <!-- Selected Products Table -->
-        <div class="mb-6 border-b pb-4 border-gray-200">
+        <div class="section-box">
             <h2 class="text-xl font-semibold mb-4 text-right">פריטים בהזמנה</h2>
             <table class="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden">
                 <thead>
@@ -638,7 +692,7 @@
         </div>
 
         <!-- Weight Summary -->
-        <div class="mb-6 border-b pb-4 border-gray-200">
+        <div class="section-box">
             <h2 class="text-xl font-semibold mb-4 text-right">סיכום משקלים</h2>
             <p class="text-lg font-bold text-gray-800 text-right">
                 סה"כ משקל הזמנה: <span id="totalWeightDisplay">0</span> ק"ג
@@ -646,9 +700,23 @@
         </div>
 
         <!-- General Notes Section -->
-        <div class="mb-6 border-b pb-4 border-gray-200">
+        <div class="section-box">
             <label for="generalNotes">הערות כלליות להזמנה:</label>
             <textarea id="generalNotes" rows="3" placeholder="הקלד הערות כלליות להזמנה כאן..."></textarea>
+        </div>
+        
+        <!-- Free Text Order Input Section - MOVED TO BOTTOM -->
+        <div class="section-box">
+            <h2 class="text-xl font-semibold mb-4 text-right">הדבקת הזמנה בטקסט חופשי</h2>
+            <label for="freeTextOrderInput">הדבק כאן את טקסט ההזמנה (שם מוצר וכמות בשורה נפרדת או באותה שורה):</label>
+            <textarea id="freeTextOrderInput" rows="6" placeholder="דוגמאות:
+שק גדול 2
+אגרגט 25 קג 10
+מוצר מיוחד 5 יח'
+ברקוד 123456789 3"></textarea>
+            <button id="insertFreeOrderBtn" class="smart-button mt-4 w-full">
+                הכנס הזמנה מהטקסט
+            </button>
         </div>
 
         <!-- Action Buttons -->
@@ -743,9 +811,9 @@
         }
 
         // Function to show visual feedback pop-up
-        function showFeedbackMessage(message, type = 'success') { // type can be 'success', 'error', 'loading'
+        function showFeedbackMessage(message, type = 'success') { // type can be 'success', 'error', 'loading', 'info'
             feedbackMessage.textContent = message;
-            feedbackPopup.classList.remove('success', 'error', 'loading', 'hidden');
+            feedbackPopup.classList.remove('success', 'error', 'loading', 'info', 'hidden');
             feedbackEmoji.style.animation = 'none'; // Reset animation
 
             if (type === 'success') {
@@ -758,11 +826,14 @@
                 feedbackPopup.classList.add('loading');
                 feedbackEmoji.textContent = '⚙️'; // Gear emoji for loading
                 feedbackEmoji.style.animation = 'spin 1.5s linear infinite';
+            } else if (type === 'info') {
+                feedbackPopup.classList.add('info');
+                feedbackEmoji.textContent = 'ℹ️'; // Info icon
             }
 
             feedbackPopup.classList.add('show');
 
-            // Hide after 3 seconds for success/error, keep loading until explicitly hidden
+            // Hide after 3 seconds for success/error/info, keep loading until explicitly hidden
             if (type !== 'loading') {
                 setTimeout(() => {
                     feedbackPopup.classList.remove('show');
