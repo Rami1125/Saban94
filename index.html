@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>טופס הזמנה - שליפת מוצרים</title>
+    <title>טופס הזמנה חדשה - מתקדם</title>
     <!-- Tailwind CSS CDN for basic styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -22,14 +22,14 @@
             padding: 2.5rem;
             border-radius: 1rem; /* Rounded corners */
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Subtle shadow */
-            max-width: 800px; /* Max width for readability */
+            max-width: 900px; /* Increased max width for more content */
             width: 100%;
             text-align: right; /* Align text to the right for RTL */
         }
-        h1 {
-            color: #1f2937; /* Dark gray for heading */
+        h1, h2 {
+            color: #1f2937; /* Dark gray for headings */
             margin-bottom: 1.5rem;
-            text-align: center; /* Center heading */
+            text-align: center; /* Center headings */
         }
         label {
             display: block;
@@ -37,7 +37,7 @@
             font-weight: 500;
             color: #374151; /* Medium gray for labels */
         }
-        select, input[type="number"] {
+        input[type="text"], input[type="number"], input[type="email"], select {
             width: 100%;
             padding: 0.75rem;
             margin-bottom: 1rem;
@@ -56,7 +56,6 @@
             transition: background-color 0.2s ease-in-out;
             cursor: pointer;
             border: none;
-            width: 100%; /* Full width button */
         }
         button:hover {
             background-color: #4338ca; /* Darker indigo on hover */
@@ -71,8 +70,109 @@
             text-align: center;
             font-weight: 500;
         }
+        .error-message {
+            background-color: #fee2e2; /* Light red background */
+            color: #991b1b; /* Dark red text */
+            border: 1px solid #fca5a5; /* Red border */
+        }
+        .product-row {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+            margin-bottom: 1rem;
+        }
+        .product-row input[type="text"] {
+            flex-grow: 3;
+        }
+        .product-row input[type="number"] {
+            flex-grow: 1;
+            max-width: 100px; /* Limit width of quantity field */
+        }
+        .product-row button {
+            flex-shrink: 0;
+            padding: 0.75rem 1rem;
+            background-color: #dc2626; /* Red for remove button */
+        }
+        .product-row button:hover {
+            background-color: #b91c1c;
+        }
+
+        /* Autocomplete suggestions styling */
+        .autocomplete-suggestions {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            width: calc(100% - 2rem); /* Adjust width to match input, considering padding */
+            right: 1rem; /* Align to right for RTL */
+        }
+        .autocomplete-suggestions div {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+        }
+        .autocomplete-suggestions div:hover {
+            background-color: #e0f2fe;
+        }
+
+        /* Print specific styles */
+        @media print {
+            body * {
+                visibility: hidden; /* Hide everything by default */
+            }
+            #print-area, #print-area * {
+                visibility: visible; /* Show only the print area */
+            }
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 1rem;
+                box-shadow: none; /* Remove shadow for print */
+                background-color: white; /* Ensure white background */
+            }
+            .no-print {
+                display: none !important; /* Hide elements specifically marked for no print */
+            }
+            /* Adjust font sizes for print if needed */
+            #print-area h1, #print-area h2 {
+                font-size: 1.5rem;
+                text-align: center;
+            }
+            #print-area p, #print-area li, #print-area table {
+                font-size: 0.9rem;
+            }
+            #print-area table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 1rem;
+            }
+            #print-area th, #print-area td {
+                border: 1px solid #ccc;
+                padding: 8px;
+                text-align: right; /* RTL */
+            }
+            #print-area th {
+                background-color: #f2f2f2;
+            }
+        }
+
         /* Responsive adjustments */
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            .product-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .product-row input[type="number"] {
+                max-width: none; /* Full width on smaller screens */
+            }
+            .product-row button {
+                width: 100%;
+            }
             .container {
                 padding: 1.5rem;
             }
@@ -84,94 +184,517 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold">טופס הזמנה חדשה</h1>
+        <h1 class="text-3xl font-bold mb-6">טופס הזמנה חדשה</h1>
 
-        <div class="mb-6">
-            <label for="productSelect" class="block text-gray-700 text-sm font-bold mb-2">בחר מוצר:</label>
-            <select id="productSelect" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                <option value="">טוען מוצרים...</option>
-            </select>
+        <!-- Customer Details Section -->
+        <div class="mb-6 border-b pb-4 border-gray-200">
+            <h2 class="text-xl font-semibold mb-4 text-right">פרטי לקוח</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="customerName">שם לקוח:</label>
+                    <input type="text" id="customerName" placeholder="הכנס שם לקוח">
+                </div>
+                <div>
+                    <label for="contactPerson">איש קשר:</label>
+                    <input type="text" id="contactPerson" placeholder="הכנס שם איש קשר">
+                </div>
+                <div>
+                    <label for="street">רחוב:</label>
+                    <input type="text" id="street" placeholder="הכנס שם רחוב">
+                </div>
+                <div>
+                    <label for="streetNumber">מספר רחוב:</label>
+                    <input type="text" id="streetNumber" placeholder="הכנס מספר רחוב">
+                </div>
+                <div>
+                    <label for="city">עיר:</label>
+                    <input type="text" id="city" placeholder="הכנס עיר">
+                </div>
+                <div>
+                    <label for="email">אימייל:</label>
+                    <input type="email" id="email" placeholder="הכנס כתובת אימייל">
+                </div>
+            </div>
         </div>
 
-        <div class="mb-4">
-            <label for="quantity" class="block text-gray-700 text-sm font-bold mb-2">כמות:</label>
-            <input type="number" id="quantity" min="1" value="1" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <!-- Delivery Type Section -->
+        <div class="mb-6 border-b pb-4 border-gray-200">
+            <h2 class="text-xl font-semibold mb-4 text-right">סוג הובלה</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="flex items-center">
+                    <input type="checkbox" id="manualUnloading" class="ml-2 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="manualUnloading" class="mb-0">פריקה ידנית</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="crane10m" class="ml-2 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="crane10m" class="mb-0">הובלת מנוף 10 מטר</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="crane15m" class="ml-2 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="crane15m" class="mb-0">הובלת מנוף 15 מטר</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="craneWork" class="ml-2 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="craneWork" class="mb-0">עבודות מנוף</label>
+                </div>
+            </div>
         </div>
 
-        <button id="addProductBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            הוסף פריט (לא פעיל עדיין)
-        </button>
+        <!-- Product Selection Section -->
+        <div class="mb-6 border-b pb-4 border-gray-200 relative">
+            <h2 class="text-xl font-semibold mb-4 text-right">הוספת מוצרים</h2>
+            <div class="product-input-group">
+                <label for="productSearchInput">בחר מוצר (הקלד 2 אותיות לחיפוש):</label>
+                <input type="text" id="productSearchInput" placeholder="הקלד שם מוצר או ברקוד">
+                <div id="autocompleteSuggestions" class="autocomplete-suggestions hidden"></div>
+            </div>
 
+            <div class="flex items-center gap-4 mt-4">
+                <label for="quantity" class="mb-0">כמות:</label>
+                <input type="number" id="quantity" min="1" value="1" class="w-24">
+                <button id="addProductBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-shrink-0">
+                    הוסף פריט
+                </button>
+            </div>
+        </div>
+
+        <!-- Selected Products Table -->
+        <div class="mb-6 border-b pb-4 border-gray-200">
+            <h2 class="text-xl font-semibold mb-4 text-right">פריטים בהזמנה</h2>
+            <table class="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="py-2 px-4 border-b text-right">שם פריט</th>
+                        <th class="py-2 px-4 border-b text-right">ברקוד</th>
+                        <th class="py-2 px-4 border-b text-right">כמות</th>
+                        <th class="py-2 px-4 border-b text-right">משקל יחידה (ק"ג)</th>
+                        <th class="py-2 px-4 border-b text-right">סה"כ משקל (ק"ג)</th>
+                        <th class="py-2 px-4 border-b text-right">הערות משקל</th>
+                        <th class="py-2 px-4 border-b text-right no-print">פעולות</th>
+                    </tr>
+                </thead>
+                <tbody id="orderItemsTableBody">
+                    <!-- Product rows will be added here by JavaScript -->
+                    <tr id="noItemsRow">
+                        <td colspan="7" class="text-center py-4 text-gray-500">עדיין לא נוספו פריטים להזמנה.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Weight Summary -->
+        <div class="mb-6 border-b pb-4 border-gray-200">
+            <h2 class="text-xl font-semibold mb-4 text-right">סיכום משקלים</h2>
+            <p class="text-lg font-bold text-gray-800 text-right">
+                סה"כ משקל הזמנה: <span id="totalWeightDisplay">0</span> ק"ג
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-6 flex flex-col md:flex-row gap-4 no-print">
+            <button id="printOrderBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md flex-1">
+                הדפסת הזמנה
+            </button>
+            <button id="whatsappShareBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md flex-1">
+                שיתוף בוואטסאפ
+            </button>
+            <button id="clearFormBtn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-lg shadow-md flex-1">
+                ניקוי טופס
+            </button>
+        </div>
+
+        <!-- Message Box for user feedback -->
         <div class="message-box mt-6" id="messageBox">
             <p>המוצרים ייטענו אוטומטית מגיליון הנתונים. וודא שקובץ Code.gs פרוס כ-Web App.</p>
         </div>
 
-        <div class="mt-6">
+        <!-- Raw Data for debugging (hidden by default, can be toggled) -->
+        <div class="mt-6 hidden">
             <h2 class="text-xl font-semibold mb-2">נתוני מוצרים גולמיים (לצורך בדיקה):</h2>
             <pre id="rawData" class="bg-gray-100 p-4 rounded-lg text-sm overflow-auto max-h-64"></pre>
         </div>
+
+        <!-- Print Area (hidden by default, used for generating print content) -->
+        <div id="print-area" class="hidden"></div>
+
     </div>
 
     <script>
         // IMPORTANT: Replace this URL with your deployed Google Apps Script Web App URL
-        // הוראות לפריסה נמצאות בחלק הבא
+        // הוראות לפריסה נמצאות בחלק הקודם של השיחה
         const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbygjSL2JFpCqMBdSTWAVEeKPD8secghGUxFWNixbXyk1c0Jf74jxwQ41aC_5uz9YA4/exec'; 
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const productSelect = document.getElementById('productSelect');
-            const rawDataPre = document.getElementById('rawData');
-            const messageBox = document.getElementById('messageBox');
+        // Global variables
+        let allProducts = []; // Stores all products fetched from the sheet
+        let selectedProducts = []; // Stores products currently in the order
 
-            // Function to display messages in the message box
-            function displayMessage(message, isError = false) {
-                messageBox.textContent = message;
-                if (isError) {
-                    messageBox.classList.remove('bg-blue-100', 'text-blue-800', 'border-blue-300');
-                    messageBox.classList.add('bg-red-100', 'text-red-800', 'border-red-300');
+        // DOM elements
+        const productSearchInput = document.getElementById('productSearchInput');
+        const autocompleteSuggestions = document.getElementById('autocompleteSuggestions');
+        const quantityInput = document.getElementById('quantity');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const orderItemsTableBody = document.getElementById('orderItemsTableBody');
+        const noItemsRow = document.getElementById('noItemsRow');
+        const totalWeightDisplay = document.getElementById('totalWeightDisplay');
+        const printOrderBtn = document.getElementById('printOrderBtn');
+        const whatsappShareBtn = document.getElementById('whatsappShareBtn');
+        const clearFormBtn = document.getElementById('clearFormBtn');
+        const messageBox = document.getElementById('messageBox');
+        const rawDataPre = document.getElementById('rawData'); // For debugging raw data
+
+        // Function to display messages in the message box
+        function displayMessage(message, isError = false) {
+            messageBox.textContent = message;
+            messageBox.classList.remove('bg-blue-100', 'text-blue-800', 'border-blue-300', 'bg-red-100', 'text-red-800', 'border-red-300');
+            if (isError) {
+                messageBox.classList.add('bg-red-100', 'text-red-800', 'border-red-300', 'error-message');
+            } else {
+                messageBox.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-300');
+            }
+        }
+
+        // --- Product Fetching ---
+        async function fetchProducts() {
+            displayMessage('טוען מוצרים מגיליון הנתונים...');
+            try {
+                const response = await fetch(googleAppsScriptUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                rawDataPre.textContent = JSON.stringify(data, null, 2); // Display raw data for debugging
+
+                if (data && data.products && Array.isArray(data.products) && data.products.length > 0) {
+                    allProducts = data.products; // Store all fetched products
+                    displayMessage('המוצרים נטענו בהצלחה!');
                 } else {
-                    messageBox.classList.remove('bg-red-100', 'text-red-800', 'border-red-300');
-                    messageBox.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-300');
+                    displayMessage('לא נמצאו מוצרים בגיליון הנתונים או שהפורמט אינו תקין.', true);
                 }
+            } catch (error) {
+                console.error('שגיאה בטעינת מוצרים:', error);
+                displayMessage(`שגיאה בטעינת מוצרים: ${error.message}. וודא שכתובת ה-URL נכונה ושהסקריפט פרוס כראוי.`, true);
             }
+        }
 
-            // Fetch products from Google Apps Script
-            async function fetchProducts() {
-                displayMessage('טוען מוצרים מגיליון הנתונים...');
-                try {
-                    const response = await fetch(googleAppsScriptUrl);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const data = await response.json();
+        // --- Autocomplete Logic ---
+        productSearchInput.addEventListener('input', () => {
+            const searchTerm = productSearchInput.value.trim();
+            autocompleteSuggestions.innerHTML = ''; // Clear previous suggestions
+            autocompleteSuggestions.classList.add('hidden');
 
-                    rawDataPre.textContent = JSON.stringify(data, null, 2); // Display raw data for debugging
+            if (searchTerm.length >= 2) {
+                const filteredProducts = allProducts.filter(product =>
+                    product.itemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    product.barcode.toLowerCase().includes(searchTerm.toLowerCase())
+                );
 
-                    if (data && data.products && Array.isArray(data.products) && data.products.length > 0) {
-                        productSelect.innerHTML = '<option value="">בחר מוצר...</option>'; // Clear and add default option
-                        data.products.forEach(product => {
-                            const option = document.createElement('option');
-                            option.value = product.barcode; // Use barcode as value
-                            option.textContent = `${product.itemName} (ברקוד: ${product.barcode})`;
-                            productSelect.appendChild(option);
+                if (filteredProducts.length > 0) {
+                    autocompleteSuggestions.classList.remove('hidden');
+                    filteredProducts.forEach(product => {
+                        const suggestionDiv = document.createElement('div');
+                        suggestionDiv.textContent = `${product.itemName} (ברקוד: ${product.barcode})`;
+                        suggestionDiv.dataset.barcode = product.barcode; // Store barcode for easy lookup
+                        suggestionDiv.dataset.itemName = product.itemName; // Store item name
+                        suggestionDiv.addEventListener('click', () => {
+                            productSearchInput.value = product.itemName; // Set input value
+                            productSearchInput.dataset.selectedBarcode = product.barcode; // Store selected barcode
+                            autocompleteSuggestions.classList.add('hidden'); // Hide suggestions
                         });
-                        displayMessage('המוצרים נטענו בהצלחה!');
-                    } else {
-                        displayMessage('לא נמצאו מוצרים בגיליון הנתונים או שהפורמט אינו תקין.', true);
-                        productSelect.innerHTML = '<option value="">לא נמצאו מוצרים</option>';
-                    }
-                } catch (error) {
-                    console.error('שגיאה בטעינת מוצרים:', error);
-                    displayMessage(`שגיאה בטעינת מוצרים: ${error.message}. וודא שכתובת ה-URL נכונה ושהסקריפט פרוס כראוי.`, true);
-                    productSelect.innerHTML = '<option value="">שגיאה בטעינה</option>';
+                        autocompleteSuggestions.appendChild(suggestionDiv);
+                    });
                 }
             }
+        });
 
-            // Check if the URL is set before fetching
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!productSearchInput.contains(event.target) && !autocompleteSuggestions.contains(event.target)) {
+                autocompleteSuggestions.classList.add('hidden');
+            }
+        });
+
+        // --- Add Product to Order ---
+        addProductBtn.addEventListener('click', () => {
+            const selectedItemName = productSearchInput.value.trim();
+            const selectedBarcode = productSearchInput.dataset.selectedBarcode; // Get the barcode of the selected item
+            const quantity = parseInt(quantityInput.value, 10);
+
+            if (!selectedItemName || !selectedBarcode) {
+                displayMessage('אנא בחר מוצר מהרשימה או הקלד שם מוצר תקין.', true);
+                return;
+            }
+            if (isNaN(quantity) || quantity <= 0) {
+                displayMessage('אנא הזן כמות חוקית (מספר גדול מ-0).', true);
+                return;
+            }
+
+            // Check if product already exists in the order
+            const existingProductIndex = selectedProducts.findIndex(p => p.barcode === selectedBarcode);
+
+            if (existingProductIndex > -1) {
+                // Update quantity if product already exists
+                selectedProducts[existingProductIndex].quantity += quantity;
+            } else {
+                // Add new product
+                selectedProducts.push({
+                    itemName: selectedItemName,
+                    barcode: selectedBarcode,
+                    quantity: quantity
+                });
+            }
+
+            renderOrderItems();
+            calculateTotalWeight();
+            productSearchInput.value = ''; // Clear input
+            productSearchInput.dataset.selectedBarcode = ''; // Clear selected barcode
+            quantityInput.value = 1; // Reset quantity
+            displayMessage('הפריט נוסף בהצלחה!');
+        });
+
+        // --- Render Order Items Table ---
+        function renderOrderItems() {
+            orderItemsTableBody.innerHTML = ''; // Clear current table content
+
+            if (selectedProducts.length === 0) {
+                noItemsRow.style.display = 'table-row'; // Show "no items" row
+                orderItemsTableBody.appendChild(noItemsRow);
+                return;
+            } else {
+                noItemsRow.style.display = 'none'; // Hide "no items" row
+            }
+
+            selectedProducts.forEach((product, index) => {
+                const { unitWeight, weightNotes } = calculateProductWeight(product.itemName);
+                const totalProductWeight = unitWeight * product.quantity;
+
+                const row = document.createElement('tr');
+                row.classList.add('border-b');
+                row.innerHTML = `
+                    <td class="py-2 px-4 border-b">${product.itemName}</td>
+                    <td class="py-2 px-4 border-b">${product.barcode}</td>
+                    <td class="py-2 px-4 border-b">${product.quantity}</td>
+                    <td class="py-2 px-4 border-b">${unitWeight}</td>
+                    <td class="py-2 px-4 border-b">${totalProductWeight.toFixed(2)}</td>
+                    <td class="py-2 px-4 border-b">${weightNotes}</td>
+                    <td class="py-2 px-4 border-b no-print">
+                        <button data-index="${index}" class="remove-item-btn bg-red-500 hover:bg-red-700 text-white text-sm py-1 px-2 rounded">הסר</button>
+                    </td>
+                `;
+                orderItemsTableBody.appendChild(row);
+            });
+
+            // Add event listeners for remove buttons
+            document.querySelectorAll('.remove-item-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const indexToRemove = parseInt(event.target.dataset.index, 10);
+                    selectedProducts.splice(indexToRemove, 1); // Remove item from array
+                    renderOrderItems(); // Re-render table
+                    calculateTotalWeight(); // Recalculate total weight
+                    displayMessage('הפריט הוסר בהצלחה.');
+                });
+            });
+        }
+
+        // --- Weight Calculation Logic ---
+        // Assumption: 1 cubic meter of "שק גדול" (large bag) is approximately 1000 kg (water density).
+        // So, half a cubic meter (חצי קוב) is 500 kg.
+        function calculateProductWeight(itemName) {
+            let unitWeight = 0;
+            let weightNotes = '';
+
+            if (itemName.includes('שק גדול')) {
+                unitWeight = 500; // Half a cubic meter assumed to be 500 kg
+                weightNotes = 'משקל משוער: חצי קוב';
+            } else if (itemName.includes('25 ק"ג')) {
+                unitWeight = 25;
+                weightNotes = 'משקל שק';
+            } else if (itemName.includes('משטח')) {
+                // "משטח" is a note, not a specific weight contribution unless specified further
+                weightNotes = 'פריט על משטח';
+                // If a default pallet weight is needed, define it here. For now, 0.
+                unitWeight = 0;
+            }
+            // Add more conditions for other product types/weights as needed
+
+            return { unitWeight, weightNotes };
+        }
+
+        function calculateTotalWeight() {
+            let totalWeight = 0;
+            selectedProducts.forEach(product => {
+                const { unitWeight } = calculateProductWeight(product.itemName);
+                totalWeight += unitWeight * product.quantity;
+            });
+            totalWeightDisplay.textContent = totalWeight.toFixed(2);
+        }
+
+        // --- Clear Form ---
+        clearFormBtn.addEventListener('click', () => {
+            // Clear customer details
+            document.getElementById('customerName').value = '';
+            document.getElementById('contactPerson').value = '';
+            document.getElementById('street').value = '';
+            document.getElementById('streetNumber').value = '';
+            document.getElementById('city').value = '';
+            document.getElementById('email').value = '';
+
+            // Uncheck all delivery checkboxes
+            document.getElementById('manualUnloading').checked = false;
+            document.getElementById('crane10m').checked = false;
+            document.getElementById('crane15m').checked = false;
+            document.getElementById('craneWork').checked = false;
+
+            // Clear product selection and order items
+            productSearchInput.value = '';
+            productSearchInput.dataset.selectedBarcode = '';
+            quantityInput.value = 1;
+            selectedProducts = [];
+            renderOrderItems();
+            calculateTotalWeight();
+            displayMessage('הטופס נוקה בהצלחה.');
+        });
+
+        // --- Print Order ---
+        printOrderBtn.addEventListener('click', () => {
+            const printArea = document.getElementById('print-area');
+            printArea.innerHTML = ''; // Clear previous content
+
+            // Collect all form data
+            const customerName = document.getElementById('customerName').value;
+            const contactPerson = document.getElementById('contactPerson').value;
+            const street = document.getElementById('street').value;
+            const streetNumber = document.getElementById('streetNumber').value;
+            const city = document.getElementById('city').value;
+            const email = document.getElementById('email').value;
+
+            const deliveryTypes = [];
+            if (document.getElementById('manualUnloading').checked) deliveryTypes.push('פריקה ידנית');
+            if (document.getElementById('crane10m').checked) deliveryTypes.push('הובלת מנוף 10 מטר');
+            if (document.getElementById('crane15m').checked) deliveryTypes.push('הובלת מנוף 15 מטר');
+            if (document.getElementById('craneWork').checked) deliveryTypes.push('עבודות מנוף');
+
+            let orderDetailsHtml = `
+                <h1 class="text-2xl font-bold mb-4">הזמנה חדשה</h1>
+                <div class="mb-4">
+                    <h2 class="text-xl font-semibold mb-2">פרטי לקוח:</h2>
+                    <p><strong>שם לקוח:</strong> ${customerName || 'לא הוזן'}</p>
+                    <p><strong>איש קשר:</strong> ${contactPerson || 'לא הוזן'}</p>
+                    <p><strong>כתובת:</strong> ${street || ''} ${streetNumber || ''}, ${city || 'לא הוזן'}</p>
+                    <p><strong>אימייל:</strong> ${email || 'לא הוזן'}</p>
+                </div>
+                <div class="mb-4">
+                    <h2 class="text-xl font-semibold mb-2">סוג הובלה:</h2>
+                    <p>${deliveryTypes.length > 0 ? deliveryTypes.join(', ') : 'לא נבחר סוג הובלה'}</p>
+                </div>
+                <div class="mb-4">
+                    <h2 class="text-xl font-semibold mb-2">פריטים בהזמנה:</h2>
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="py-2 px-4 border-b text-right">שם פריט</th>
+                                <th class="py-2 px-4 border-b text-right">ברקוד</th>
+                                <th class="py-2 px-4 border-b text-right">כמות</th>
+                                <th class="py-2 px-4 border-b text-right">משקל יחידה (ק"ג)</th>
+                                <th class="py-2 px-4 border-b text-right">סה"כ משקל (ק"ג)</th>
+                                <th class="py-2 px-4 border-b text-right">הערות משקל</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            if (selectedProducts.length === 0) {
+                orderDetailsHtml += `<tr><td colspan="6" class="text-center py-4 text-gray-500">לא נוספו פריטים להזמנה.</td></tr>`;
+            } else {
+                selectedProducts.forEach(product => {
+                    const { unitWeight, weightNotes } = calculateProductWeight(product.itemName);
+                    const totalProductWeight = unitWeight * product.quantity;
+                    orderDetailsHtml += `
+                        <tr>
+                            <td class="py-2 px-4 border-b">${product.itemName}</td>
+                            <td class="py-2 px-4 border-b">${product.barcode}</td>
+                            <td class="py-2 px-4 border-b">${product.quantity}</td>
+                            <td class="py-2 px-4 border-b">${unitWeight}</td>
+                            <td class="py-2 px-4 border-b">${totalProductWeight.toFixed(2)}</td>
+                            <td class="py-2 px-4 border-b">${weightNotes}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            orderDetailsHtml += `
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mb-4">
+                    <h2 class="text-xl font-semibold mb-2">סיכום משקלים:</h2>
+                    <p class="text-lg font-bold">סה"כ משקל הזמנה: ${totalWeightDisplay.textContent} ק"ג</p>
+                </div>
+            `;
+
+            printArea.innerHTML = orderDetailsHtml;
+            window.print(); // Trigger the browser's print dialog
+        });
+
+        // --- WhatsApp Share ---
+        whatsappShareBtn.addEventListener('click', () => {
+            const phoneNumber = '972508860896'; // The specific WhatsApp number
+
+            // Collect all form data for the message
+            const customerName = document.getElementById('customerName').value;
+            const contactPerson = document.getElementById('contactPerson').value;
+            const street = document.getElementById('street').value;
+            const streetNumber = document.getElementById('streetNumber').value;
+            const city = document.getElementById('city').value;
+            const email = document.getElementById('email').value;
+
+            const deliveryTypes = [];
+            if (document.getElementById('manualUnloading').checked) deliveryTypes.push('פריקה ידנית');
+            if (document.getElementById('crane10m').checked) deliveryTypes.push('הובלת מנוף 10 מטר');
+            if (document.getElementById('crane15m').checked) deliveryTypes.push('הובלת מנוף 15 מטר');
+            if (document.getElementById('craneWork').checked) deliveryTypes.push('עבודות מנוף');
+
+            let message = `*הזמנה חדשה*\n\n`;
+            message += `*פרטי לקוח:*\n`;
+            message += `שם לקוח: ${customerName || 'לא הוזן'}\n`;
+            message += `איש קשר: ${contactPerson || 'לא הוזן'}\n`;
+            message += `כתובת: ${street || ''} ${streetNumber || ''}, ${city || 'לא הוזן'}\n`;
+            message += `אימייל: ${email || 'לא הוזן'}\n\n`;
+
+            message += `*סוג הובלה:*\n`;
+            message += `${deliveryTypes.length > 0 ? deliveryTypes.join(', ') : 'לא נבחר סוג הובלה'}\n\n`;
+
+            message += `*פריטים בהזמנה:*\n`;
+            if (selectedProducts.length === 0) {
+                message += `לא נוספו פריטים להזמנה.\n`;
+            } else {
+                selectedProducts.forEach(product => {
+                    const { unitWeight, weightNotes } = calculateProductWeight(product.itemName);
+                    const totalProductWeight = unitWeight * product.quantity;
+                    message += `- ${product.itemName} (ברקוד: ${product.barcode}), כמות: ${product.quantity}, משקל יחידה: ${unitWeight} ק"ג, סה"כ משקל: ${totalProductWeight.toFixed(2)} ק"ג (${weightNotes})\n`;
+                });
+            }
+            message += `\n*סה"כ משקל הזמנה:* ${totalWeightDisplay.textContent} ק"ג`;
+
+            // Encode the message for URL
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+            // Open WhatsApp in a new tab
+            window.open(whatsappUrl, '_blank');
+        });
+
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if the Apps Script URL is set
             if (googleAppsScriptUrl === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
                 displayMessage('אנא החלף את YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE בכתובת ה-URL של ה-Web App שלך ב-Code.gs.', true);
             } else {
-                fetchProducts();
+                fetchProducts(); // Fetch products when the page loads
             }
+            renderOrderItems(); // Render initial empty table
+            calculateTotalWeight(); // Calculate initial total weight (should be 0)
         });
     </script>
 </body>
