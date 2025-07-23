@@ -9,30 +9,42 @@
     <style>
         /* Define CSS Variables for a consistent color palette */
         :root {
-            --color-bg-light: #e0f2f7; /* Light blue background for body */
-            --color-primary-blue: #3498db; /* Standard vibrant blue */
-            --color-dark-blue: #2980b9; /* Darker blue for accents */
-            --color-text-dark: #1a202c; /* Dark text for headings */
-            --color-text-medium: #2d3748; /* Medium dark text for labels */
-            --color-text-light: #4a5568; /* Light text for inputs */
-            --color-border-light-blue: #90cdf4; /* Light blue border */
-            --color-focus-blue: #3182ce; /* Deeper blue on focus */
-            --color-glass-bg: rgba(255, 255, 255, 0.15); /* White with transparency for glass effect */
-            --color-glass-border: rgba(255, 255, 255, 0.2); /* White with transparency for glass border */
-            --color-glass-shadow-1: rgba(0, 0, 0, 0.15);
-            --color-glass-shadow-2: rgba(0, 0, 0, 0.08);
-            --color-table-header-bg: #e2f2f7; /* Light blue-gray for table header */
-            --color-table-row-odd: rgba(240, 248, 255, 0.5); /* AliceBlue with transparency */
-            --color-table-row-even: rgba(230, 240, 250, 0.5); /* Slightly darker light blue with transparency */
-            --color-feedback-success: #4CAF50;
-            --color-feedback-error: #f44336;
-            --color-feedback-info: #2196F3; /* Blue for info messages */
+            --color-light-bg: #e0f7fa; /* Very light blue for background */
+            --color-medium-blue: #b3e5fc; /* Medium light blue */
+            --color-dark-blue: #0288d1; /* Darker blue for primary elements */
+            --color-accent-blue: #03a9f4; /* Accent blue */
+            --color-text-dark: #263238; /* Dark gray for headings and important text */
+            --color-text-medium: #455a64; /* Medium gray for labels */
+            --color-text-light: #607d8b; /* Light gray for input text */
+
+            --color-glass-bg: rgba(255, 255, 255, 0.5); /* Semi-transparent white for glass */
+            --color-glass-border: rgba(255, 255, 255, 0.7); /* More opaque white border */
+            --color-glass-shadow-light: rgba(0, 0, 0, 0.1); /* Subtle dark shadow */
+            --color-glass-shadow-glow: rgba(255, 255, 255, 0.3); /* White glow effect */
+
+            --color-input-bg: rgba(255, 255, 255, 0.8); /* Slightly transparent white input background */
+            --color-input-border: rgba(179, 229, 252, 0.8); /* Light blue transparent border */
+            --color-input-focus-border: var(--color-dark-blue); /* Dark blue on focus */
+            --color-input-focus-shadow: rgba(2, 136, 209, 0.3); /* Dark blue shadow on focus */
+
+            --color-button-primary: linear-gradient(135deg, #03a9f4 0%, #0288d1 100%); /* Blue gradient button */
+            --color-button-hover: linear-gradient(135deg, #0288d1 0%, #01579b 100%); /* Darker blue gradient on hover */
+            --color-button-shadow: rgba(0, 0, 0, 0.2);
+
+            --color-table-header-bg: rgba(179, 229, 252, 0.5); /* Transparent light blue for table header */
+            --color-table-row-odd: rgba(255, 255, 255, 0.7); /* More opaque white for odd rows */
+            --color-table-row-even: rgba(240, 248, 255, 0.7); /* AliceBlue with transparency for even rows */
+            --color-table-border: rgba(207, 216, 220, 0.8); /* Light gray table border */
+
+            --color-feedback-success: #4CAF50; /* Green */
+            --color-feedback-error: #f44336; /* Red */
+            --color-feedback-info: #2196F3; /* Blue */
         }
 
         /* Custom styles for Inter font and general layout */
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--color-bg-light) 0%, #cce7f0 100%); /* Subtle gradient background */
+            background: linear-gradient(135deg, var(--color-light-bg) 0%, var(--color-medium-blue) 100%); /* Light gradient background */
             display: flex;
             justify-content: center;
             align-items: flex-start; /* Align to top for better content flow */
@@ -40,6 +52,7 @@
             padding: 2rem; /* Padding around the content */
             direction: rtl; /* Ensure RTL for the entire body */
             overflow-x: hidden; /* Prevent horizontal scroll on small screens */
+            color: var(--color-text-medium); /* Set default text color */
         }
         .container {
             background-color: var(--color-glass-bg); /* Glass background */
@@ -48,7 +61,7 @@
             padding: 3rem; /* Increased padding */
             border-radius: 1.5rem; /* More rounded corners */
             border: 1px solid var(--color-glass-border); /* Subtle light border */
-            box-shadow: 0 20px 40px -10px var(--color-glass-shadow-1), 0 8px 16px -5px var(--color-glass-shadow-2); /* More pronounced shadow */
+            box-shadow: 0 15px 30px -5px var(--color-glass-shadow-light), 0 6px 12px -3px var(--color-glass-shadow-glow) inset; /* More pronounced shadow with inset for inner glow */
             max-width: 1200px; /* Increased max width for larger page */
             width: 100%;
             text-align: right; /* Align text to the right for RTL */
@@ -58,12 +71,12 @@
 
         /* New section-box for consistent styling of logical blocks */
         .section-box {
-            background-color: rgba(255, 255, 255, 0.1); /* Slightly more opaque for inner boxes */
+            background-color: var(--color-glass-bg); /* Slightly more opaque for inner boxes */
             backdrop-filter: blur(5px); /* Frosted glass effect for inner boxes */
             -webkit-backdrop-filter: blur(5px);
             border-radius: 1rem; /* Rounded corners for inner boxes */
-            border: 1px solid rgba(255, 255, 255, 0.25); /* Lighter border for inner boxes */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* Subtle shadow for inner boxes */
+            border: 1px solid var(--color-glass-border); /* Lighter border for inner boxes */
+            box-shadow: 0 5px 15px var(--color-glass-shadow-light), 0 2px 5px var(--color-glass-shadow-glow) inset; /* Subtle shadow for inner boxes */
             padding: 1.5rem; /* Padding inside inner boxes */
             margin-bottom: 2rem; /* Space between sections */
         }
@@ -73,28 +86,28 @@
             margin-bottom: 1.5rem;
             text-align: center; /* Center headings */
             font-weight: 700; /* Bolder headings */
-            text-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle text shadow for depth */
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Subtle text shadow for depth */
         }
         label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600; /* Bolder labels */
-            color: var(--color-text-medium); /* Medium dark gray for labels */
+            color: var(--color-text-dark); /* Labels also get dark color for contrast */
         }
         input[type="text"], input[type="number"], input[type="email"], input[type="tel"], input[type="date"], input[type="time"], select, textarea {
             width: 100%;
             padding: 0.85rem; /* Slightly more padding */
             margin-bottom: 1rem;
-            border: 1px solid var(--color-border-light-blue); /* Light blue border */
+            border: 1px solid var(--color-input-border); /* Light blue border */
             border-radius: 0.75rem; /* More rounded corners for inputs */
             font-size: 1rem;
-            color: var(--color-text-light); /* Darker gray for input text */
-            background-color: rgba(255, 255, 255, 0.7); /* Slightly transparent white input background */
+            color: var(--color-text-light); /* Light text for input text */
+            background-color: var(--color-input-bg); /* Slightly transparent white input background */
             transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
         }
         input[type="text"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="date"]:focus, input[type="time"]:focus, select:focus, textarea:focus {
-            border-color: var(--color-focus-blue); /* Deeper blue border on focus */
-            box-shadow: 0 0 0 4px rgba(49, 130, 206, 0.25); /* More prominent focus ring */
+            border-color: var(--color-input-focus-border); /* Deeper blue border on focus */
+            box-shadow: 0 0 0 4px var(--color-input-focus-shadow); /* More prominent focus ring */
             background-color: #ffffff; /* Solid white on focus */
             outline: none;
         }
@@ -103,20 +116,20 @@
         .smart-button {
             position: relative;
             overflow: hidden;
-            background-color: var(--color-primary-blue); /* Blue button */
+            background: var(--color-button-primary); /* Blue gradient button */
             color: white;
             padding: 0.9rem 2rem; /* Larger padding */
             border-radius: 0.75rem; /* More rounded corners */
             font-weight: 600;
-            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.1s ease-out, opacity 0.3s ease-in-out; /* Added opacity for disabled state */
+            transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.1s ease-out, opacity 0.3s ease-in-out; /* Added opacity for disabled state */
             cursor: pointer;
             border: none;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Default shadow */
+            box-shadow: 0 4px 8px -2px var(--color-button-shadow); /* Default shadow */
             text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Subtle text shadow */
         }
         .smart-button:hover {
-            background-color: var(--color-dark-blue); /* Even darker blue on hover */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08); /* Larger shadow on hover */
+            background: var(--color-button-hover); /* Even darker blue gradient on hover */
+            box-shadow: 0 8px 16px -4px var(--color-button-shadow); /* Larger shadow on hover */
             transform: translateY(-2px); /* Slight lift effect */
         }
         .smart-button::before {
@@ -126,7 +139,7 @@
             left: -75%; /* Start off-screen to the left */
             width: 50%; /* Width of the shine */
             height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,.3) 100%); /* White to transparent gradient */
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,.5) 100%); /* White to transparent gradient, more intense shine */
             transform: skewX(-20deg); /* Angle the shine */
             transition: all 0.5s ease;
         }
@@ -139,26 +152,26 @@
             cursor: not-allowed; /* Change cursor */
             box-shadow: none; /* Remove shadow */
             transform: none; /* Remove lift effect */
-            background-color: #a0aec0; /* A neutral gray for disabled */
+            background: #a0aec0; /* A neutral gray for disabled */
         }
         .smart-button:disabled:hover::before {
             left: -75%; /* Prevent shine on disabled button */
         }
 
 
-        /* Specific button colors */
-        #addProductBtn { background-color: #48bb78; } /* Green */
-        #addProductBtn:hover { background-color: #38a169; }
-        #addProductBtn:disabled { background-color: #a0aec0; } /* Disabled green */
+        /* Specific button colors with gradients */
+        #addProductBtn { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); } /* Green */
+        #addProductBtn:hover { background: linear-gradient(135deg, #38a169 0%, #2f855a 100%); }
+        #addProductBtn:disabled { background: #a0aec0; }
 
-        #printOrderBtn { background-color: #4299e1; } /* Blue */
-        #printOrderBtn:hover { background-color: #3182ce; }
-        #whatsappShareBtn { background-color: #25d366; } /* WhatsApp Green */
-        #whatsappShareBtn:hover { background-color: #1da851; }
-        #clearFormBtn { background-color: #6b7280; } /* Gray */
-        #clearFormBtn:hover { background-color: #4b5563; }
-        #insertFreeOrderBtn { background-color: #8a2be2; } /* BlueViolet */
-        #insertFreeOrderBtn:hover { background-color: #6a1aab; }
+        #printOrderBtn { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); } /* Blue */
+        #printOrderBtn:hover { background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%); }
+        #whatsappShareBtn { background: linear-gradient(135deg, #25d366 0%, #1da851 100%); } /* WhatsApp Green */
+        #whatsappShareBtn:hover { background: linear-gradient(135deg, #1da851 0%, #179344 100%); }
+        #clearFormBtn { background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); } /* Gray */
+        #clearFormBtn:hover { background: linear-gradient(135deg, #4b5563 0%, #374151 100%); }
+        #insertFreeOrderBtn { background: linear-gradient(135deg, #8a2be2 0%, #6a1aab 100%); } /* BlueViolet */
+        #insertFreeOrderBtn:hover { background: linear-gradient(135deg, #6a1aab 0%, #55158e 100%); }
 
 
         .message-box {
@@ -206,8 +219,8 @@
 
         .autocomplete-suggestions {
             position: absolute;
-            background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
-            border: 1px solid var(--color-border-light-blue); /* Light blue border */
+            background-color: rgba(255, 255, 255, 0.95); /* Light background for suggestions */
+            border: 1px solid var(--color-input-border); /* Light blue border */
             border-radius: 0.75rem;
             box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             max-height: 200px;
@@ -221,12 +234,13 @@
             padding: 0.75rem 1rem;
             cursor: pointer;
             border-bottom: 1px solid #e2e8f0; /* Light separator */
+            color: var(--color-text-light);
         }
         .autocomplete-suggestions div:last-child {
             border-bottom: none;
         }
         .autocomplete-suggestions div:hover, .autocomplete-suggestions div.highlighted {
-            background-color: var(--color-table-row-odd); /* Lighter blue on hover/highlight */
+            background-color: var(--color-table-row-even); /* Lighter blue on hover/highlight */
         }
 
         /* Table specific styles for better readability */
@@ -235,16 +249,16 @@
             border-spacing: 0;
         }
         table thead th {
-            background-color: var(--color-table-header-bg); /* Light blue-gray for table header */
-            color: var(--color-text-medium); /* Darker text */
+            background-color: var(--color-table-header-bg); /* Transparent light blue for table header */
+            color: var(--color-text-dark); /* Darker text */
             font-weight: 700;
             padding: 1rem;
-            border-bottom: 2px solid var(--color-border-light-blue); /* Blue border */
+            border-bottom: 2px solid var(--color-table-border); /* Blue border */
         }
         table tbody td {
             padding: 0.9rem 1rem;
-            border-bottom: 1px solid #e2e8f0;
-            color: var(--color-text-light);
+            border-bottom: 1px solid var(--color-table-border);
+            color: var(--color-text-medium);
         }
         table tbody tr:last-child td {
             border-bottom: none;
@@ -257,7 +271,7 @@
             background-color: var(--color-table-row-even);
         }
         table tbody tr:hover {
-            background-color: rgba(190, 220, 240, 0.6); /* More pronounced hover effect */
+            background-color: rgba(179, 229, 252, 0.4); /* More pronounced hover effect */
         }
         /* Align specific columns */
         table th:nth-child(1), table td:nth-child(1) { text-align: right; } /* שם פריט */
@@ -284,12 +298,13 @@
             width: 100%;
             height: 100%;
             padding: 0.5rem; /* Adjust padding to fit cell */
-            border: 1px solid var(--color-focus-blue);
+            border: 1px solid var(--color-input-focus-border);
             border-radius: 0.5rem;
-            box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.25);
-            background-color: white;
+            box-shadow: 0 0 0 2px var(--color-input-focus-shadow);
+            background-color: #ffffff; /* Solid white background for editing */
             font-size: 0.9rem;
             box-sizing: border-box; /* Include padding in element's total width and height */
+            color: var(--color-text-dark);
         }
         /* Specific styling for autocomplete input within table cell */
         .editable-cell .autocomplete-input-in-table {
@@ -301,17 +316,18 @@
             width: 100%;
             height: 100%;
             padding: 0.5rem;
-            border: 1px solid var(--color-focus-blue);
+            border: 1px solid var(--color-input-focus-border);
             border-radius: 0.5rem;
-            box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.25);
-            background-color: white;
+            box-shadow: 0 0 0 2px var(--color-input-focus-shadow);
+            background-color: #ffffff;
             font-size: 0.9rem;
             box-sizing: border-box;
+            color: var(--color-text-dark);
         }
         .autocomplete-suggestions-in-table {
             position: absolute;
             background-color: rgba(255, 255, 255, 0.95);
-            border: 1px solid var(--color-border-light-blue);
+            border: 1px solid var(--color-input-border);
             border-radius: 0.75rem;
             box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.1);
             max-height: 150px;
@@ -325,12 +341,13 @@
             padding: 0.5rem 0.75rem;
             cursor: pointer;
             border-bottom: 1px solid #e2e8f0;
+            color: var(--color-text-light);
         }
         .autocomplete-suggestions-in-table div:last-child {
             border-bottom: none;
         }
         .autocomplete-suggestions-in-table div:hover, .autocomplete-suggestions-in-table div.highlighted {
-            background-color: var(--color-table-row-odd);
+            background-color: var(--color-table-row-even);
         }
 
         /* Responsive adjustments */
@@ -392,13 +409,14 @@
                 padding-right: 10px;
                 white-space: nowrap;
                 font-weight: bold;
+                color: var(--color-text-medium); /* Ensure labels are visible */
             }
             /* Data labels for responsive table */
             td:nth-of-type(1):before { content: "שם פריט:"; }
             td:nth-of-type(2):before { content: "ברקוד:"; }
             td:nth-of-type(3):before { content: "כמות:"; }
             td:nth-of-type(4):before { content: "משקל יחידה (ק\"ג):"; }
-            td:nth-of-type(5):before { content: "סה\"כ משקל (ק\"ג):"; }
+            td:nth-of-type(5):before { content: "סה"כ משקל (ק\"ג):"; }
             td:nth-of-type(6):before { content: "הערות משקל:"; }
             td:nth-of-type(7):before { content: "פעולות:"; }
         }
@@ -411,6 +429,7 @@
                 margin: 0;
                 display: block;
                 font-size: 11pt; /* Increased base font for print */
+                color: #000000; /* Ensure black text for print */
             }
             .container {
                 box-shadow: none;
@@ -420,6 +439,9 @@
                 max-width: 100%;
                 width: auto; /* Allow content to dictate width within margins */
                 text-align: center; /* Center content within container for print */
+                background-color: #ffffff; /* Override glassmorphism for print */
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
             }
             .no-print {
                 display: none !important;
@@ -438,17 +460,28 @@
                 margin-bottom: 20px; /* Increased margin */
                 font-size: 3rem; /* Larger for print */
                 font-weight: 900; /* Extra bold */
+                color: #000000 !important; /* Force black for print */
+                background: none !important; /* Remove gradient for print */
+                -webkit-background-clip: unset !important;
+                -webkit-text-fill-color: #000000 !important;
+                text-shadow: none !important;
             }
             h2 {
                 text-align: center; /* Center section headings for print */
                 margin-bottom: 10px; /* Increased margin */
                 font-size: 1.5rem; /* Larger for print */
                 font-weight: 700; /* Ensure bold */
+                color: #000000 !important;
+                background: none !important;
+                -webkit-background-clip: unset !important;
+                -webkit-text-fill-color: #000000 !important;
+                text-shadow: none !important;
             }
             p {
                 margin-bottom: 5px; /* Slightly more spacing */
                 line-height: 1.4; /* Slightly more relaxed line height */
                 text-align: right; /* Align paragraphs to right within their container */
+                color: #000000 !important;
             }
             /* Combined details section */
             .order-header-print {
@@ -481,10 +514,11 @@
                 text-align: right;
                 vertical-align: top;
                 font-weight: 500;
+                color: #000000 !important;
             }
-            th { background-color: #f0f0f0; font-weight: 800; text-align: center; }
+            th { background-color: #f0f0f0 !important; font-weight: 800; text-align: center; }
             .text-center { text-align: center; }
-            .item-notes-print { font-size: 0.95em; color: #333; margin-top: 5px; font-weight: 600; }
+            .item-notes-print { font-size: 0.95em; color: #333 !important; margin-top: 5px; font-weight: 600; }
 
             .summary-box-print {
                 border: 4px solid #000;
@@ -506,11 +540,19 @@
             .emphasized-delivery {
                 font-weight: 900;
                 font-size: 1.3em;
-                color: #000;
-                background-color: #e0f2f7;
+                color: #000 !important;
+                background-color: #e0f2f7 !important;
                 padding: 3px 8px;
                 border-radius: 5px;
                 display: inline-block;
+            }
+            .section-box, .message-box {
+                background-color: #ffffff !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            label {
+                color: #000000 !important;
             }
         }
 
@@ -828,7 +870,7 @@
                 feedbackEmoji.style.animation = 'spin 1.5s linear infinite';
             } else if (type === 'info') {
                 feedbackPopup.classList.add('info');
-                feedbackEmoji.textContent = 'ℹ️'; // Info icon
+                feedbackEmoji.textContent = 'ℹ️'; /* Info icon */
             }
 
             feedbackPopup.classList.add('show');
@@ -1228,9 +1270,9 @@
                                 
                                 const matchIndex = displayHtml.toLowerCase().indexOf(searchTerm);
                                 if (matchIndex !== -1) {
-                                    const beforeMatch = displayHtml.substring(0, matchIndex);
-                                    const matchText = displayHtml.substring(matchIndex, matchIndex + searchTerm.length);
-                                    const afterMatch = displayHtml.substring(matchIndex + searchTerm.length);
+                                    const beforeMatch = displayText.substring(0, matchIndex);
+                                    const matchText = displayText.substring(matchIndex, matchIndex + searchTerm.length);
+                                    const afterMatch = displayText.substring(matchIndex + searchTerm.length);
                                     suggestionItem.innerHTML = `${beforeMatch}<strong>${matchText}</strong>${afterMatch}`;
                                 } else {
                                     suggestionItem.textContent = displayHtml;
