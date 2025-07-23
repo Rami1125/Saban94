@@ -63,7 +63,7 @@
             padding: 0.9rem 2rem; /* Larger padding */
             border-radius: 0.75rem; /* More rounded corners */
             font-weight: 600;
-            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.1s ease-out;
+            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.1s ease-out, opacity 0.3s ease-in-out; /* Added opacity for disabled state */
             cursor: pointer;
             border: none;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Default shadow */
@@ -87,10 +87,24 @@
         .smart-button:hover::before {
             left: 125%; /* Move across the button to the right */
         }
+        /* Disabled state for smart buttons */
+        .smart-button:disabled {
+            opacity: 0.6; /* Dim the button */
+            cursor: not-allowed; /* Change cursor */
+            box-shadow: none; /* Remove shadow */
+            transform: none; /* Remove lift effect */
+            background-color: #a0aec0; /* A neutral gray for disabled */
+        }
+        .smart-button:disabled:hover::before {
+            left: -75%; /* Prevent shine on disabled button */
+        }
+
 
         /* Specific button colors */
         #addProductBtn { background-color: #22c55e; } /* Green */
         #addProductBtn:hover { background-color: #16a34a; }
+        #addProductBtn:disabled { background-color: #a0aec0; } /* Disabled green */
+
         #printOrderBtn { background-color: #4f46e5; } /* Indigo */
         #printOrderBtn:hover { background-color: #4338ca; }
         #whatsappShareBtn { background-color: #25d366; } /* WhatsApp Green */
@@ -253,7 +267,7 @@
             <div class="flex items-center gap-4 mt-4">
                 <label for="quantity" class="mb-0">כמות:</label>
                 <input type="number" id="quantity" min="1" value="1" class="w-24">
-                <button id="addProductBtn" class="smart-button flex-shrink-0">
+                <button id="addProductBtn" class="smart-button flex-shrink-0" disabled>
                     הוסף פריט
                 </button>
             </div>
@@ -340,7 +354,7 @@
         const totalWeightDisplay = document.getElementById('totalWeightDisplay');
         const printOrderBtn = document.getElementById('printOrderBtn');
         const whatsappShareBtn = document.getElementById('whatsappShareBtn');
-        const clearFormBtn = document.getElementById('clearFormBtn');
+        const clearFormBtn = document = document.getElementById('clearFormBtn');
         const messageBox = document.getElementById('messageBox');
         const rawDataPre = document.getElementById('rawData'); // For debugging raw data
 
@@ -369,7 +383,7 @@
 
                 if (data && data.products && Array.isArray(data.products) && data.products.length > 0) {
                     allProducts = data.products; // Store all fetched products
-                    console.log('All Products fetched successfully. Total products:', allProducts.length, allProducts); // New debug log
+                    console.log('All Products fetched successfully. Total products:', allProducts.length, allProducts); // New debug log: Check this in browser console!
                     displayMessage('המוצרים נטענו בהצלחה!');
                 } else {
                     displayMessage('לא נמצאו מוצרים בגיליון הנתונים או שהפורמט אינו תקין.', true);
@@ -387,14 +401,20 @@
             autocompleteSuggestions.innerHTML = ''; // Clear previous suggestions
             autocompleteSuggestions.classList.add('hidden');
             selectedProductForAdd = null; // Reset selected product when typing
+            addProductBtn.disabled = true; // Disable add button until a product is selected
 
             if (searchTerm.length >= 2) {
                 console.log('Autocomplete: Search Term:', searchTerm); // Debugging: Log the search term
                 console.log('Autocomplete: Total products available for filter:', allProducts.length); // Debugging: Check if allProducts is populated
 
                 const filteredProducts = allProducts.filter(product => {
-                    const itemNameMatch = product.itemName && product.itemName.toLowerCase().includes(searchTerm.toLowerCase());
-                    const barcodeMatch = product.barcode && product.barcode.toLowerCase().includes(searchTerm.toLowerCase());
+                    // Ensure product.itemName and product.barcode are strings before calling toLowerCase() and includes()
+                    const itemName = String(product.itemName || '').toLowerCase().trim();
+                    const barcode = String(product.barcode || '').toLowerCase().trim();
+                    const lowerCaseSearchTerm = searchTerm.toLowerCase().trim();
+                    
+                    const itemNameMatch = itemName.includes(lowerCaseSearchTerm);
+                    const barcodeMatch = barcode.includes(lowerCaseSearchTerm);
                     
                     // Debugging: Log each product and its match status
                     // console.log(`  Product: ${product.itemName} (${product.barcode}), ItemName Match: ${itemNameMatch}, Barcode Match: ${barcodeMatch}`);
@@ -417,6 +437,7 @@
                             productSearchInput.value = selectedProductData.itemName; // Set input value
                             selectedProductForAdd = selectedProductData; // Store the full product object
                             autocompleteSuggestions.classList.add('hidden'); // Hide suggestions
+                            addProductBtn.disabled = false; // Enable add button when a product is selected
                             console.log('Autocomplete: Product selected:', selectedProductForAdd); // Debugging: Confirm selection
                         });
                         autocompleteSuggestions.appendChild(suggestionDiv);
@@ -465,6 +486,7 @@
             calculateTotalWeight();
             productSearchInput.value = ''; // Clear input
             selectedProductForAdd = null; // Clear selected product after adding
+            addProductBtn.disabled = true; // Disable add button again
             quantityInput.value = 1; // Reset quantity
             displayMessage('הפריט נוסף בהצלחה!');
         });
@@ -565,6 +587,7 @@
             // Clear product selection and order items
             productSearchInput.value = '';
             selectedProductForAdd = null; // Clear selected product
+            addProductBtn.disabled = true; // Disable add button
             quantityInput.value = 1;
             selectedProducts = [];
             renderOrderItems();
