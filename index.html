@@ -410,7 +410,7 @@
             }
             table {
                 border: 4px solid #000; /* Even Thicker black border for table */
-                margin: 15px auto; /* Centered and increased margin */
+                margin: 15px auto;
                 width: 80%;
                 border-collapse: collapse; /* Ensure collapse for clean lines */
             }
@@ -599,6 +599,20 @@
             </div>
         </div>
 
+        <!-- Free Text Order Input Section -->
+        <div class="mb-6 border-b pb-4 border-gray-200">
+            <h2 class="text-xl font-semibold mb-4 text-right">הדבקת הזמנה בטקסט חופשי</h2>
+            <label for="freeTextOrderInput">הדבק כאן את טקסט ההזמנה (שם מוצר וכמות בשורה נפרדת או באותה שורה):</label>
+            <textarea id="freeTextOrderInput" rows="6" placeholder="דוגמאות:
+שק גדול 2
+אגרגט 25 קג 10
+מוצר מיוחד 5 יח'
+ברקוד 123456789 3"></textarea>
+            <button id="insertFreeOrderBtn" class="smart-button mt-4 w-full">
+                הכנס הזמנה מהטקסט
+            </button>
+        </div>
+
         <!-- Selected Products Table -->
         <div class="mb-6 border-b pb-4 border-gray-200">
             <h2 class="text-xl font-semibold mb-4 text-right">פריטים בהזמנה</h2>
@@ -713,6 +727,8 @@
         const feedbackPopup = document.getElementById('feedbackPopup');
         const feedbackEmoji = document.getElementById('feedbackEmoji');
         const feedbackMessage = document.getElementById('feedbackMessage');
+        const freeTextOrderInput = document.getElementById('freeTextOrderInput'); // New: Free text order input
+        const insertFreeOrderBtn = document.getElementById('insertFreeOrderBtn'); // New: Insert free order button
 
 
         // Function to display messages in the message box
@@ -1816,6 +1832,117 @@
                 }
             }
         });
+
+        // --- Free Text Order Parsing and Insertion ---
+        insertFreeOrderBtn.addEventListener('click', () => {
+            parseAndInsertFreeTextOrder();
+        });
+
+        function parseAndInsertFreeTextOrder() {
+            const freeText = freeTextOrderInput.value.trim();
+            if (freeText.length === 0) {
+                showFeedbackMessage('אנא הדבק טקסט להזמנה.', 'error');
+                return;
+            }
+
+            const lines = freeText.split('\n').filter(line => line.trim() !== '');
+            let itemsProcessed = 0;
+
+            lines.forEach(line => {
+                const trimmedLine = line.trim();
+                // Regex to capture product name and quantity.
+                // It looks for a number at the end, optionally followed by 'ק"ג' or 'יח''
+                // Or a number at the beginning.
+                // This is a simplified regex and might need refinement for complex free text formats.
+                const regexEnd = /^(.*?)\s+(\d+)\s*(?:ק"ג|יח'|קג|יחידה)?$/i;
+                const regexStart = /^(\d+)\s+(.*?)\s*(?:ק"ג|יח'|קג|יחידה)?$/i;
+
+                let productName = '';
+                let quantity = 0;
+                let match;
+
+                if ((match = trimmedLine.match(regexEnd)) && match[2]) {
+                    productName = match[1].trim();
+                    quantity = parseInt(match[2], 10);
+                } else if ((match = trimmedLine.match(regexStart)) && match[1]) {
+                    quantity = parseInt(match[1], 10);
+                    productName = match[2].trim();
+                } else {
+                    // Fallback: if no clear quantity, assume quantity 1 and the whole line is product name
+                    productName = trimmedLine;
+                    quantity = 1;
+                }
+
+                if (productName && quantity > 0) {
+                    let matchedProduct = null;
+                    const lowerCaseProductName = productName.toLowerCase();
+
+                    // Try to find a match in allProducts
+                    // Prioritize exact match, then startsWith, then includes
+                    matchedProduct = allProducts.find(p => String(p.itemName || '').toLowerCase() === lowerCaseProductName);
+                    if (!matchedProduct) {
+                        matchedProduct = allProducts.find(p => String(p.itemName || '').toLowerCase().startsWith(lowerCaseProductName));
+                    }
+                    if (!matchedProduct) {
+                        matchedProduct = allProducts.find(p => String(p.itemName || '').toLowerCase().includes(lowerCaseProductName));
+                    }
+                    // Also check barcode
+                    if (!matchedProduct) {
+                        matchedProduct = allProducts.find(p => String(p.barcode || '').toLowerCase() === lowerCaseProductName);
+                    }
+
+
+                    if (matchedProduct) {
+                        // Create a new product object to avoid modifying the original allProducts item
+                        const productToAdd = { ...matchedProduct, quantity: quantity };
+                        
+                        const existingProductIndex = selectedProducts.findIndex(p => 
+                            (p.barcode !== 'N/A' && p.barcode === productToAdd.barcode) || 
+                            (p.barcode === 'N/A' && p.itemName === productToAdd.itemName)
+                        );
+
+                        if (existingProductIndex > -1) {
+                            selectedProducts[existingProductIndex].quantity += quantity;
+                        } else {
+                            selectedProducts.push(productToAdd);
+                        }
+                        itemsProcessed++;
+                    } else {
+                        // If no match found, add as a free-text item
+                        const { unitWeight, weightNotes } = calculateProductWeight(productName);
+                        const freeTextItem = {
+                            itemName: productName,
+                            barcode: 'N/A',
+                            quantity: quantity,
+                            originalUnitWeight: unitWeight,
+                            userDefinedUnitWeight: null,
+                            weightNotes: weightNotes || 'פריט שהוזן ידנית מטקסט חופשי',
+                            itemNotes: ''
+                        };
+
+                        const existingFreeTextItemIndex = selectedProducts.findIndex(p => 
+                            p.barcode === 'N/A' && p.itemName === freeTextItem.itemName
+                        );
+
+                        if (existingFreeTextItemIndex > -1) {
+                            selectedProducts[existingFreeTextItemIndex].quantity += quantity;
+                        } else {
+                            selectedProducts.push(freeTextItem);
+                        }
+                        itemsProcessed++;
+                    }
+                }
+            });
+
+            if (itemsProcessed > 0) {
+                renderOrderItems();
+                calculateTotalWeight();
+                freeTextOrderInput.value = ''; // Clear the textarea
+                showFeedbackMessage(`${itemsProcessed} פריטים נוספו/עודכנו מהטקסט החופשי.`, 'success');
+            } else {
+                showFeedbackMessage('לא נמצאו פריטים חוקיים בטקסט שהוזן.', 'error');
+            }
+        }
 
 
         // --- Initial Load ---
