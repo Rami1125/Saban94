@@ -3,54 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>טופס הזמנה חדשה - מתקדם</title>
+    <title>טופס הזמנה חדשה - משודרג</title>
     <!-- Tailwind CSS CDN for basic styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom styles for Inter font and general layout */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Light gray background */
+            background-color: #e0f2f7; /* Light blue background */
             display: flex;
             justify-content: center;
             align-items: flex-start; /* Align to top for better content flow */
             min-height: 100vh; /* Full viewport height */
             padding: 2rem; /* Padding around the content */
+            direction: rtl; /* Ensure RTL for the entire body */
         }
         .container {
-            background-color: #ffffff; /* White background for the form container */
+            background-color: #fcfcfc; /* Creamy white background for the form container */
             padding: 3rem; /* Increased padding */
             border-radius: 1.5rem; /* More rounded corners */
-            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15), 0 6px 12px -3px rgba(0, 0, 0, 0.08); /* More pronounced shadow */
-            max-width: 1100px; /* Increased max width for larger page */
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15), 0 8px 16px -5px rgba(0, 0, 0, 0.08); /* More pronounced shadow */
+            max-width: 1200px; /* Increased max width for larger page */
             width: 100%;
             text-align: right; /* Align text to the right for RTL */
+            border: 2px solid #a7d9ed; /* Light blue border for the container */
         }
         h1, h2 {
-            color: #1f2937; /* Dark gray for headings */
+            color: #1a202c; /* Darker gray for headings */
             margin-bottom: 1.5rem;
             text-align: center; /* Center headings */
+            font-weight: 700; /* Bolder headings */
         }
         label {
             display: block;
             margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: #374151; /* Medium gray for labels */
+            font-weight: 600; /* Bolder labels */
+            color: #2d3748; /* Medium dark gray for labels */
         }
-        input[type="text"], input[type="number"], input[type="email"], select {
+        input[type="text"], input[type="number"], input[type="email"], input[type="tel"], input[type="date"], input[type="time"], select, textarea {
             width: 100%;
             padding: 0.85rem; /* Slightly more padding */
             margin-bottom: 1rem;
-            border: 1px solid #d1d5db; /* Light gray border */
+            border: 1px solid #90cdf4; /* Light blue border */
             border-radius: 0.75rem; /* More rounded corners for inputs */
             font-size: 1rem;
-            color: #4b5563; /* Darker gray for input text */
-            background-color: #f9fafb; /* Slightly off-white background */
+            color: #4a5568; /* Darker gray for input text */
+            background-color: #ffffff; /* White background */
             transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-        input[type="text"]:focus, input[type="number"]:focus, input[type="email"]:focus, select:focus {
-            border-color: #6366f1; /* Indigo border on focus */
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); /* Subtle focus ring */
+        input[type="text"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="date"]:focus, input[type="time"]:focus, select:focus, textarea:focus {
+            border-color: #3182ce; /* Deeper blue border on focus */
+            box-shadow: 0 0 0 4px rgba(49, 130, 206, 0.25); /* More prominent focus ring */
             outline: none;
         }
 
@@ -58,7 +61,7 @@
         .smart-button {
             position: relative;
             overflow: hidden;
-            background-color: #4f46e5; /* Indigo button */
+            background-color: #4299e1; /* Blue button */
             color: white;
             padding: 0.9rem 2rem; /* Larger padding */
             border-radius: 0.75rem; /* More rounded corners */
@@ -69,7 +72,7 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Default shadow */
         }
         .smart-button:hover {
-            background-color: #4338ca; /* Darker indigo on hover */
+            background-color: #3182ce; /* Even darker blue on hover */
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08); /* Larger shadow on hover */
             transform: translateY(-2px); /* Slight lift effect */
         }
@@ -101,31 +104,31 @@
 
 
         /* Specific button colors */
-        #addProductBtn { background-color: #22c55e; } /* Green */
-        #addProductBtn:hover { background-color: #16a34a; }
+        #addProductBtn { background-color: #48bb78; } /* Green */
+        #addProductBtn:hover { background-color: #38a169; }
         #addProductBtn:disabled { background-color: #a0aec0; } /* Disabled green */
 
-        #printOrderBtn { background-color: #4f46e5; } /* Indigo */
-        #printOrderBtn:hover { background-color: #4338ca; }
+        #printOrderBtn { background-color: #4299e1; } /* Blue */
+        #printOrderBtn:hover { background-color: #3182ce; }
         #whatsappShareBtn { background-color: #25d366; } /* WhatsApp Green */
         #whatsappShareBtn:hover { background-color: #1da851; }
         #clearFormBtn { background-color: #6b7280; } /* Gray */
         #clearFormBtn:hover { background-color: #4b5563; }
 
         .message-box {
-            background-color: #e0f2fe; /* Light blue background */
-            color: #0c4a6e; /* Dark blue text */
+            background-color: #e0f7fa; /* Light cyan background */
+            color: #006064; /* Dark cyan text */
             padding: 1rem;
-            border-radius: 0.5rem;
+            border-radius: 0.75rem;
             margin-top: 1.5rem;
-            border: 1px solid #7dd3fc; /* Blue border */
+            border: 1px solid #80deea; /* Cyan border */
             text-align: center;
             font-weight: 500;
         }
         .error-message {
-            background-color: #fee2e2; /* Light red background */
-            color: #991b1b; /* Dark red text */
-            border: 1px solid #fca5a5; /* Red border */
+            background-color: #ffebee; /* Light red background */
+            color: #c62828; /* Dark red text */
+            border: 1px solid #ef9a9a; /* Red border */
         }
         .product-row {
             display: flex;
@@ -143,10 +146,10 @@
         .product-row button {
             flex-shrink: 0;
             padding: 0.75rem 1rem;
-            background-color: #dc2626; /* Red for remove button */
+            background-color: #ef4444; /* Red for remove button */
         }
         .product-row button:hover {
-            background-color: #b91c1c;
+            background-color: #dc2626;
         }
 
         /* Autocomplete suggestions styling */
@@ -157,9 +160,9 @@
         .autocomplete-suggestions {
             position: absolute;
             background-color: white;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #90cdf4; /* Light blue border */
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             max-height: 200px;
             overflow-y: auto;
             z-index: 10;
@@ -171,12 +174,123 @@
         .autocomplete-suggestions div {
             padding: 0.75rem 1rem;
             cursor: pointer;
+            border-bottom: 1px solid #e2e8f0; /* Light separator */
         }
-        .autocomplete-suggestions div:hover {
-            background-color: #e0f2fe;
+        .autocomplete-suggestions div:last-child {
+            border-bottom: none;
+        }
+        .autocomplete-suggestions div:hover, .autocomplete-suggestions div.highlighted {
+            background-color: #ebf8ff; /* Lighter blue on hover/highlight */
         }
 
+        /* Table specific styles for better readability */
+        table {
+            border-collapse: separate; /* Allows border-radius on table */
+            border-spacing: 0;
+        }
+        table thead th {
+            background-color: #e2f2f7; /* Light blue-gray for table header */
+            color: #2d3748; /* Darker text */
+            font-weight: 700;
+            padding: 1rem;
+            border-bottom: 2px solid #90cdf4; /* Blue border */
+        }
+        table tbody td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            color: #4a5568;
+        }
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        table tbody tr:hover {
+            background-color: #f7fafc; /* Subtle hover effect */
+        }
+        /* Align specific columns */
+        table th:nth-child(1), table td:nth-child(1) { text-align: right; } /* שם פריט */
+        table th:nth-child(2), table td:nth-child(2) { text-align: right; } /* ברקוד */
+        table th:nth-child(3), table td:nth-child(3) { text-align: center; } /* כמות */
+        table th:nth-child(4), table td:nth-child(4) { text-align: center; } /* משקל יחידה */
+        table th:nth-child(5), table td:nth-child(5) { text-align: center; } /* סה"כ משקל */
+        table th:nth-child(6), table td:nth-child(6) { text-align: right; } /* הערות משקל */
+        table th:nth-child(7), table td:nth-child(7) { text-align: center; } /* פעולות */
+
+        /* Editable table cells */
+        .editable-cell {
+            position: relative;
+            cursor: pointer;
+        }
+        .editable-cell .edit-input,
+        .editable-cell .edit-select,
+        .editable-cell .edit-input-free {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0.5rem; /* Adjust padding to fit cell */
+            border: 1px solid #3182ce;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.25);
+            background-color: white;
+            font-size: 0.9rem;
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+        /* Specific styling for autocomplete input within table cell */
+        .editable-cell .autocomplete-input-in-table {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0.5rem;
+            border: 1px solid #3182ce;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.25);
+            background-color: white;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+        .autocomplete-suggestions-in-table {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #90cdf4;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.1);
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 20; /* Higher z-index than main autocomplete */
+            left: 0;
+            width: 100%;
+            top: 100%; /* Position right below the cell */
+        }
+        .autocomplete-suggestions-in-table div {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .autocomplete-suggestions-in-table div:last-child {
+            border-bottom: none;
+        }
+        .autocomplete-suggestions-in-table div:hover, .autocomplete-suggestions-in-table div.highlighted {
+            background-color: #ebf8ff;
+        }
+
+
         /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 2rem;
+            }
+            .grid-cols-1-2-gap-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             .product-row {
                 flex-direction: column;
@@ -194,12 +308,230 @@
             h1 {
                 font-size: 1.75rem;
             }
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr { border: 1px solid #ccc; margin-bottom: 0.625em; border-radius: 0.75rem; overflow: hidden; }
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%; /* Adjust as needed for label */
+                text-align: right;
+            }
+            td:before {
+                position: absolute;
+                top: 6px;
+                right: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+            }
+            /* Data labels for responsive table */
+            td:nth-of-type(1):before { content: "שם פריט:"; }
+            td:nth-of-type(2):before { content: "ברקוד:"; }
+            td:nth-of-type(3):before { content: "כמות:"; }
+            td:nth-of-type(4):before { content: "משקל יחידה (ק\"ג):"; }
+            td:nth-of-type(5):before { content: "סה\"כ משקל (ק\"ג):"; }
+            td:nth-of-type(6):before { content: "הערות משקל:"; }
+            td:nth-of-type(7):before { content: "פעולות:"; }
+        }
+
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: #ffffff;
+                padding: 0;
+                margin: 0;
+                display: block;
+                font-size: 11pt; /* Increased base font for print */
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 0.5cm; /* Adjusted padding for A4 fit */
+                margin: 1cm auto; /* Centering the entire print content and more margin */
+                max-width: 100%;
+                width: auto; /* Allow content to dictate width within margins */
+                text-align: center; /* Center content within container for print */
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-logo {
+                display: block;
+                margin: 0 auto 15px auto; /* Centered logo with margin below */
+                width: 80px; /* Specific size for print logo */
+                height: 80px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid #000;
+            }
+            h1 {
+                text-align: center; /* Center main heading for print */
+                margin-bottom: 20px; /* Increased margin */
+                font-size: 3rem; /* Larger for print */
+                font-weight: 900; /* Extra bold */
+            }
+            h2 {
+                text-align: center; /* Center section headings for print */
+                margin-bottom: 10px; /* Increased margin */
+                font-size: 1.5rem; /* Larger for print */
+                font-weight: 700; /* Ensure bold */
+            }
+            p {
+                margin-bottom: 5px; /* Slightly more spacing */
+                line-height: 1.4; /* Slightly more relaxed line height */
+                text-align: right; /* Align paragraphs to right within their container */
+            }
+            /* Combined details section */
+            .order-header-print {
+                border: 4px solid #000; /* Even Thicker black border */
+                padding: 15px; /* Increased padding */
+                margin: 0 auto 20px auto; /* Centered and increased margin */
+                border-radius: 8px; /* Slightly larger border radius */
+                background-color: #fcfcfc; /* Creamy white for print sections */
+                width: 80%; /* Define width to allow centering */
+                text-align: right; /* Ensure text inside is right-aligned */
+            }
+            .order-header-print p {
+                margin-bottom: 4px; /* Tighter spacing inside */
+                line-height: 1.3;
+            }
+            .order-header-print p strong {
+                display: inline-block;
+                min-width: 90px; /* Adjusted min-width for alignment */
+                font-weight: 800; /* Bolder labels */
+            }
+            table {
+                border: 4px solid #000; /* Even Thicker black border for table */
+                margin: 15px auto; /* Centered and increased margin */
+                width: 80%; /* Define width to allow centering */
+                border-collapse: collapse; /* Ensure collapse for clean lines */
+            }
+            th, td {
+                border: 2px solid #000; /* Thicker black border for cells */
+                padding: 8px; /* Increased padding for print */
+                text-align: right; /* Default text align right */
+                vertical-align: top; /* Align text to top in cells */
+                font-weight: 500; /* Medium font weight for cell content */
+            }
+            th { background-color: #f0f0f0; font-weight: 800; text-align: center; } /* Bolder and centered headers */
+            .print-table th:nth-child(1), .print-table td:nth-child(1) { text-align: right; } /* שם פריט */
+            .print-table th:nth-child(2), .print-table td:nth-child(2) { text-align: right; } /* ברקוד */
+            .print-table th:nth-child(3), .print-table td:nth-child(3) { text-align: center; } /* כמות */
+            .print-table th:nth-child(4), .print-table td:nth-child(4) { text-align: center; } /* משקל יחידה */
+            .print-table th:nth-child(5), .print-table td:nth-child(5) { text-align: center; } /* סה"כ משקל */
+            .print-table th:nth-child(6), .print-table td:nth-child(6) { text-align: right; } /* הערות משקל */
+            .item-notes-print {
+                font-size: 0.95em; /* Slightly larger font for item notes */
+                color: #333; /* Darker color */
+                margin-top: 5px; /* More spacing */
+                font-weight: 600; /* Bolder notes */
+            }
+
+            .summary-box-print {
+                border: 4px solid #000; /* Thicker border */
+                padding: 15px; /* Increased padding */
+                margin: 20px auto; /* Centered and increased margin */
+                border-radius: 8px;
+                background-color: #fcfcfc;
+                text-align: center; /* Center summary text */
+                width: 80%; /* Define width to allow centering */
+            }
+            .summary-box-print p {
+                margin-bottom: 0; /* No margin between lines */
+                line-height: 1.2; /* Tighter line height */
+                font-size: 1.2rem; /* Larger font size */
+                font-weight: 900; /* Extra bold */
+                text-align: center; /* Ensure text is centered */
+            }
+            .general-notes-print {
+                margin: 25px auto; /* Centered and more margin */
+                border: 4px solid #000; /* Thicker border */
+                padding: 15px; /* Increased padding */
+                border-radius: 8px;
+                background-color: #fcfcfc;
+                width: 80%; /* Define width to allow centering */
+                text-align: right; /* Align text to right */
+            }
+            .general-notes-print p {
+                margin-bottom: 0;
+                font-size: 1.1rem; /* Larger font for notes */
+            }
+            .empty-lines-for-notes {
+                border-bottom: 2px dashed #777; /* Darker and thicker dashed line */
+                height: 1.8em; /* More height for each line */
+                margin-bottom: 0.4em; /* More spacing between lines */
+            }
+            .emphasized-delivery {
+                font-weight: 900; /* Even bolder */
+                font-size: 1.3em; /* Significantly larger */
+                color: #000; /* Ensure black color */
+                background-color: #e0f2f7; /* Light blue highlight */
+                padding: 3px 8px;
+                border-radius: 5px;
+                display: inline-block; /* Ensure padding applies */
+            }
+        }
+
+        /* Feedback Pop-up Styles */
+        #feedbackPopup {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            opacity: 0; /* Start hidden */
+            transform: translateY(20px); /* Start slightly below */
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            z-index: 1000;
+        }
+        #feedbackPopup.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #feedbackEmoji {
+            font-size: 1.5rem;
+            margin-left: 0.5rem;
+            animation: spin 1.5s linear infinite; /* Spinning animation */
+        }
+        #feedbackPopup.success #feedbackEmoji {
+            animation: none; /* Stop spin on success */
+            content: '✅'; /* Checkmark emoji */
+        }
+        #feedbackPopup.error {
+            background-color: #f44336; /* Red for error */
+        }
+        #feedbackPopup.error #feedbackEmoji {
+            animation: none; /* Stop spin on error */
+            content: '❌'; /* Cross emoji */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold mb-6">טופס הזמנה חדשה</h1>
+        <!-- Logo and Main Title Section -->
+        <div class="flex flex-col items-center mb-8">
+            <img src="https://i.postimg.cc/cJFsg4Zf/unnamed.jpg" alt="Company Logo" class="w-24 h-24 rounded-full object-cover border-4 border-blue-300 shadow-md mb-4" onerror="this.onerror=null;this.src='https://placehold.co/96x96/aabbcc/ffffff?text=LOGO';">
+            <h1 class="text-3xl font-bold text-center">טופס הזמנה חדשה</h1>
+        </div>
 
         <!-- Customer Details Section -->
         <div class="mb-6 border-b pb-4 border-gray-200">
@@ -214,6 +546,14 @@
                     <input type="text" id="contactPerson" placeholder="הכנס שם איש קשר">
                 </div>
                 <div>
+                    <label for="phoneNumber">מספר נייד:</label>
+                    <input type="tel" id="phoneNumber" placeholder="הכנס מספר טלפון נייד">
+                </div>
+                <div>
+                    <label for="email">אימייל:</label>
+                    <input type="email" id="email" placeholder="הכנס כתובת אימייל">
+                </div>
+                <div>
                     <label for="street">רחוב:</label>
                     <input type="text" id="street" placeholder="הכנס שם רחוב">
                 </div>
@@ -226,16 +566,30 @@
                     <input type="text" id="city" placeholder="הכנס עיר">
                 </div>
                 <div>
-                    <label for="email">אימייל:</label>
-                    <input type="email" id="email" placeholder="הכנס כתובת אימייל">
+                    <label for="representativeName">שם נציג מטפל:</label>
+                    <input type="text" id="representativeName" placeholder="הכנס שם נציג">
                 </div>
             </div>
         </div>
 
-        <!-- Delivery Type Section -->
+        <!-- Delivery Details Section -->
         <div class="mb-6 border-b pb-4 border-gray-200">
-            <h2 class="text-xl font-semibold mb-4 text-right">סוג הובלה</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <h2 class="text-xl font-semibold mb-4 text-right">פרטי אספקה</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="deliveryDate">תאריך אספקה:</label>
+                    <input type="date" id="deliveryDate">
+                </div>
+                <div>
+                    <label for="deliveryTime">שעת אספקה:</label>
+                    <input type="time" id="deliveryTime">
+                </div>
+                <div>
+                    <label for="driverName">שם נהג מתוכנן:</label>
+                    <input type="text" id="driverName" placeholder="הכנס שם נהג">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
                 <div class="flex items-center">
                     <input type="checkbox" id="manualUnloading" class="ml-2 rounded text-indigo-600 focus:ring-indigo-500">
                     <label for="manualUnloading" class="mb-0">פריקה ידנית</label>
@@ -259,7 +613,7 @@
         <div class="mb-6 border-b pb-4 border-gray-200">
             <h2 class="text-xl font-semibold mb-4 text-right">הוספת מוצרים</h2>
             <div class="product-input-group">
-                <label for="productSearchInput">בחר מוצר (הקלד 2 אותיות לחיפוש):</label>
+                <label for="productSearchInput">בחר מוצר (הקלד 2 אותיות לחיפוש או הקלדה חופשית):</label>
                 <input type="text" id="productSearchInput" placeholder="הקלד שם מוצר או ברקוד">
                 <div id="autocompleteSuggestions" class="autocomplete-suggestions hidden"></div>
             </div>
@@ -281,11 +635,11 @@
                     <tr class="bg-gray-100">
                         <th class="py-2 px-4 border-b text-right">שם פריט</th>
                         <th class="py-2 px-4 border-b text-right">ברקוד</th>
-                        <th class="py-2 px-4 border-b text-right">כמות</th>
-                        <th class="py-2 px-4 border-b text-right">משקל יחידה (ק"ג)</th>
-                        <th class="py-2 px-4 border-b text-right">סה"כ משקל (ק"ג)</th>
+                        <th class="py-2 px-4 border-b text-center">כמות</th>
+                        <th class="py-2 px-4 border-b text-center">משקל יחידה (ק"ג)</th>
+                        <th class="py-2 px-4 border-b text-center">סה"כ משקל (ק"ג)</th>
                         <th class="py-2 px-4 border-b text-right">הערות משקל</th>
-                        <th class="py-2 px-4 border-b text-right no-print">פעולות</th>
+                        <th class="py-2 px-4 border-b text-center no-print">פעולות</th>
                     </tr>
                 </thead>
                 <tbody id="orderItemsTableBody">
@@ -303,6 +657,12 @@
             <p class="text-lg font-bold text-gray-800 text-right">
                 סה"כ משקל הזמנה: <span id="totalWeightDisplay">0</span> ק"ג
             </p>
+        </div>
+
+        <!-- General Notes Section -->
+        <div class="mb-6 border-b pb-4 border-gray-200">
+            <label for="generalNotes">הערות כלליות להזמנה:</label>
+            <textarea id="generalNotes" rows="3" placeholder="הקלד הערות כלליות להזמנה כאן..."></textarea>
         </div>
 
         <!-- Action Buttons -->
@@ -329,9 +689,12 @@
             <pre id="rawData" class="bg-gray-100 p-4 rounded-lg text-sm overflow-auto max-h-64"></pre>
         </div>
 
-        <!-- Print Area (hidden by default, no longer used for printing) -->
-        <div id="print-area" class="hidden"></div>
+    </div>
 
+    <!-- Feedback Pop-up -->
+    <div id="feedbackPopup" class="fixed bottom-4 right-4 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg hidden items-center" style="z-index: 1000;">
+        <span id="feedbackEmoji" class="ml-2"></span>
+        <span id="feedbackMessage"></span>
     </div>
 
     <script>
@@ -343,8 +706,25 @@
         let allProducts = []; // Stores all products fetched from the sheet
         let selectedProducts = []; // Stores products currently in the order
         let selectedProductForAdd = null; // Stores the currently selected product object from autocomplete
+        let highlightedSuggestionIndex = -1; // For keyboard navigation in autocomplete (main search)
+        let highlightedTableSuggestionIndex = -1; // For keyboard navigation in table cell autocomplete
 
         // DOM elements
+        const customerNameInput = document.getElementById('customerName');
+        const contactPersonInput = document.getElementById('contactPerson');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const emailInput = document.getElementById('email');
+        const streetInput = document.getElementById('street');
+        const streetNumberInput = document.getElementById('streetNumber');
+        const cityInput = document.getElementById('city');
+        const representativeNameInput = document.getElementById('representativeName'); // New: Representative Name
+        const deliveryDateInput = document.getElementById('deliveryDate');
+        const deliveryTimeInput = document.getElementById('deliveryTime');
+        const driverNameInput = document.getElementById('driverName');
+        const manualUnloadingCheckbox = document.getElementById('manualUnloading');
+        const crane10mCheckbox = document.getElementById('crane10m');
+        const crane15mCheckbox = document.getElementById('crane15m');
+        const craneWorkCheckbox = document.getElementById('craneWork');
         const productSearchInput = document.getElementById('productSearchInput');
         const autocompleteSuggestions = document.getElementById('autocompleteSuggestions');
         const quantityInput = document.getElementById('quantity');
@@ -352,26 +732,66 @@
         const orderItemsTableBody = document.getElementById('orderItemsTableBody');
         const noItemsRow = document.getElementById('noItemsRow');
         const totalWeightDisplay = document.getElementById('totalWeightDisplay');
+        const generalNotesInput = document.getElementById('generalNotes'); // New general notes input
         const printOrderBtn = document.getElementById('printOrderBtn');
         const whatsappShareBtn = document.getElementById('whatsappShareBtn');
-        const clearFormBtn = document = document.getElementById('clearFormBtn');
+        const clearFormBtn = document.getElementById('clearFormBtn');
         const messageBox = document.getElementById('messageBox');
         const rawDataPre = document.getElementById('rawData'); // For debugging raw data
+        const feedbackPopup = document.getElementById('feedbackPopup');
+        const feedbackEmoji = document.getElementById('feedbackEmoji');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+
 
         // Function to display messages in the message box
         function displayMessage(message, isError = false) {
             messageBox.textContent = message;
-            messageBox.classList.remove('bg-blue-100', 'text-blue-800', 'border-blue-300', 'bg-red-100', 'text-red-800', 'border-red-300');
+            messageBox.classList.remove('bg-blue-100', 'text-blue-800', 'border-blue-300', 'bg-red-100', 'text-red-800', 'border-red-300', 'error-message', 'bg-cyan-50', 'text-cyan-800', 'border-cyan-200');
             if (isError) {
                 messageBox.classList.add('bg-red-100', 'text-red-800', 'border-red-300', 'error-message');
             } else {
-                messageBox.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-300');
+                messageBox.classList.add('bg-cyan-50', 'text-cyan-800', 'border-cyan-200'); // Updated to a more pleasant light blue/cyan
             }
         }
 
+        // Function to show visual feedback pop-up
+        function showFeedbackMessage(message, type = 'success') { // type can be 'success', 'error', 'loading'
+            feedbackMessage.textContent = message;
+            feedbackPopup.classList.remove('success', 'error', 'loading', 'hidden');
+            feedbackEmoji.style.animation = 'none'; // Reset animation
+
+            if (type === 'success') {
+                feedbackPopup.classList.add('success');
+                feedbackEmoji.textContent = '✅';
+            } else if (type === 'error') {
+                feedbackPopup.classList.add('error');
+                feedbackEmoji.textContent = '❌';
+            } else if (type === 'loading') {
+                feedbackPopup.classList.add('loading');
+                feedbackEmoji.textContent = '⚙️'; // Gear emoji for loading
+                feedbackEmoji.style.animation = 'spin 1.5s linear infinite';
+            }
+
+            feedbackPopup.classList.add('show');
+
+            // Hide after 3 seconds for success/error, keep loading until explicitly hidden
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    feedbackPopup.classList.remove('show');
+                    setTimeout(() => feedbackPopup.classList.add('hidden'), 300); // Fully hide after transition
+                }, 3000);
+            }
+        }
+
+        function hideFeedbackMessage() {
+            feedbackPopup.classList.remove('show');
+            setTimeout(() => feedbackPopup.classList.add('hidden'), 300); // Fully hide after transition
+        }
+
+
         // --- Product Fetching ---
         async function fetchProducts() {
-            displayMessage('טוען מוצרים מגיליון הנתונים...');
+            showFeedbackMessage('טוען מוצרים...', 'loading');
             try {
                 const response = await fetch(googleAppsScriptUrl);
                 if (!response.ok) {
@@ -383,62 +803,47 @@
 
                 if (data && data.products && Array.isArray(data.products) && data.products.length > 0) {
                     allProducts = data.products; // Store all fetched products
-                    console.log('All Products fetched successfully. Total products:', allProducts.length, allProducts); // New debug log: Check this in browser console!
-                    displayMessage('המוצרים נטענו בהצלחה!');
+                    console.log('All Products fetched successfully. Total products:', allProducts.length, allProducts);
+                    showFeedbackMessage('המוצרים נטענו בהצלחה!', 'success');
                 } else {
-                    displayMessage('לא נמצאו מוצרים בגיליון הנתונים או שהפורמט אינו תקין.', true);
-                    console.error('No products found or invalid format:', data); // Debugging: Log the problematic data
+                    showFeedbackMessage('לא נמצאו מוצרים בגיליון הנתונים או שהפורמט אינו תקין.', 'error');
+                    console.error('No products found or invalid format:', data);
                 }
             } catch (error) {
                 console.error('שגיאה בטעינת מוצרים:', error);
-                displayMessage(`שגיאה בטעינת מוצרים: ${error.message}. וודא שכתובת ה-URL נכונה ושהסקריפט פרוס כראוי.`, true);
+                showFeedbackMessage(`שגיאה בטעינת מוצרים: ${error.message}. וודא שכתובת ה-URL נכונה ושהסקריפט פרוס כראוי.`, 'error');
             }
         }
 
-        // --- Autocomplete Logic ---
+        // --- Autocomplete Logic (Main Search) ---
         productSearchInput.addEventListener('input', () => {
             const searchTerm = productSearchInput.value.trim();
             autocompleteSuggestions.innerHTML = ''; // Clear previous suggestions
             autocompleteSuggestions.classList.add('hidden');
             selectedProductForAdd = null; // Reset selected product when typing
-            addProductBtn.disabled = true; // Disable add button until a product is selected
+            highlightedSuggestionIndex = -1; // Reset highlight
+
+            // Enable add button if there's any text
+            addProductBtn.disabled = searchTerm.length === 0;
 
             if (searchTerm.length >= 2) {
-                console.log('Autocomplete: Search Term:', searchTerm); // Debugging: Log the search term
-                console.log('Autocomplete: Total products available for filter:', allProducts.length); // Debugging: Check if allProducts is populated
-
+                const lowerCaseSearchTerm = searchTerm.toLowerCase();
                 const filteredProducts = allProducts.filter(product => {
-                    // Ensure product.itemName and product.barcode are strings before calling toLowerCase() and includes()
-                    const itemName = String(product.itemName || '').toLowerCase().trim();
-                    const barcode = String(product.barcode || '').toLowerCase().trim();
-                    const lowerCaseSearchTerm = searchTerm.toLowerCase().trim();
-                    
-                    const itemNameMatch = itemName.includes(lowerCaseSearchTerm);
-                    const barcodeMatch = barcode.includes(lowerCaseSearchTerm);
-                    
-                    // Debugging: Log each product and its match status
-                    // console.log(`  Product: ${product.itemName} (${product.barcode}), ItemName Match: ${itemNameMatch}, Barcode Match: ${barcodeMatch}`);
-                    
-                    return itemNameMatch || barcodeMatch;
+                    const itemName = String(product.itemName || '').toLowerCase();
+                    const barcode = String(product.barcode || '').toLowerCase();
+                    return itemName.includes(lowerCaseSearchTerm) || barcode.includes(lowerCaseSearchTerm);
                 });
-
-                console.log('Autocomplete: Filtered Products:', filteredProducts); // Debugging: Log the filtered results
 
                 if (filteredProducts.length > 0) {
                     autocompleteSuggestions.classList.remove('hidden');
-                    filteredProducts.forEach(product => {
+                    filteredProducts.forEach((product, index) => {
                         const suggestionDiv = document.createElement('div');
                         suggestionDiv.textContent = `${product.itemName} (ברקוד: ${product.barcode})`;
-                        // Store the full product object in the dataset for easy retrieval
                         suggestionDiv.dataset.product = JSON.stringify(product); 
+                        suggestionDiv.dataset.index = index;
                         
                         suggestionDiv.addEventListener('click', () => {
-                            const selectedProductData = JSON.parse(suggestionDiv.dataset.product);
-                            productSearchInput.value = selectedProductData.itemName; // Set input value
-                            selectedProductForAdd = selectedProductData; // Store the full product object
-                            autocompleteSuggestions.classList.add('hidden'); // Hide suggestions
-                            addProductBtn.disabled = false; // Enable add button when a product is selected
-                            console.log('Autocomplete: Product selected:', selectedProductForAdd); // Debugging: Confirm selection
+                            selectAutocompleteSuggestion(suggestionDiv);
                         });
                         autocompleteSuggestions.appendChild(suggestionDiv);
                     });
@@ -446,39 +851,107 @@
             }
         });
 
-        // Hide suggestions when clicking outside
+        // Function to select an autocomplete suggestion (by click or Enter)
+        function selectAutocompleteSuggestion(suggestionDiv) {
+            const selectedProductData = JSON.parse(suggestionDiv.dataset.product);
+            productSearchInput.value = selectedProductData.itemName; // Set input value
+            selectedProductForAdd = selectedProductData; // Store the full product object
+            autocompleteSuggestions.classList.add('hidden'); // Hide suggestions
+            addProductBtn.disabled = false; // Enable add button when a product is selected
+            quantityInput.focus(); // Move focus to quantity input
+        }
+
+        // Keyboard navigation for main autocomplete
+        productSearchInput.addEventListener('keydown', (event) => {
+            const suggestions = Array.from(autocompleteSuggestions.children);
+            if (suggestions.length === 0) return;
+
+            if (event.key === 'ArrowDown') {
+                event.preventDefault(); // Prevent cursor movement in input
+                if (highlightedSuggestionIndex < suggestions.length - 1) {
+                    if (highlightedSuggestionIndex > -1) {
+                        suggestions[highlightedSuggestionIndex].classList.remove('highlighted');
+                    }
+                    highlightedSuggestionIndex++;
+                    suggestions[highlightedSuggestionIndex].classList.add('highlighted');
+                    suggestions[highlightedSuggestionIndex].scrollIntoView({ block: 'nearest' });
+                }
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault(); // Prevent cursor movement in input
+                if (highlightedSuggestionIndex > 0) {
+                    suggestions[highlightedSuggestionIndex].classList.remove('highlighted');
+                    highlightedSuggestionIndex--;
+                    suggestions[highlightedSuggestionIndex].classList.add('highlighted');
+                    suggestions[highlightedSuggestionIndex].scrollIntoView({ block: 'nearest' });
+                }
+            } else if (event.key === 'Enter') {
+                if (highlightedSuggestionIndex > -1) {
+                    event.preventDefault(); // Prevent form submission
+                    selectAutocompleteSuggestion(suggestions[highlightedSuggestionIndex]);
+                }
+            }
+        });
+
+        // Hide main suggestions when clicking outside
         document.addEventListener('click', (event) => {
             if (!productSearchInput.contains(event.target) && !autocompleteSuggestions.contains(event.target)) {
                 autocompleteSuggestions.classList.add('hidden');
+                highlightedSuggestionIndex = -1; // Reset highlight
             }
         });
 
         // --- Add Product to Order ---
         addProductBtn.addEventListener('click', () => {
-            const productToAdd = selectedProductForAdd; // Use the globally stored selected product
-            const quantity = parseInt(quantityInput.value, 10);
+            addProductToOrder();
+        });
 
-            if (!productToAdd) {
-                displayMessage('אנא בחר מוצר מהרשימה או הקלד שם מוצר תקין.', true);
+        // Function to add product to order (called by button click or Enter on quantity)
+        function addProductToOrder() {
+            const quantity = parseInt(quantityInput.value, 10);
+            const searchTerm = productSearchInput.value.trim();
+
+            if (searchTerm.length === 0) {
+                showFeedbackMessage('אנא הקלד או בחר שם מוצר.', 'error');
                 return;
             }
             if (isNaN(quantity) || quantity <= 0) {
-                displayMessage('אנא הזן כמות חוקית (מספר גדול מ-0).', true);
+                showFeedbackMessage('אנא הזן כמות חוקית (מספר גדול מ-0).', 'error');
                 return;
             }
 
-            // Check if product already exists in the order
-            const existingProductIndex = selectedProducts.findIndex(p => p.barcode === productToAdd.barcode);
+            let productToAdd = selectedProductForAdd;
+
+            // If no product was selected from autocomplete, use free text input
+            if (!productToAdd) {
+                const { unitWeight, weightNotes } = calculateProductWeight(searchTerm); // Try to calculate if matches known patterns
+                productToAdd = {
+                    itemName: searchTerm,
+                    barcode: 'N/A', // Default barcode for free text
+                    quantity: quantity,
+                    originalUnitWeight: unitWeight,
+                    userDefinedUnitWeight: null,
+                    weightNotes: weightNotes || 'פריט שהוזן ידנית', // Default notes for free text
+                    itemNotes: ''
+                };
+            }
+
+            // Check if product already exists in the order (by barcode for known, by name for free text)
+            const existingProductIndex = selectedProducts.findIndex(p => 
+                p.barcode !== 'N/A' && p.barcode === productToAdd.barcode || 
+                p.barcode === 'N/A' && p.itemName === productToAdd.itemName
+            );
 
             if (existingProductIndex > -1) {
-                // Update quantity if product already exists
                 selectedProducts[existingProductIndex].quantity += quantity;
             } else {
-                // Add new product
                 selectedProducts.push({
                     itemName: productToAdd.itemName,
                     barcode: productToAdd.barcode,
-                    quantity: quantity
+                    quantity: quantity,
+                    originalUnitWeight: productToAdd.originalUnitWeight,
+                    userDefinedUnitWeight: productToAdd.userDefinedUnitWeight,
+                    weightNotes: productToAdd.weightNotes,
+                    itemNotes: productToAdd.itemNotes // Keep existing notes if any
                 });
             }
 
@@ -488,8 +961,9 @@
             selectedProductForAdd = null; // Clear selected product after adding
             addProductBtn.disabled = true; // Disable add button again
             quantityInput.value = 1; // Reset quantity
-            displayMessage('הפריט נוסף בהצלחה!');
-        });
+            productSearchInput.focus(); // Return focus to product search input
+            showFeedbackMessage('הפריט נוסף בהצלחה!', 'success');
+        }
 
         // --- Render Order Items Table ---
         function renderOrderItems() {
@@ -504,36 +978,390 @@
             }
 
             selectedProducts.forEach((product, index) => {
-                const { unitWeight, weightNotes } = calculateProductWeight(product.itemName);
-                const totalProductWeight = unitWeight * product.quantity;
+                const { unitWeight: calculatedUnitWeight, weightNotes } = calculateProductWeight(product.itemName);
+                // Use user-defined weight if available, otherwise calculated original weight
+                const displayUnitWeight = product.userDefinedUnitWeight !== null ? product.userDefinedUnitWeight : calculatedUnitWeight;
+                const totalProductWeight = displayUnitWeight * product.quantity;
 
                 const row = document.createElement('tr');
                 row.classList.add('border-b');
                 row.innerHTML = `
-                    <td class="py-2 px-4 border-b">${product.itemName}</td>
-                    <td class="py-2 px-4 border-b">${product.barcode}</td>
-                    <td class="py-2 px-4 border-b">${product.quantity}</td>
-                    <td class="py-2 px-4 border-b">${unitWeight}</td>
-                    <td class="py-2 px-4 border-b">${totalProductWeight.toFixed(2)}</td>
-                    <td class="py-2 px-4 border-b">${weightNotes}</td>
-                    <td class="py-2 px-4 border-b no-print">
-                        <button data-index="${index}" class="remove-item-btn bg-red-500 hover:bg-red-700 text-white text-sm py-1 px-2 rounded">הסר</button>
+                    <td class="py-2 px-4 border-b editable-cell" data-field="itemName" data-index="${index}">
+                        <span class="display-value">${product.itemName}</span>
+                    </td>
+                    <td class="py-2 px-4 border-b editable-cell" data-field="barcode" data-index="${index}">
+                        <span class="display-value">${product.barcode}</span>
+                    </td>
+                    <td class="py-2 px-4 border-b text-center editable-cell" data-field="quantity" data-index="${index}">
+                        <span class="display-value">${product.quantity}</span>
+                    </td>
+                    <td class="py-2 px-4 border-b text-center editable-cell" data-field="unitWeight" data-index="${index}">
+                        <span class="display-value">${displayUnitWeight.toFixed(2)}</span>
+                    </td>
+                    <td class="py-2 px-4 border-b text-center">${totalProductWeight.toFixed(2)}</td>
+                    <td class="py-2 px-4 border-b">
+                        ${weightNotes}
+                        <textarea data-index="${index}" class="item-notes-input w-full mt-1 p-1 text-sm border rounded-md focus:ring-indigo-500 focus:border-indigo-500" rows="1" placeholder="הערות לפריט..." oninput="updateItemNotes(this)">${product.itemNotes || ''}</textarea>
+                    </td>
+                    <td class="py-2 px-4 border-b no-print text-center">
+                        <button data-index="${index}" class="remove-item-btn bg-red-500 hover:bg-red-700 text-white text-sm py-1 px-2 rounded-md">הסר</button>
                     </td>
                 `;
                 orderItemsTableBody.appendChild(row);
             });
 
-            // Add event listeners for remove buttons
-            document.querySelectorAll('.remove-item-btn').forEach(button => {
+            // Add event listeners for remove buttons (delegated)
+            orderItemsTableBody.querySelectorAll('.remove-item-btn').forEach(button => {
                 button.addEventListener('click', (event) => {
                     const indexToRemove = parseInt(event.target.dataset.index, 10);
                     selectedProducts.splice(indexToRemove, 1); // Remove item from array
                     renderOrderItems(); // Re-render table
                     calculateTotalWeight(); // Recalculate total weight
-                    displayMessage('הפריט הוסר בהצלחה.');
+                    showFeedbackMessage('הפריט הוסר בהצלחה.', 'success');
+                });
+            });
+
+            // Add event listeners for editable cells (delegated)
+            orderItemsTableBody.querySelectorAll('.editable-cell').forEach(cell => {
+                cell.addEventListener('click', (event) => {
+                    // Ensure we are clicking the cell itself, not an input inside it
+                    if (event.target.classList.contains('display-value') || event.target.classList.contains('editable-cell')) {
+                        makeCellEditable(cell);
+                    }
                 });
             });
         }
+
+        // --- Make Table Cell Editable ---
+        function makeCellEditable(cell) {
+            const field = cell.dataset.field;
+            const index = parseInt(cell.dataset.index, 10);
+            const displaySpan = cell.querySelector('.display-value');
+
+            // Remove any existing inputs/suggestions from other cells in case of rapid clicks
+            document.querySelectorAll('.editable-cell .edit-input, .editable-cell .edit-select, .editable-cell .edit-input-free, .editable-cell .autocomplete-input-in-table, .autocomplete-suggestions-in-table').forEach(el => {
+                if (el.parentNode !== cell) { // Only hide if it's not the current cell's input
+                    el.remove();
+                }
+            });
+            document.querySelectorAll('.editable-cell .display-value').forEach(span => span.style.display = 'block'); // Show all display spans
+
+            displaySpan.style.display = 'none'; // Hide the display span
+
+            let inputElement;
+
+            if (field === 'itemName' || field === 'barcode') {
+                inputElement = document.createElement('input');
+                inputElement.type = 'text';
+                inputElement.value = selectedProducts[index].itemName; // Always use itemName for editing
+                inputElement.classList.add('autocomplete-input-in-table');
+                inputElement.placeholder = 'הקלד לחיפוש...';
+                
+                const suggestionsDiv = document.createElement('div');
+                suggestionsDiv.classList.add('autocomplete-suggestions-in-table', 'hidden');
+                cell.appendChild(inputElement);
+                cell.appendChild(suggestionsDiv);
+
+                let currentTableSuggestions = []; // To store filtered products for this specific cell's autocomplete
+                let currentHighlightedTableSuggestionIndex = -1;
+
+                inputElement.addEventListener('input', () => {
+                    const searchTerm = inputElement.value.trim().toLowerCase();
+                    suggestionsDiv.innerHTML = '';
+                    suggestionsDiv.classList.add('hidden');
+                    currentHighlightedTableSuggestionIndex = -1;
+
+                    if (searchTerm.length >= 2) {
+                        currentTableSuggestions = allProducts.filter(product => {
+                            const itemName = String(product.itemName || '').toLowerCase();
+                            const barcode = String(product.barcode || '').toLowerCase();
+                            return itemName.includes(searchTerm) || barcode.includes(searchTerm);
+                        });
+
+                        if (currentTableSuggestions.length > 0) {
+                            suggestionsDiv.classList.remove('hidden');
+                            currentTableSuggestions.forEach((product, suggestionIdx) => {
+                                const suggestionItem = document.createElement('div');
+                                suggestionItem.textContent = `${product.itemName} (ברקוד: ${product.barcode})`;
+                                suggestionItem.dataset.product = JSON.stringify(product);
+                                suggestionItem.addEventListener('click', () => {
+                                    updateProductInRow(index, product);
+                                    suggestionsDiv.remove();
+                                    inputElement.remove();
+                                    displaySpan.style.display = 'block';
+                                });
+                                suggestionsDiv.appendChild(suggestionItem);
+                            });
+                        }
+                    }
+                });
+
+                inputElement.addEventListener('keydown', (event) => {
+                    const tableSuggestions = Array.from(suggestionsDiv.children);
+                    if (tableSuggestions.length === 0) return;
+
+                    if (event.key === 'ArrowDown') {
+                        event.preventDefault();
+                        if (currentHighlightedTableSuggestionIndex < tableSuggestions.length - 1) {
+                            if (currentHighlightedTableSuggestionIndex > -1) {
+                                tableSuggestions[currentHighlightedTableSuggestionIndex].classList.remove('highlighted');
+                            }
+                            currentHighlightedTableSuggestionIndex++;
+                            tableSuggestions[currentHighlightedTableSuggestionIndex].classList.add('highlighted');
+                            tableSuggestions[currentHighlightedTableSuggestionIndex].scrollIntoView({ block: 'nearest' });
+                        }
+                    } else if (event.key === 'ArrowUp') {
+                        event.preventDefault();
+                        if (currentHighlightedTableSuggestionIndex > 0) {
+                            tableSuggestions[currentHighlightedTableSuggestionIndex].classList.remove('highlighted');
+                            currentHighlightedTableSuggestionIndex--;
+                            tableSuggestions[currentHighlightedTableSuggestionIndex].classList.add('highlighted');
+                            tableSuggestions[currentHighlightedTableSuggestionIndex].scrollIntoView({ block: 'nearest' });
+                        }
+                    } else if (event.key === 'Enter') {
+                        event.preventDefault();
+                        if (currentHighlightedTableSuggestionIndex > -1) {
+                            const selectedProductData = JSON.parse(tableSuggestions[currentHighlightedTableSuggestionIndex].dataset.product);
+                            updateProductInRow(index, selectedProductData);
+                            suggestionsDiv.remove();
+                            inputElement.remove();
+                            displaySpan.style.display = 'block';
+                        } else {
+                            // If Enter pressed without highlighting, treat as free text update
+                            saveCellEdit(cell, field, index, inputElement);
+                        }
+                    }
+                });
+
+                inputElement.addEventListener('blur', () => {
+                    // Delay hiding to allow click on suggestion
+                    setTimeout(() => {
+                        suggestionsDiv.remove();
+                        // If no product was selected via autocomplete, save the free text
+                        if (selectedProductForAdd === null || inputElement.value !== selectedProductForAdd.itemName) {
+                            saveCellEdit(cell, field, index, inputElement);
+                        } else {
+                            inputElement.remove();
+                            displaySpan.style.display = 'block';
+                            renderOrderItems(); // Re-render to ensure consistency
+                        }
+                    }, 100);
+                });
+
+
+            } else if (field === 'quantity') {
+                inputElement = document.createElement('select');
+                inputElement.classList.add('edit-select');
+                // Add options 1-50
+                for (let i = 1; i <= 50; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = i;
+                    inputElement.appendChild(option);
+                }
+                // Add option for free text input
+                const freeOption = document.createElement('option');
+                freeOption.value = 'free';
+                freeOption.textContent = 'הקלדה חופשית...';
+                inputElement.appendChild(freeOption);
+
+                inputElement.value = selectedProducts[index].quantity; // Set current quantity
+
+                const freeTextInput = document.createElement('input');
+                freeTextInput.type = 'number';
+                freeTextInput.classList.add('edit-input-free', 'hidden');
+                freeTextInput.value = selectedProducts[index].quantity;
+                freeTextInput.min = 1;
+
+                inputElement.addEventListener('change', () => {
+                    if (inputElement.value === 'free') {
+                        freeTextInput.classList.remove('hidden');
+                        freeTextInput.focus();
+                        inputElement.classList.add('hidden');
+                    } else {
+                        selectedProducts[index].quantity = parseInt(inputElement.value, 10);
+                        renderOrderItems();
+                        calculateTotalWeight();
+                        showFeedbackMessage('כמות עודכנה.', 'success');
+                        // Simulate Enter key press to move to next cell
+                        const event = new KeyboardEvent('keydown', { key: 'Enter' });
+                        cell.dispatchEvent(event);
+                    }
+                });
+
+                freeTextInput.addEventListener('blur', () => {
+                    const newQuantity = parseInt(freeTextInput.value, 10);
+                    if (!isNaN(newQuantity) && newQuantity > 0) {
+                        selectedProducts[index].quantity = newQuantity;
+                        renderOrderItems();
+                        calculateTotalWeight();
+                        showFeedbackMessage('כמות עודכנה.', 'success');
+                    } else {
+                        showFeedbackMessage('כמות לא חוקית, שומר ערך קודם.', 'error');
+                        renderOrderItems(); // Revert to previous valid state
+                    }
+                    inputElement.remove(); // Remove select
+                    freeTextInput.remove(); // Remove input
+                    displaySpan.style.display = 'block'; // Show display
+                });
+                freeTextInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        freeTextInput.blur(); // Trigger blur to save
+                    }
+                });
+
+                cell.appendChild(inputElement);
+                cell.appendChild(freeTextInput);
+
+            } else if (field === 'unitWeight') {
+                inputElement = document.createElement('input');
+                inputElement.type = 'number';
+                inputElement.step = '0.01';
+                inputElement.classList.add('edit-input');
+                inputElement.value = selectedProducts[index].userDefinedUnitWeight !== null ? selectedProducts[index].userDefinedUnitWeight : selectedProducts[index].originalUnitWeight;
+                
+                cell.appendChild(inputElement);
+            }
+
+            if (inputElement) {
+                inputElement.focus();
+                inputElement.select(); // Select all text for easy editing
+
+                inputElement.addEventListener('blur', () => {
+                    // For quantity select, blur is handled by change event or freeTextInput blur
+                    if (field !== 'quantity' || inputElement.value !== 'free') {
+                        saveCellEdit(cell, field, index, inputElement);
+                    }
+                });
+                inputElement.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        // For quantity select, Enter should trigger change or freeTextInput blur
+                        if (field === 'quantity' && inputElement.value === 'free') {
+                            freeTextInput.blur();
+                        } else if (field === 'quantity') {
+                            inputElement.dispatchEvent(new Event('change')); // Trigger change for select
+                        } else {
+                            saveCellEdit(cell, field, index, inputElement);
+                            // Move to next cell or next row
+                            const currentRow = cell.closest('tr');
+                            const allCellsInRow = Array.from(currentRow.querySelectorAll('.editable-cell'));
+                            const currentCellIndex = allCellsInRow.indexOf(cell);
+
+                            if (currentCellIndex < allCellsInRow.length - 1) {
+                                allCellsInRow[currentCellIndex + 1].click(); // Simulate click on next editable cell
+                            } else {
+                                // If last cell in row, try to focus first cell of next row
+                                const nextRow = currentRow.nextElementSibling;
+                                if (nextRow) {
+                                    const firstCellInNextRow = nextRow.querySelector('.editable-cell');
+                                    if (firstCellInNextRow) {
+                                        firstCellInNextRow.click();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // --- Save Cell Edit ---
+        function saveCellEdit(cell, field, index, inputElement) {
+            const newValue = inputElement.value;
+            let needsRerender = false;
+
+            if (field === 'itemName' || field === 'barcode') {
+                const matchedProduct = allProducts.find(p => 
+                    String(p.itemName || '').toLowerCase() === String(newValue || '').toLowerCase() ||
+                    String(p.barcode || '').toLowerCase() === String(newValue || '').toLowerCase()
+                );
+                if (matchedProduct) {
+                    updateProductInRow(index, matchedProduct);
+                    showFeedbackMessage('פריט עודכן בהצלחה.', 'success');
+                } else {
+                    // Allow free text input for item name
+                    if (field === 'itemName') {
+                        selectedProducts[index].itemName = newValue;
+                        selectedProducts[index].barcode = 'N/A'; // Mark as free text
+                        selectedProducts[index].originalUnitWeight = 0; // Default to 0 for free text
+                        selectedProducts[index].userDefinedUnitWeight = null;
+                        selectedProducts[index].weightNotes = 'פריט שהוזן ידנית';
+                        showFeedbackMessage('פריט הוזן ידנית.', 'success');
+                        needsRerender = true;
+                    } else { // If barcode field was edited to non-matching, revert
+                        showFeedbackMessage('פריט לא נמצא, שומר ערך קודם.', 'error');
+                        // Revert to original display value - no change needed as it's not updated
+                    }
+                }
+                needsRerender = true;
+
+            } else if (field === 'quantity') {
+                const newQuantity = parseInt(newValue, 10);
+                if (!isNaN(newQuantity) && newQuantity > 0) {
+                    if (selectedProducts[index].quantity !== newQuantity) {
+                        selectedProducts[index].quantity = newQuantity;
+                        needsRerender = true;
+                        showFeedbackMessage('כמות עודכנה.', 'success');
+                    }
+                } else {
+                    showFeedbackMessage('כמות לא חוקית, שומר ערך קודם.', 'error');
+                }
+            } else if (field === 'unitWeight') {
+                const newUnitWeight = parseFloat(newValue);
+                if (!isNaN(newUnitWeight) && newUnitWeight >= 0) {
+                    if (selectedProducts[index].userDefinedUnitWeight !== newUnitWeight) {
+                        selectedProducts[index].userDefinedUnitWeight = newUnitWeight;
+                        needsRerender = true;
+                        showFeedbackMessage('משקל יחידה עודכן.', 'success');
+                    }
+                } else {
+                    showFeedbackMessage('משקל יחידה לא חוקי, שומר ערך קודם.', 'error');
+                    // If invalid, revert to null userDefinedUnitWeight so it uses original
+                    selectedProducts[index].userDefinedUnitWeight = null;
+                    needsRerender = true;
+                }
+            }
+
+            // Remove the input element and show the display span
+            if (inputElement) { // Ensure inputElement exists before trying to remove
+                inputElement.remove();
+            }
+            const displaySpan = cell.querySelector('.display-value');
+            if (displaySpan) { // Ensure displaySpan exists
+                displaySpan.style.display = 'block';
+            }
+
+            if (needsRerender) {
+                renderOrderItems();
+                calculateTotalWeight();
+            }
+        }
+
+        // Function to update product details in a row after autocomplete selection
+        function updateProductInRow(index, newProductData) {
+            const { unitWeight, weightNotes } = calculateProductWeight(newProductData.itemName);
+            selectedProducts[index].itemName = newProductData.itemName;
+            selectedProducts[index].barcode = newProductData.barcode;
+            selectedProducts[index].originalUnitWeight = unitWeight;
+            selectedProducts[index].weightNotes = weightNotes;
+            selectedProducts[index].userDefinedUnitWeight = null; // Reset user-defined weight on product change
+            renderOrderItems();
+            calculateTotalWeight();
+            showFeedbackMessage('פריט עודכן בהצלחה.', 'success');
+        }
+
+
+        // Function to update item notes when textarea changes
+        function updateItemNotes(textareaElement) {
+            const index = parseInt(textareaElement.dataset.index, 10);
+            if (selectedProducts[index]) {
+                selectedProducts[index].itemNotes = textareaElement.value;
+                showFeedbackMessage('הערות פריט עודכנו.', 'success');
+            }
+        }
+        window.updateItemNotes = updateItemNotes; // Make it globally accessible for oninput
 
         // --- Weight Calculation Logic ---
         // Assumption: 1 cubic meter of "שק גדול" (large bag) is approximately 1000 kg (water density).
@@ -555,6 +1383,11 @@
                 unitWeight = 0;
             }
             // Add more conditions for other product types/weights as needed
+            // Example for a product with a specific weight:
+            // else if (itemName.includes('מוצר X')) {
+            //     unitWeight = 10; // Example: 10 kg for product X
+            //     weightNotes = 'משקל ספציפי למוצר X';
+            // }
 
             return { unitWeight, weightNotes };
         }
@@ -562,8 +1395,8 @@
         function calculateTotalWeight() {
             let totalWeight = 0;
             selectedProducts.forEach(product => {
-                const { unitWeight } = calculateProductWeight(product.itemName);
-                totalWeight += unitWeight * product.quantity;
+                const unitWeightToUse = product.userDefinedUnitWeight !== null ? product.userDefinedUnitWeight : product.originalUnitWeight;
+                totalWeight += unitWeightToUse * product.quantity;
             });
             totalWeightDisplay.textContent = totalWeight.toFixed(2);
         }
@@ -571,45 +1404,71 @@
         // --- Clear Form ---
         clearFormBtn.addEventListener('click', () => {
             // Clear customer details
-            document.getElementById('customerName').value = '';
-            document.getElementById('contactPerson').value = '';
-            document.getElementById('street').value = '';
-            document.getElementById('streetNumber').value = '';
-            document.getElementById('city').value = '';
-            document.getElementById('email').value = '';
+            customerNameInput.value = '';
+            contactPersonInput.value = '';
+            phoneNumberInput.value = '';
+            streetInput.value = '';
+            streetNumberInput.value = '';
+            cityInput.value = '';
+            emailInput.value = '';
+            representativeNameInput.value = ''; // Clear representative name
+
+            // Clear delivery details
+            deliveryDateInput.value = '';
+            deliveryTimeInput.value = '';
+            driverNameInput.value = '';
 
             // Uncheck all delivery checkboxes
-            document.getElementById('manualUnloading').checked = false;
-            document.getElementById('crane10m').checked = false;
-            document.getElementById('crane15m').checked = false;
-            document.getElementById('craneWork').checked = false;
+            manualUnloadingCheckbox.checked = false;
+            crane10mCheckbox.checked = false;
+            crane15mCheckbox.checked = false;
+            craneWorkCheckbox.checked = false;
 
             // Clear product selection and order items
             productSearchInput.value = '';
-            selectedProductForAdd = null; // Clear selected product
-            addProductBtn.disabled = true; // Disable add button
+            selectedProductForAdd = null;
+            addProductBtn.disabled = true;
             quantityInput.value = 1;
             selectedProducts = [];
             renderOrderItems();
             calculateTotalWeight();
-            displayMessage('הטופס נוקה בהצלחה.');
+            generalNotesInput.value = ''; // Clear general notes
+            showFeedbackMessage('הטופס נוקה בהצלחה.', 'success');
         });
 
         // --- Print Order ---
         printOrderBtn.addEventListener('click', () => {
             // Collect all form data
-            const customerName = document.getElementById('customerName').value;
-            const contactPerson = document.getElementById('contactPerson').value;
-            const street = document.getElementById('street').value;
-            const streetNumber = document.getElementById('streetNumber').value;
-            const city = document.getElementById('city').value;
-            const email = document.getElementById('email').value;
+            const customerName = customerNameInput.value;
+            const contactPerson = contactPersonInput.value;
+            const phoneNumber = phoneNumberInput.value;
+            const street = streetInput.value;
+            const streetNumber = streetNumberInput.value;
+            const city = cityInput.value;
+            const email = emailInput.value;
+            const representativeName = representativeNameInput.value; // Get representative name
+            const deliveryDate = deliveryDateInput.value;
+            const deliveryTime = deliveryTimeInput.value;
+            const driverName = driverNameInput.value;
+            const generalNotes = generalNotesInput.value; // Get general notes
 
             const deliveryTypes = [];
-            if (document.getElementById('manualUnloading').checked) deliveryTypes.push('פריקה ידנית');
-            if (document.getElementById('crane10m').checked) deliveryTypes.push('הובלת מנוף 10 מטר');
-            if (document.getElementById('crane15m').checked) deliveryTypes.push('הובלת מנוף 15 מטר');
-            if (document.getElementById('craneWork').checked) deliveryTypes.push('עבודות מנוף');
+            if (manualUnloadingCheckbox.checked) deliveryTypes.push('פריקה ידנית');
+            if (crane10mCheckbox.checked) deliveryTypes.push('הובלת מנוף 10 מטר');
+            if (crane15mCheckbox.checked) deliveryTypes.push('הובלת מנוף 15 מטר');
+            if (craneWorkCheckbox.checked) deliveryTypes.push('עבודות מנוף');
+
+            let totalQuantity = 0;
+            selectedProducts.forEach(product => {
+                totalQuantity += product.quantity;
+            });
+
+            const now = new Date();
+            const formCreationTimestamp = now.toLocaleString('he-IL', {
+                year: 'numeric', month: 'numeric', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hour12: false
+            });
 
             let orderDetailsHtml = `
                 <!DOCTYPE html>
@@ -619,66 +1478,121 @@
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <title>הזמנת לקוח</title>
                     <style>
-                        body { font-family: 'Inter', sans-serif; margin: 20px; direction: rtl; text-align: right; }
-                        h1, h2 { color: #1f2937; margin-bottom: 15px; text-align: center; }
-                        p { margin-bottom: 5px; }
-                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                        th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
-                        th { background-color: #f2f2f2; }
-                        .mb-4 { margin-bottom: 1rem; }
-                        .mb-2 { margin-bottom: 0.5rem; }
+                        body { font-family: 'Inter', sans-serif; margin: 0.5cm; direction: rtl; text-align: right; color: #333; font-size: 10pt; }
+                        .print-logo {
+                            display: block;
+                            margin: 0 auto 15px auto;
+                            width: 80px;
+                            height: 80px;
+                            border-radius: 50%;
+                            object-fit: cover;
+                            border: 2px solid #000;
+                        }
+                        h1 { color: #1a202c; margin-bottom: 15px; text-align: center; font-weight: 900; font-size: 2.5rem; }
+                        h2 { color: #1a202c; margin-bottom: 8px; text-align: right; font-weight: 700; font-size: 1.2rem; }
+                        p { margin-bottom: 3px; line-height: 1.3; }
+                        .order-header-print {
+                            border: 3px solid #000;
+                            padding: 10px;
+                            margin: 0 auto 15px auto;
+                            border-radius: 6px;
+                            background-color: #fcfcfc;
+                            width: 80%;
+                            text-align: right;
+                        }
+                        .order-header-print p { margin-bottom: 4px; line-height: 1.3; }
+                        .order-header-print p strong { display: inline-block; min-width: 90px; font-weight: 800; }
+                        table {
+                            border: 3px solid #000;
+                            margin: 15px auto;
+                            width: 80%;
+                            border-collapse: collapse;
+                        }
+                        th, td {
+                            border: 1px solid #000;
+                            padding: 6px;
+                            text-align: right;
+                            vertical-align: top;
+                            font-weight: 500;
+                        }
+                        th { background-color: #f0f0f0; font-weight: 800; text-align: center; }
                         .text-center { text-align: center; }
-                        .text-right { text-align: right; }
-                        .font-bold { font-weight: bold; }
-                        .text-lg { font-size: 1.125rem; }
-                        .text-xl { font-size: 1.25rem; }
-                        .text-2xl { font-size: 1.5rem; }
-                        .text-gray-500 { color: #6b7280; }
+                        .item-notes-print { font-size: 0.9em; color: #333; margin-top: 4px; font-weight: 500; }
+                        .summary-box-print {
+                            border: 3px solid #000;
+                            padding: 10px;
+                            margin: 15px auto;
+                            border-radius: 6px;
+                            background-color: #fcfcfc;
+                            text-align: center;
+                            width: 80%;
+                        }
+                        .summary-box-print p { margin-bottom: 0; line-height: 1.2; font-size: 1.2rem; font-weight: 900; text-align: center; }
+                        .general-notes-print { margin: 20px auto; border: 3px solid #000; padding: 10px; border-radius: 6px; background-color: #fcfcfc; width: 80%; text-align: right; }
+                        .general-notes-print p { margin-bottom: 0; font-size: 1rem; }
+                        .empty-lines-for-notes {
+                            border-bottom: 1px dashed #777;
+                            height: 1.5em;
+                            margin-bottom: 0.3em;
+                        }
+                        .emphasized-delivery {
+                            font-weight: 900;
+                            font-size: 1.2em;
+                            color: #000;
+                            background-color: #e0f2f7;
+                            padding: 2px 5px;
+                            border-radius: 4px;
+                            display: inline-block;
+                        }
                     </style>
                 </head>
                 <body>
-                    <h1 class="text-2xl font-bold mb-4">הזמנה חדשה</h1>
-                    <div class="mb-4">
-                        <h2 class="text-xl font-semibold mb-2">פרטי לקוח:</h2>
-                        <p><strong>שם לקוח:</strong> ${customerName || 'לא הוזן'}</p>
-                        <p><strong>איש קשר:</strong> ${contactPerson || 'לא הוזן'}</p>
+                    <img src="https://i.postimg.cc/cJFsg4Zf/unnamed.jpg" alt="Company Logo" class="print-logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/aabbcc/ffffff?text=LOGO';">
+                    <h1>${customerName || 'הזמנה חדשה'}</h1>
+                    <div class="order-header-print">
+                        <h2>פרטי הזמנה: 👤🚚</h2>
+                        <p><strong>לקוח:</strong> ${customerName || 'לא הוזן'} (איש קשר: ${contactPerson || 'לא הוזן'})</p>
+                        <p><strong>נציג מטפל:</strong> ${representativeName || 'לא הוזן'}</p>
+                        <p><strong>נייד:</strong> ${phoneNumber || 'לא הוזן'} | <strong>אימייל:</strong> ${email || 'לא הוזן'}</p>
                         <p><strong>כתובת:</strong> ${street || ''} ${streetNumber || ''}, ${city || 'לא הוזן'}</p>
-                        <p><strong>אימייל:</strong> ${email || 'לא הוזן'}</p>
+                        <p><strong>תאריך אספקה:</strong> ${deliveryDate || 'לא הוזן'} | <strong>שעת אספקה:</strong> ${deliveryTime || 'לא הוזן'}</p>
+                        <p><strong>נהג מתוכנן:</strong> ${driverName || 'לא הוזן'}</p>
+                        <p><strong>סוג הובלה:</strong> ${deliveryTypes.length > 0 ? deliveryTypes.map(type => type.includes('מנוף') ? `<span class="emphasized-delivery">${type}</span>` : type).join(', ') : 'לא נבחר'}</p>
+                        <p><strong>זמן הקמת טופס:</strong> ${formCreationTimestamp}</p>
                     </div>
-                    <div class="mb-4">
-                        <h2 class="text-xl font-semibold mb-2">סוג הובלה:</h2>
-                        <p>${deliveryTypes.length > 0 ? deliveryTypes.join(', ') : 'לא נבחר סוג הובלה'}</p>
-                    </div>
-                    <div class="mb-4">
-                        <h2 class="text-xl font-semibold mb-2">פריטים בהזמנה:</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>שם פריט</th>
-                                    <th>ברקוד</th>
-                                    <th>כמות</th>
-                                    <th>משקל יחידה (ק"ג)</th>
-                                    <th>סה"כ משקל (ק"ג)</th>
-                                    <th>הערות משקל</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+
+                    <h2>פריטים בהזמנה: 📦</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>שם פריט</th>
+                                <th>ברקוד</th>
+                                <th class="text-center">כמות</th>
+                                <th class="text-center">משקל יחידה (ק"ג)</th>
+                                <th class="text-center">סה"כ משקל (ק"ג)</th>
+                                <th>הערות משקל</th>
+                            </tr>
+                        </thead>
+                        <tbody>
             `;
 
             if (selectedProducts.length === 0) {
-                orderDetailsHtml += `<tr><td colspan="6" class="text-center py-4 text-gray-500">לא נוספו פריטים להזמנה.</td></tr>`;
+                orderDetailsHtml += `<tr><td colspan="6" class="text-center text-gray-500">לא נוספו פריטים להזמנה.</td></tr>`;
             } else {
                 selectedProducts.forEach(product => {
-                    const { unitWeight, weightNotes } = calculateProductWeight(product.itemName);
-                    const totalProductWeight = unitWeight * product.quantity;
+                    const unitWeightToUse = product.userDefinedUnitWeight !== null ? product.userDefinedUnitWeight : product.originalUnitWeight;
+                    const totalProductWeight = unitWeightToUse * product.quantity;
                     orderDetailsHtml += `
                         <tr>
                             <td>${product.itemName}</td>
                             <td>${product.barcode}</td>
-                            <td>${product.quantity}</td>
-                            <td>${unitWeight}</td>
-                            <td>${totalProductWeight.toFixed(2)}</td>
-                            <td>${weightNotes}</td>
+                            <td class="text-center">${product.quantity}</td>
+                            <td class="text-center">${unitWeightToUse.toFixed(2)}</td>
+                            <td class="text-center">${totalProductWeight.toFixed(2)}</td>
+                            <td>
+                                ${product.weightNotes}
+                                ${product.itemNotes ? `<div class="item-notes-print">הערה: ${product.itemNotes}</div>` : ''}
+                            </td>
                         </tr>
                     `;
                 });
@@ -687,10 +1601,17 @@
             orderDetailsHtml += `
                             </tbody>
                         </table>
+                    <div class="summary-box-print">
+                        <h2>סיכום הזמנה:</h2>
+                        <p class="font-bold">סה"כ כמות פריטים: ${totalQuantity} | סה"כ משקל הזמנה: ${totalWeightDisplay.textContent} ק"ג</p>
                     </div>
-                    <div class="mb-4">
-                        <h2 class="text-xl font-semibold mb-2">סיכום משקלים:</h2>
-                        <p class="text-lg font-bold">סה"כ משקל הזמנה: ${totalWeightDisplay.textContent} ק"ג</p>
+                    ${generalNotes ? `<div class="general-notes-print"><h2>הערות כלליות:</h2><p>${generalNotes}</p></div>` : ''}
+                    <div class="general-notes-print">
+                        <h2>הערות (לכתיבה ידנית):</h2>
+                        <div class="empty-lines-for-notes"></div>
+                        <div class="empty-lines-for-notes"></div>
+                        <div class="empty-lines-for-notes"></div>
+                        <div class="empty-lines-for-notes"></div>
                     </div>
                 </body>
                 </html>
@@ -706,50 +1627,127 @@
 
         // --- WhatsApp Share ---
         whatsappShareBtn.addEventListener('click', () => {
-            const phoneNumber = '972508860896'; // The specific WhatsApp number
+            const phoneNumberWhatsapp = '972508860896'; // The specific WhatsApp number for sending
 
             // Collect all form data for the message
-            const customerName = document.getElementById('customerName').value;
-            const contactPerson = document.getElementById('contactPerson').value;
-            const street = document.getElementById('street').value;
-            const streetNumber = document.getElementById('streetNumber').value;
-            const city = document.getElementById('city').value;
-            const email = document.getElementById('email').value;
+            const customerName = customerNameInput.value;
+            const contactPerson = contactPersonInput.value;
+            const phoneNumber = phoneNumberInput.value;
+            const street = streetInput.value;
+            const streetNumber = streetNumberInput.value;
+            const city = cityInput.value;
+            const email = emailInput.value;
+            const representativeName = representativeNameInput.value; // Get representative name
+            const deliveryDate = deliveryDateInput.value;
+            const deliveryTime = deliveryTimeInput.value;
+            const driverName = driverNameInput.value;
+            const generalNotes = generalNotesInput.value; // Get general notes for WhatsApp
 
             const deliveryTypes = [];
-            if (document.getElementById('manualUnloading').checked) deliveryTypes.push('פריקה ידנית');
-            if (document.getElementById('crane10m').checked) deliveryTypes.push('הובלת מנוף 10 מטר');
-            if (document.getElementById('crane15m').checked) deliveryTypes.push('הובלת מנוף 15 מטר');
-            if (document.getElementById('craneWork').checked) deliveryTypes.push('עבודות מנוף');
+            if (manualUnloadingCheckbox.checked) deliveryTypes.push('פריקה ידנית');
+            if (crane10mCheckbox.checked) deliveryTypes.push('הובלת מנוף 10 מטר');
+            if (crane15mCheckbox.checked) deliveryTypes.push('הובלת מנוף 15 מטר');
+            if (craneWorkCheckbox.checked) deliveryTypes.push('עבודות מנוף');
+
+            let totalQuantity = 0;
+            selectedProducts.forEach(product => {
+                totalQuantity += product.quantity;
+            });
+
+            const now = new Date();
+            const formCreationTimestamp = now.toLocaleString('he-IL', {
+                year: 'numeric', month: 'numeric', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hour12: false
+            });
 
             let message = `*הזמנה חדשה*\n\n`;
             message += `*פרטי לקוח:*\n`;
             message += `שם לקוח: ${customerName || 'לא הוזן'}\n`;
             message += `איש קשר: ${contactPerson || 'לא הוזן'}\n`;
+            message += `נציג מטפל: ${representativeName || 'לא הוזן'}\n`;
+            message += `מספר נייד: ${phoneNumber || 'לא הוזן'}\n`;
             message += `כתובת: ${street || ''} ${streetNumber || ''}, ${city || 'לא הוזן'}\n`;
             message += `אימייל: ${email || 'לא הוזן'}\n\n`;
 
-            message += `*סוג הובלה:*\n`;
-            message += `${deliveryTypes.length > 0 ? deliveryTypes.join(', ') : 'לא נבחר סוג הובלה'}\n\n`;
+            message += `*פרטי אספקה:*\n`;
+            message += `תאריך אספקה: ${deliveryDate || 'לא הוזן'}\n`;
+            message += `שעת אספקה: ${deliveryTime || 'לא הוזן'}\n`;
+            message += `שם נהג מתוכנן: ${driverName || 'לא הוזן'}\n`;
+            message += `סוג הובלה: ${deliveryTypes.length > 0 ? deliveryTypes.join(', ') : 'לא נבחר סוג הובלה'}\n\n`;
+            message += `זמן הקמת טופס: ${formCreationTimestamp}\n\n`;
 
             message += `*פריטים בהזמנה:*\n`;
             if (selectedProducts.length === 0) {
                 message += `לא נוספו פריטים להזמנה.\n`;
             } else {
                 selectedProducts.forEach(product => {
-                    const { unitWeight, weightNotes } = calculateProductWeight(product.itemName);
-                    const totalProductWeight = unitWeight * product.quantity;
-                    message += `- ${product.itemName} (ברקוד: ${product.barcode}), כמות: ${product.quantity}, משקל יחידה: ${unitWeight} ק"ג, סה"כ משקל: ${totalProductWeight.toFixed(2)} ק"ג (${weightNotes})\n`;
+                    const unitWeightToUse = product.userDefinedUnitWeight !== null ? product.userDefinedUnitWeight : product.originalUnitWeight;
+                    const totalProductWeight = unitWeightToUse * product.quantity;
+                    message += `- ${product.itemName} (ברקוד: ${product.barcode}), כמות: ${product.quantity}, משקל יחידה: ${unitWeightToUse.toFixed(2)} ק"ג, סה"כ משקל: ${totalProductWeight.toFixed(2)} ק"ג (${product.weightNotes})`;
+                    if (product.itemNotes) {
+                        message += ` (הערה: ${product.itemNotes})`;
+                    }
+                    message += `\n`;
                 });
             }
+            message += `\n*סה"כ כמות פריטים:* ${totalQuantity}`;
             message += `\n*סה"כ משקל הזמנה:* ${totalWeightDisplay.textContent} ק"ג`;
+            if (generalNotes) {
+                message += `\n\n*הערות כלליות:*\n${generalNotes}`;
+            }
 
             // Encode the message for URL
             const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            const whatsappUrl = `https://wa.me/${phoneNumberWhatsapp}?text=${encodedMessage}`;
 
             // Open WhatsApp in a new tab
             window.open(whatsappUrl, '_blank');
+        });
+
+        // --- Enter Key Navigation (General Form Fields) ---
+        document.addEventListener('keydown', (event) => {
+            // Check if the currently focused element is an input, select, or textarea
+            const isInput = event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'TEXTAREA';
+
+            if (event.key === 'Enter') {
+                // If Enter is pressed on the quantity input, add the product
+                if (document.activeElement === quantityInput) {
+                    event.preventDefault(); // Prevent default form submission
+                    addProductToOrder();
+                    return; // Stop further processing
+                }
+
+                // If Enter is pressed on a general input field, move to the next focusable element
+                if (isInput && !event.target.classList.contains('autocomplete-input-in-table')) { // Exclude table autocomplete input
+                    event.preventDefault(); // Prevent default Enter behavior (e.g., form submission)
+                    const focusableElements = Array.from(
+                        document.querySelectorAll(
+                            'input:not([type="hidden"]):not([disabled]):not(.autocomplete-input-in-table), select:not([disabled]), textarea:not([disabled]), button:not([disabled])'
+                        )
+                    );
+                    const currentFocusedElement = document.activeElement;
+                    const currentIndex = focusableElements.indexOf(currentFocusedElement);
+
+                    if (currentIndex > -1) {
+                        let nextIndex = currentIndex + 1;
+                        // Skip the "Add Product" button if no product is selected
+                        if (currentFocusedElement === quantityInput && !selectedProductForAdd) {
+                            let tempIndex = focusableElements.indexOf(addProductBtn);
+                            if (tempIndex > -1) {
+                                nextIndex = tempIndex + 1;
+                            }
+                        }
+
+                        if (nextIndex < focusableElements.length) {
+                            focusableElements[nextIndex].focus();
+                        } else {
+                            // If at the end, focus on the first element
+                            focusableElements[0].focus();
+                        }
+                    }
+                }
+            }
         });
 
 
@@ -763,6 +1761,24 @@
             }
             renderOrderItems(); // Render initial empty table
             calculateTotalWeight(); // Calculate initial total weight (should be 0)
+
+            // Set today's date as default for delivery date
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const day = String(today.getDate()).padStart(2, '0');
+            deliveryDateInput.value = `${year}-${month}-${day}`;
+
+            // Add event listeners for input changes to show feedback
+            const formInputs = document.querySelectorAll('input:not([type="number"]), select, textarea'); // Exclude number inputs for continuous feedback
+            formInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    // Only show feedback for relevant inputs, not product search or quantity
+                    if (input !== productSearchInput && input !== quantityInput) {
+                        showFeedbackMessage('פרטי הזמנה עודכנו.', 'success');
+                    }
+                });
+            });
         });
     </script>
 </body>
