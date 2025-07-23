@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>טופס הזמנה יוקרתי - מתקדם</title>
+    <!-- Tailwind CSS CDN for basic styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font and general layout */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Lighter, more luxurious background */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top for better content flow */
+            min-height: 100vh; /* Full viewport height */
+            padding: 2.5rem; /* Increased padding around the content */
+        }
+        .container {
+            background-color: #ffffff; /* White background for the form container */
+            padding: 3.5rem; /* More generous padding */
+            border-radius: 1.75rem; /* Even more rounded corners */
+            box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.2), 0 8px 16px -4px rgba(0, 0, 0, 0.1); /* Deeper, softer shadow */
+            max-width: 1200px; /* Increased max width for larger page */
+            width: 100%;
+            text-align: right; /* Align text to the right for RTL */
+            border: 1px solid #e2e8f0; /* Subtle border */
+        }
+        h1, h2 {
+            color: #1a202c; /* Darker, more premium text color for headings */
+            margin-bottom: 1.5rem;
+            text-align: center; /* Center headings */
+            font-weight: 700; /* Bolder headings */
+        }
+        h1 {
+            font-size: 2.5rem; /* Larger main heading */
+            background: linear-gradient(to right, #6366f1, #8b5cf6); /* Gradient for main title */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600; /* Bolder labels */
+            color: #4a5568; /* Medium-dark gray for labels */
+        }
+        input[type="text"], input[type="number"], input[type="email"], select {
+            width: 100%;
+            padding: 1rem; /* More padding */
+            margin-bottom: 1rem;
+            border: 1px solid #cbd5e0; /* Slightly darker light gray border */
+            border-radius: 0.75rem; /* More rounded corners for inputs */
+            font-size: 1.05rem; /* Slightly larger font */
+            color: #2d3748; /* Darker gray for input text */
+            background-color: #fdfdfe; /* Almost white background */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, input[type="email"]:focus, select:focus {
+            border-color: #6366f1; /* Indigo border on focus */
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3); /* More prominent focus ring */
+            outline: none;
+        }
+
+        /* Smart Button Styling with Shine Effect */
+        .smart-button {
+            position: relative;
+            overflow: hidden;
+            background-color: #4f46e5; /* Indigo button */
+            color: white;
+            padding: 1rem 2.2rem; /* Larger padding */
+            border-radius: 0.85rem; /* More rounded corners */
+            font-weight: 700; /* Bolder text */
+            letter-spacing: 0.025em; /* Slight letter spacing */
+            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.1s ease-out, opacity 0.3s ease-in-out; /* Added opacity for disabled state */
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Default shadow */
+        }
+        .smart-button:hover {
+            background-color: #4338ca; /* Darker indigo on hover */
+            box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.15), 0 5px 10px -2px rgba(0, 0, 0, 0.08); /* Larger shadow on hover */
+            transform: translateY(-3px); /* More pronounced lift effect */
+        }
+        .smart-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -75%; /* Start off-screen to the left */
+            width: 50%; /* Width of the shine */
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,.4) 100%); /* White to transparent gradient */
+            transform: skewX(-20deg); /* Angle the shine */
+            transition: all 0.5s ease;
+        }
+        .smart-button:hover::before {
+            left: 125%; /* Move across the button to the right */
+        }
+        /* Disabled state for smart buttons */
+        .smart-button:disabled {
+            opacity: 0.5; /* Dim the button */
+            cursor: not-allowed; /* Change cursor */
+            box-shadow: none; /* Remove shadow */
+            transform: none; /* Remove lift effect */
+            background-color: #a0aec0; /* A neutral gray for disabled */
+        }
+        .smart-button:disabled:hover::before {
+            left: -75%; /* Prevent shine on disabled button */
+        }
+
+        /* Specific button colors */
+        #addProductBtn { background-color: #10b981; } /* Emerald Green */
+        #addProductBtn:hover { background-color: #059669; }
+        #addProductBtn:disabled { background-color: #a0aec0; }
+
+        #printOrderBtn { background-color: #4f46e5; } /* Indigo */
+        #printOrderBtn:hover { background-color: #4338ca; }
+
+        #whatsappShareBtn { background-color: #25d366; } /* WhatsApp Green */
+        #whatsappShareBtn:hover { background-color: #1da851; }
+
+        #saveOrderBtn { background-color: #0ea5e9; } /* Sky Blue */
+        #saveOrderBtn:hover { background-color: #0284c7; }
+
+        #searchOrderBtn { background-color: #f97316; } /* Orange */
+        #searchOrderBtn:hover { background-color: #ea580c; }
+
+        #clearFormBtn { background-color: #6b7280; } /* Gray */
+        #clearFormBtn:hover { background-color: #4b5563; }
+
+        .message-box {
+            background-color: #e0f2fe; /* Light blue background */
+            color: #0c4a6e; /* Dark blue text */
+            padding: 1.2rem; /* More padding */
+            border-radius: 0.75rem; /* More rounded */
+            margin-top: 2rem; /* More margin */
+            border: 1px solid #7dd3fc; /* Blue border */
+            text-align: center;
+            font-weight: 500;
+        }
+        .error-message {
+            background-color: #fee2e2; /* Light red background */
+            color: #991b1b; /* Dark red text */
+            border: 1px solid #fca5a5; /* Red border */
+        }
+        .product-row {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+            margin-bottom: 1rem;
+        }
+        .product-row input[type="text"] {
+            flex-grow: 3;
+        }
+        .product-row input[type="number"] {
+            flex-grow: 1;
+            max-width: 100px; /* Limit width of quantity field */
+        }
+        .product-row .remove-item-btn { /* Specific styling for remove button */
+            background-color: #ef4444; /* Red */
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+            cursor: pointer;
+            border: none;
+            box-shadow: none; /* Remove smart button shadow */
+            transform: none; /* Remove smart button lift */
+        }
+        .product-row .remove-item-btn:hover {
+            background-color: #dc2626;
+            box-shadow: none;
+            transform: none;
+        }
+        .product-row .remove-item-btn::before { /* Remove shine effect for remove button */
+            content: none;
+        }
+
+
+        /* Autocomplete suggestions styling */
+        .product-input-group {
+            position: relative; /* Make this the positioning context for suggestions */
+        }
+
+        .autocomplete-suggestions {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #cbd5e0; /* Adjusted border color */
+            border-radius: 0.75rem; /* More rounded */
+            box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.1), 0 3px 6px -1px rgba(0, 0, 0, 0.06); /* Stronger shadow */
+            max-height: 250px; /* Taller suggestions box */
+            overflow-y: auto;
+            z-index: 10;
+            left: 0;
+            width: 100%;
+            top: calc(100% + 0.5rem); /* More space below input */
+        }
+        .autocomplete-suggestions div {
+            padding: 0.85rem 1.2rem; /* More padding */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            color: #2d3748; /* Darker text */
+        }
+        .autocomplete-suggestions div:hover {
+            background-color: #e0f7fa; /* Lighter hover background */
+        }
+
+        /* Date and Time Display */
+        .datetime-display {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 2rem;
+            padding: 0.75rem 1.5rem;
+            background-color: #edf2f7;
+            border-radius: 0.75rem;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        /* Search Results Section */
+        #searchResults {
+            margin-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.5rem;
+        }
+        #searchResults h2 {
+            margin-bottom: 1rem;
+        }
+        #searchResults pre {
+            background-color: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            color: #2d3748;
+        }
+
+        /* Print specific styles for the new print window */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'Inter', sans-serif;
+                direction: rtl;
+                text-align: right;
+                color: #000; /* Ensure black text for printing */
+                background-color: #fff; /* Ensure white background */
+            }
+            .print-header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .print-header h1 {
+                font-size: 24px;
+                color: #333;
+                margin-bottom: 10px;
+            }
+            .print-section {
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 1px dashed #ccc;
+            }
+            .print-section:last-child {
+                border-bottom: none;
+            }
+            .print-section h2 {
+                font-size: 18px;
+                color: #555;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+            .print-section p {
+                font-size: 14px;
+                line-height: 1.5;
+            }
+            .print-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 15px;
+            }
+            .print-table th, .print-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: right;
+                font-size: 13px;
+            }
+            .print-table th {
+                background-color: #f8f8f8;
+                font-weight: bold;
+            }
+            .print-summary {
+                margin-top: 20px;
+                text-align: left; /* Align summary to left for better visual separation in print */
+            }
+            .print-summary p {
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .product-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .product-row input[type="number"] {
+                max-width: none; /* Full width on smaller screens */
+            }
+            .product-row button {
+                width: 100%;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.75rem;
+            }
+            .datetime-display {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold mb-6">טופס הזמנה חדשה</h1>
+
+        <!-- Date and Time Display -->
+        <div class="datetime-display" id="datetimeDisplay">
+            טוען תאריך ושעה...
+        </div>
+
+        <!-- Customer Details Section -->
+        <div class="mb-6 border-b pb-4 border-gray-200">
+            <h2 class="text-xl font-semibold mb-4 text-right">פרטי לקוח</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="customerName">שם לקוח:</label>
+                    <input type="text" id="customerName" placeholder="הכנס שם לקוח">
+                </div>
+                <div>
+                    <label for="contactPerson">איש קשר:</label>
+                    <input type="text" id="contactPerson" placeholder="הכנס שם איש קשר">
+                </div>
+                <div>
+                    <label for="street">רחוב:</label>
+                    <input type="text" id="street" placeholder="הכנס שם רחוב">
+                </div>
+                <div>
+                    <label for="streetNumber">מספר רחוב:</label>
+                    <input type="text" id="streetNumber" placeholder="הכנס מספר רחוב">
+                </div>
+                <div>
+                    <label for="city">עיר:</label>
+                    <input type="text" id="city" placeholder="הכנס עיר">
+                </div>
+                <div>
+                    <label for="email">אימייל:</label>
+                    <input type="email" id="email" placeholder="הכנס כתובת אימייל">
+                </div>
+            </div>
+        </div>
+
+        <!-- Delivery Type Section -->
+        <div class="mb-6 border-b pb-4 border-gray-200">
+            <h2 class="text-xl font-semibold mb-4 text-right">סוג הובלה</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="flex items-center">
+                    <input type="checkbox" id="manualUnloading" class="ml-2 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="manualUnloading" class="mb-0">פריקה ידנית</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="crane10m" class="ml-2 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="crane10m" class="mb-0">הובלת מנוף 10 מטר</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="crane15m" class="ml-2 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="crane15m" class="mb-0">הובלת מנוף 15 מטר</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="craneWork" class="ml-2 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="craneWork" class="mb-0">עבודות מנוף</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Selection Section -->
+        <div class="mb-6 border-b pb-4 border-gray-200">
+            <h2 class="text-xl font-semibold mb-4 text-right">הוספת מוצרים</h2>
+            <div class="product-input-group">
+                <label for="productSearchInput">בחר מוצר (הקלד 2 אותיות לחיפוש או הקלדה חופשית):</label>
+                <input type="text" id="productSearchInput" placeholder="הקלד שם מוצר או ברקוד">
+                <div id="autocompleteSuggestions" class="autocomplete-suggestions hidden"></div>
+            </div>
+
+            <div class="flex items-center gap-4 mt-4">
+                <label for="quantity" class="mb-0">כמות:</label>
+                <input type="number" id="quantity" min="1" value="1" class="w-24">
+                <button id="addProductBtn" class="smart-button flex-shrink-0">
+                    הוסף פריט
+                </button>
+            </div>
+        </div>
+
+        <!-- Selected Products Table -->
+        <div class="mb-6 border-b pb-4 border-gray-200">
+            <h2 class="text-xl font-semibold mb-4 text-right">פריטים בהזמנה</h2>
+            <table class="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="py-2 px-4 border-b text-right">שם פריט</th>
+                        <th class="py-2 px-4 border-b text-right">ברקוד</th>
+                        <th class="py-2 px-4 border-b text-right">כמות</th>
+                        <th class="py-2 px-4 border-b text-right">משקל יחידה (ק"ג)</th>
+                        <th class="py-2 px-4 border-b text-right">סה"כ משקל (ק"ג)</th>
+                        <th class="py-2 px-4 border-b text-right">הערות משקל</th>
+                        <th class="py-2 px-4 border-b text-right no-print">פעולות</th>
+                    </tr>
+                </thead>
+                <tbody id="orderItemsTableBody">
+                    <!-- Product rows will be added here by JavaScript -->
+                    <tr id="noItemsRow">
+                        <td colspan="7" class="text-center py-4 text-gray-500">עדיין לא נוספו פריטים להזמנה.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Weight and Item Summary -->
+        <div class="mb-6 border-b pb-4 border-gray-200">
+            <h2 class="text-xl font-semibold mb-4 text-right">סיכום הזמנה</h2>
+            <p class="text-lg font-bold text-gray-800 text-right mb-2">
+                סה"כ משקל הזמנה: <span id="totalWeightDisplay">0</span> ק"ג
+            </p>
+            <p class="text-lg font-bold text-gray-800 text-right">
+                סה"כ כמות פריטים: <span id="totalItemsDisplay">0</span>
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-6 flex flex-col md:flex-row gap-4 no-print">
+            <button id="saveOrderBtn" class="smart-button flex-1">
+                שמור הזמנה
+            </button>
+            <button id="printOrderBtn" class="smart-button flex-1">
+                הדפסת הזמנה
+            </button>
+            <button id="whatsappShareBtn" class="smart-button flex-1">
+                שיתוף בוואטסאפ
+            </button>
+            <button id="clearFormBtn" class="smart-button flex-1">
+                ניקוי טופס
+            </button>
+        </div>
+
+        <!-- Search Order Section -->
+        <div class="mt-8 border-t pt-6 border-gray-200">
+            <h2 class="text-xl font-semibold mb-4 text-right">חיפוש הזמנה קודמת</h2>
+            <div class="flex flex-col md:flex-row gap-4">
+                <input type="text" id="orderSearchInput" placeholder="הכנס מספר הזמנה או שם לקוח לחיפוש" class="flex-grow">
+                <button id="searchOrderBtn" class="smart-button flex-shrink-0">
+                    חפש הזמנה
+                </button>
+            </div>
+            <div id="searchResults" class="mt-4">
+                <!-- Search results will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Message Box for user feedback -->
+        <div class="message-box mt-6" id="messageBox">
+            <p>המוצרים ייטענו אוטומטית מגיליון הנתונים. וודא שקובץ Code.gs פרוס כ-Web App.</p>
+        </div>
+
+        <!-- Raw Data for debugging (hidden by default, can be toggled) -->
+        <div class="mt-6 hidden">
+            <h2 class="text-xl font-semibold mb-2">נתוני מוצרים גולמיים (לצורך בדיקה):</h2>
+            <pre id="rawData" class="bg-gray-100 p-4 rounded-lg text-sm overflow-auto max-h-64"></pre>
+        </div>
+
+    </div>
+
+    <script>
+        // IMPORTANT: Replace this URL with your deployed Google Apps Script Web App URL
+        // הוראות לפריסה נמצאות בחלק הקודם של השיחה
+        const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbygjSL2JFpCqMBdSTWAVEeKPD8secghGUxFWNixbXyk1c0Jf74jxwQ41aC_5uz9YA4/exec'; 
+
+        // Global variables
+        let allProducts = []; // Stores all products fetched from the sheet
+        let selectedProducts = []; // Stores products currently in the order
+
+        // DOM elements
+        const datetimeDisplay = document.getElementById('datetimeDisplay');
+        const productSearchInput = document.getElementById('productSearchInput');
+        const autocompleteSuggestions = document.getElementById('autocompleteSuggestions');
+        const quantityInput = document.getElementById('quantity');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const orderItemsTableBody = document.getElementById('orderItemsTableBody');
+        const noItemsRow = document.getElementById('noItemsRow');
+        const totalWeightDisplay = document.getElementById('totalWeightDisplay');
+        const totalItemsDisplay = document.getElementById('totalItemsDisplay'); // New element for total items
+        const saveOrderBtn = document.getElementById('saveOrderBtn'); // New save button
+        const printOrderBtn = document.getElementById('printOrderBtn');
+        const whatsappShareBtn = document.getElementById('whatsappShareBtn');
+        const clearFormBtn = document.getElementById('clearFormBtn');
+        const orderSearchInput = document.getElementById('orderSearchInput'); // New search input
+        const searchOrderBtn = document.getElementById('searchOrderBtn'); // New search button
+        const searchResultsDiv = document.getElementById('searchResults'); // New div for search results
+        const messageBox = document.getElementById('messageBox');
+        const rawDataPre = document.getElementById('rawData'); // For debugging raw data
+
+        // Function to display messages in the message box
+        function displayMessage(message, isError = false) {
+            messageBox.textContent = message;
+            messageBox.classList.remove('bg-blue-100', 'text-blue-800', 'border-blue-300', 'bg-red-100', 'text-red-800', 'border-red-300');
+            if (isError) {
+                messageBox.classList.add('bg-red-100', 'text-red-800', 'border-red-300', 'error-message');
+            } else {
+                messageBox.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-300');
+            }
+        }
+
+        // --- Real-time Clock and Date ---
+        function updateDateTime() {
+            const now = new Date();
+            const options = {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+            };
+            datetimeDisplay.textContent = now.toLocaleDateString('he-IL', options);
+        }
+        setInterval(updateDateTime, 1000); // Update every second
+        updateDateTime(); // Initial call
+
+        // --- Product Fetching ---
+        async function fetchProducts() {
+            displayMessage('טוען מוצרים מגיליון הנתונים...');
+            try {
+                const response = await fetch(googleAppsScriptUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                rawDataPre.textContent = JSON.stringify(data, null, 2); // Display raw data for debugging
+
+                if (data && data.products && Array.isArray(data.products) && data.products.length > 0) {
+                    allProducts = data.products; // Store all fetched products
+                    console.log('All Products fetched successfully. Total products:', allProducts.length, allProducts);
+                    displayMessage('המוצרים נטענו בהצלחה!');
+                } else {
+                    displayMessage('לא נמצאו מוצרים בגיליון הנתונים או שהפורמט אינו תקין.', true);
+                    console.error('No products found or invalid format:', data);
+                }
+            } catch (error) {
+                console.error('שגיאה בטעינת מוצרים:', error);
+                displayMessage(`שגיאה בטעינת מוצרים: ${error.message}. וודא שכתובת ה-URL נכונה ושהסקריפט פרוס כראוי.`, true);
+            }
+        }
+
+        // --- Autocomplete Logic (with free text support) ---
+        productSearchInput.addEventListener('input', () => {
+            const searchTerm = productSearchInput.value.trim();
+            autocompleteSuggestions.innerHTML = ''; // Clear previous suggestions
+            autocompleteSuggestions.classList.add('hidden');
+            
+            // Clear any previously selected product from autocomplete
+            productSearchInput.dataset.selectedProduct = ''; 
+
+            if (searchTerm.length >= 2) {
+                const filteredProducts = allProducts.filter(product => {
+                    const itemName = String(product.itemName || '').toLowerCase().trim();
+                    const barcode = String(product.barcode || '').toLowerCase().trim();
+                    const lowerCaseSearchTerm = searchTerm.toLowerCase().trim();
+                    
+                    return itemName.includes(lowerCaseSearchTerm) || barcode.includes(lowerCaseSearchTerm);
+                });
+
+                if (filteredProducts.length > 0) {
+                    autocompleteSuggestions.classList.remove('hidden');
+                    filteredProducts.forEach(product => {
+                        const suggestionDiv = document.createElement('div');
+                        suggestionDiv.textContent = `${product.itemName} (ברקוד: ${product.barcode})`;
+                        suggestionDiv.dataset.product = JSON.stringify(product); // Store full product object
+                        
+                        suggestionDiv.addEventListener('click', () => {
+                            const selectedProductData = JSON.parse(suggestionDiv.dataset.product);
+                            productSearchInput.value = selectedProductData.itemName; // Set input value
+                            productSearchInput.dataset.selectedProduct = JSON.stringify(selectedProductData); // Store selected product
+                            autocompleteSuggestions.classList.add('hidden'); // Hide suggestions
+                        });
+                        autocompleteSuggestions.appendChild(suggestionDiv);
+                    });
+                }
+            }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!productSearchInput.contains(event.target) && !autocompleteSuggestions.contains(event.target)) {
+                autocompleteSuggestions.classList.add('hidden');
+            }
+        });
+
+
+        // --- Add Product to Order (updated for free text) ---
+        addProductBtn.addEventListener('click', () => {
+            const quantity = parseInt(quantityInput.value, 10);
+            const typedProductName = productSearchInput.value.trim();
+            let productToAdd = null;
+
+            // Try to get product from autocomplete selection first
+            if (productSearchInput.dataset.selectedProduct) {
+                productToAdd = JSON.parse(productSearchInput.dataset.selectedProduct);
+            } else if (typedProductName) {
+                // If no autocomplete selection, use typed text as a new product
+                // Assign a placeholder barcode for free-text products if none exists
+                const tempBarcode = `FREE_TEXT_${Date.now()}_${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+                productToAdd = {
+                    itemName: typedProductName,
+                    barcode: tempBarcode // Assign a unique temporary barcode
+                };
+            }
+
+            if (!productToAdd || !productToAdd.itemName) {
+                displayMessage('אנא בחר מוצר מהרשימה או הקלד שם מוצר.', true);
+                return;
+            }
+            if (isNaN(quantity) || quantity <= 0) {
+                displayMessage('אנא הזן כמות חוקית (מספר גדול מ-0).', true);
+                return;
+            }
+
+            // Check if product already exists in the order (by barcode, or by name for free text)
+            const existingProductIndex = selectedProducts.findIndex(p => 
+                (productToAdd.barcode && p.barcode === productToAdd.barcode) || 
+                (!productToAdd.barcode && p.itemName === productToAdd.itemName) // Fallback for free text without barcode
+            );
+
+            if (existingProductIndex > -1) {
+                // Update quantity if product already exists
+                selectedProducts[existingProductIndex].quantity += quantity;
+            } else {
+                // Add new product
+                selectedProducts.push({
+                    itemName: productToAdd.itemName,
+                    barcode: productToAdd.barcode, // Will be tempBarcode for free text
+                    quantity: quantity
+                });
+            }
+
+            renderOrderItems();
+            calculateTotalWeightAndItems(); // Updated function call
+            productSearchInput.value = ''; // Clear input
+            productSearchInput.dataset.selectedProduct = ''; // Clear selected product data
+            quantityInput.value = 1; // Reset quantity
+            displayMessage('הפריט נוסף בהצלחה!');
+        });
+
+        // --- Render Order Items Table ---
+        function renderOrderItems() {
+            orderItemsTableBody.innerHTML = ''; // Clear current table content
+
+            if (selectedProducts.length === 0) {
+                noItemsRow.style.display = 'table-row'; // Show "no items" row
+                orderItemsTableBody.appendChild(noItemsRow);
+                return;
+            } else {
+                noItemsRow.style.display = 'none'; // Hide "no items" row
+            }
+
+            selectedProducts.forEach((product, index) => {
+                const { unitWeight, weightNotes } = calculateProductWeight(product.itemName);
+                const totalProductWeight = unitWeight * product.quantity;
+                // Display barcode, but handle cases where it's a temporary one for free text
+                const displayBarcode = product.barcode && !product.barcode.startsWith('FREE_TEXT_') ? product.barcode : 'אין ברקוד';
+
+                const row = document.createElement('tr');
+                row.classList.add('border-b');
+                row.innerHTML = `
+                    <td class="py-2 px-4 border-b">${product.itemName}</td>
+                    <td class="py-2 px-4 border-b">${displayBarcode}</td>
+                    <td class="py-2 px-4 border-b">${product.quantity}</td>
+                    <td class="py-2 px-4 border-b">${unitWeight}</td>
+                    <td class="py-2 px-4 border-b">${totalProductWeight.toFixed(2)}</td>
+                    <td class="py-2 px-4 border-b">${weightNotes}</td>
+                    <td class="py-2 px-4 border-b no-print">
+                        <button data-index="${index}" class="remove-item-btn">הסר</button>
+                    </td>
+                `;
+                orderItemsTableBody.appendChild(row);
+            });
+
+            // Add event listeners for remove buttons
+            document.querySelectorAll('.remove-item-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const indexToRemove = parseInt(event.target.dataset.index, 10);
+                    selectedProducts.splice(indexToRemove, 1); // Remove item from array
+                    renderOrderItems(); // Re-render table
+                    calculateTotalWeightAndItems(); // Recalculate total weight and items
+                    displayMessage('הפריט הוסר בהצלחה.');
+                });
+            });
+        }
+
+        // --- Weight Calculation Logic ---
+        // Assumption: 1 cubic meter of "שק גדול" (large bag) is approximately 1000 kg (water density).
+        // So, half a cubic meter (חצי קוב) is 500 kg.
+        function calculateProductWeight(itemName) {
+            let unitWeight = 0;
+            let weightNotes = '';
+
+            if (itemName.includes('שק גדול')) {
+                unitWeight = 500; // Half a cubic meter assumed to be 500 kg
+                weightNotes = 'משקל משוער: חצי קוב';
+            } else if (itemName.includes('25 ק"ג')) {
+                unitWeight = 25;
+                weightNotes = 'משקל שק';
+            } else if (itemName.includes('משטח')) {
+                // "משטח" is a note, not a specific weight contribution unless specified further
+                weightNotes = 'פריט על משטח';
+                // If a default pallet weight is needed, define it here. For now, 0.
+                unitWeight = 0;
+            }
+            // Add more conditions for other product types/weights as needed
+
+            return { unitWeight, weightNotes };
+        }
+
+        // --- Calculate Total Weight and Total Items ---
+        function calculateTotalWeightAndItems() {
+            let totalWeight = 0;
+            let totalItems = 0;
+            selectedProducts.forEach(product => {
+                const { unitWeight } = calculateProductWeight(product.itemName);
+                totalWeight += unitWeight * product.quantity;
+                totalItems += product.quantity; // Summing up quantities for total items
+            });
+            totalWeightDisplay.textContent = totalWeight.toFixed(2);
+            totalItemsDisplay.textContent = totalItems; // Update total items display
+        }
+
+        // --- Clear Form ---
+        clearFormBtn.addEventListener('click', () => {
+            // Clear customer details
+            document.getElementById('customerName').value = '';
+            document.getElementById('contactPerson').value = '';
+            document.getElementById('street').value = '';
+            document.getElementById('streetNumber').value = '';
+            document.getElementById('city').value = '';
+            document.getElementById('email').value = '';
+
+            // Uncheck all delivery checkboxes
+            document.getElementById('manualUnloading').checked = false;
+            document.getElementById('crane10m').checked = false;
+            document.getElementById('crane15m').checked = false;
+            document.getElementById('craneWork').checked = false;
+
+            // Clear product selection and order items
+            productSearchInput.value = '';
+            productSearchInput.dataset.selectedProduct = ''; // Clear selected product data
+            quantityInput.value = 1;
+            selectedProducts = [];
+            renderOrderItems();
+            calculateTotalWeightAndItems(); // Recalculate total weight and items
+            displayMessage('הטופס נוקה בהצלחה.');
+        });
+
+        // --- Save Order (Frontend Logic - will send to Code.gs doPost) ---
+        saveOrderBtn.addEventListener('click', async () => {
+            const customerName = document.getElementById('customerName').value;
+            const contactPerson = document.getElementById('contactPerson').value;
+            const street = document.getElementById('street').value;
+            const streetNumber = document.getElementById('streetNumber').value;
+            const city = document.getElementById('city').value;
+            const email = document.getElementById('email').value;
+
+            const deliveryTypes = [];
+            if (document.getElementById('manualUnloading').checked) deliveryTypes.push('פריקה ידנית');
+            if (document.getElementById('crane10m').checked) deliveryTypes.push('הובלת מנוף 10 מטר');
+            if (document.getElementById('crane15m').checked) deliveryTypes.push('הובלת מנוף 15 מטר');
+            if (document.getElementById('craneWork').checked) deliveryTypes.push('עבודות מנוף');
+
+            if (!customerName || selectedProducts.length === 0) {
+                displayMessage('אנא מלא שם לקוח והוסף לפחות פריט אחד להזמנה.', true);
+                return;
+            }
+
+            const orderData = {
+                timestamp: new Date().toISOString(),
+                customer: {
+                    name: customerName,
+                    contactPerson: contactPerson,
+                    address: `${street} ${streetNumber}, ${city}`,
+                    email: email
+                },
+                deliveryTypes: deliveryTypes,
+                products: selectedProducts,
+                totalWeight: parseFloat(totalWeightDisplay.textContent),
+                totalItems: parseInt(totalItemsDisplay.textContent, 10)
+            };
+
+            displayMessage('שומר הזמנה...');
+            try {
+                const response = await fetch(googleAppsScriptUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(orderData),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    displayMessage(`הזמנה נשמרה בהצלחה! מספר הזמנה: ${result.orderId}`);
+                    // Optionally clear form after successful save
+                    clearFormBtn.click();
+                } else {
+                    displayMessage(`שגיאה בשמירת הזמנה: ${result.message || 'שגיאה לא ידועה'}`, true);
+                }
+            } catch (error) {
+                console.error('שגיאה בשמירת הזמנה:', error);
+                displayMessage(`שגיאה בשמירת הזמנה: ${error.message}. וודא שקובץ Code.gs מעודכן ומטפל בבקשות POST.`, true);
+            }
+        });
+
+        // --- Print Order ---
+        printOrderBtn.addEventListener('click', () => {
+            const customerName = document.getElementById('customerName').value;
+            const contactPerson = document.getElementById('contactPerson').value;
+            const street = document.getElementById('street').value;
+            const streetNumber = document.getElementById('streetNumber').value;
+            const city = document.getElementById('city').value;
+            const email = document.getElementById('email').value;
+
+            const deliveryTypes = [];
+            if (document.getElementById('manualUnloading').checked) deliveryTypes.push('פריקה ידנית');
+            if (document.getElementById('crane10m').checked) deliveryTypes.push('הובלת מנוף 10 מטר');
+            if (document.getElementById('crane15m').checked) deliveryTypes.push('הובלת מנוף 15 מטר');
+            if (document.getElementById('craneWork').checked) deliveryTypes.push('עבודות מנוף');
+
+            let printContentHtml = `
+                <!DOCTYPE html>
+                <html lang="he" dir="rtl">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>הזמנה: ${customerName || 'חדשה'}</title>
+                    <style>
+                        /* Inline styles for print to ensure consistency */
+                        body { font-family: 'Inter', sans-serif; margin: 20px; direction: rtl; text-align: right; color: #000; background-color: #fff; }
+                        .print-header { text-align: center; margin-bottom: 20px; }
+                        .print-header h1 { font-size: 24px; color: #333; margin-bottom: 10px; }
+                        .print-section { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #ccc; }
+                        .print-section:last-child { border-bottom: none; }
+                        .print-section h2 { font-size: 18px; color: #555; margin-bottom: 10px; font-weight: bold; }
+                        .print-section p { font-size: 14px; line-height: 1.5; }
+                        .print-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+                        .print-table th, .print-table td { border: 1px solid #ddd; padding: 8px; text-align: right; font-size: 13px; }
+                        .print-table th { background-color: #f8f8f8; font-weight: bold; }
+                        .print-summary { margin-top: 20px; text-align: left; }
+                        .print-summary p { font-size: 16px; font-weight: bold; color: #333; }
+                    </style>
+                </head>
+                <body>
+                    <div class="print-header">
+                        <h1>הזמנת לקוח</h1>
+                        <p>תאריך: ${new Date().toLocaleDateString('he-IL')}</p>
+                    </div>
+
+                    <div class="print-section">
+                        <h2>פרטי לקוח:</h2>
+                        <p><strong>שם לקוח:</strong> ${customerName || 'לא הוזן'}</p>
+                        <p><strong>איש קשר:</strong> ${contactPerson || 'לא הוזן'}</p>
+                        <p><strong>כתובת:</strong> ${street || ''} ${streetNumber || ''}, ${city || 'לא הוזן'}</p>
+                        <p><strong>אימייל:</strong> ${email || 'לא הוזן'}</p>
+                    </div>
+
+                    <div class="print-section">
+                        <h2>סוג הובלה:</h2>
+                        <p>${deliveryTypes.length > 0 ? deliveryTypes.join(', ') : 'לא נבחר סוג הובלה'}</p>
+                    </div>
+
+                    <div class="print-section">
+                        <h2>פריטים בהזמנה:</h2>
+                        <table class="print-table">
+                            <thead>
+                                <tr>
+                                    <th>שם פריט</th>
+                                    <th>ברקוד</th>
+                                    <th>כמות</th>
+                                    <th>משקל יחידה (ק"ג)</th>
+                                    <th>סה"כ משקל (ק"ג)</th>
+                                    <th>הערות משקל</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+
+            if (selectedProducts.length === 0) {
+                printContentHtml += `<tr><td colspan="6" class="text-center">לא נוספו פריטים להזמנה.</td></tr>`;
+            } else {
+                selectedProducts.forEach(product => {
+                    const { unitWeight, weightNotes } = calculateProductWeight(product.itemName);
+                    const totalProductWeight = unitWeight * product.quantity;
+                    const displayBarcode = product.barcode && !product.barcode.startsWith('FREE_TEXT_') ? product.barcode : 'אין ברקוד';
+
+                    printContentHtml += `
+                        <tr>
+                            <td>${product.itemName}</td>
+                            <td>${displayBarcode}</td>
+                            <td>${product.quantity}</td>
+                            <td>${unitWeight}</td>
+                            <td>${totalProductWeight.toFixed(2)}</td>
+                            <td>${weightNotes}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            printContentHtml += `
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="print-summary">
+                        <p><strong>סה"כ משקל הזמנה:</strong> ${totalWeightDisplay.textContent} ק"ג</p>
+                        <p><strong>סה"כ כמות פריטים:</strong> ${totalItemsDisplay.textContent}</p>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContentHtml);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        });
+
+        // --- WhatsApp Share ---
+        whatsappShareBtn.addEventListener('click', () => {
+            const phoneNumber = '972508860896'; // The specific WhatsApp number
+
+            // Collect all form data for the message
+            const customerName = document.getElementById('customerName').value;
+            const contactPerson = document.getElementById('contactPerson').value;
+            const street = document.getElementById('street').value;
+            const streetNumber = document.getElementById('streetNumber').value;
+            const city = document.getElementById('city').value;
+            const email = document.getElementById('email').value;
+
+            const deliveryTypes = [];
+            if (document.getElementById('manualUnloading').checked) deliveryTypes.push('פריקה ידנית');
+            if (document.getElementById('crane10m').checked) deliveryTypes.push('הובלת מנוף 10 מטר');
+            if (document.getElementById('crane15m').checked) deliveryTypes.push('הובלת מנוף 15 מטר');
+            if (document.getElementById('craneWork').checked) deliveryTypes.push('עבודות מנוף');
+
+            let message = `*הזמנה חדשה*\n\n`;
+            message += `*פרטי לקוח:*\n`;
+            message += `שם לקוח: ${customerName || 'לא הוזן'}\n`;
+            message += `איש קשר: ${contactPerson || 'לא הוזן'}\n`;
+            message += `כתובת: ${street || ''} ${streetNumber || ''}, ${city || 'לא הוזן'}\n`;
+            message += `אימייל: ${email || 'לא הוזן'}\n\n`;
+
+            message += `*סוג הובלה:*\n`;
+            message += `${deliveryTypes.length > 0 ? deliveryTypes.join(', ') : 'לא נבחר סוג הובלה'}\n\n`;
+
+            message += `*פריטים בהזמנה:*\n`;
+            if (selectedProducts.length === 0) {
+                message += `לא נוספו פריטים להזמנה.\n`;
+            } else {
+                selectedProducts.forEach(product => {
+                    const { unitWeight, weightNotes } = calculateProductWeight(product.itemName);
+                    const totalProductWeight = unitWeight * product.quantity;
+                    const displayBarcode = product.barcode && !product.barcode.startsWith('FREE_TEXT_') ? product.barcode : 'אין ברקוד';
+                    message += `- ${product.itemName} (ברקוד: ${displayBarcode}), כמות: ${product.quantity}, משקל יחידה: ${unitWeight} ק"ג, סה"כ משקל: ${totalProductWeight.toFixed(2)} ק"ג (${weightNotes})\n`;
+                });
+            }
+            message += `\n*סה"כ משקל הזמנה:* ${totalWeightDisplay.textContent} ק"ג`;
+            message += `\n*סה"כ כמות פריטים:* ${totalItemsDisplay.textContent}`;
+
+            // Encode the message for URL
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+            // Open WhatsApp in a new tab
+            window.open(whatsappUrl, '_blank');
+        });
+
+        // --- Search Order (Frontend Logic - will send to Code.gs doGet with params) ---
+        searchOrderBtn.addEventListener('click', async () => {
+            const searchQuery = orderSearchInput.value.trim();
+            if (!searchQuery) {
+                displayMessage('אנא הכנס מספר הזמנה או שם לקוח לחיפוש.', true);
+                return;
+            }
+
+            displayMessage('מחפש הזמנות...');
+            searchResultsDiv.innerHTML = ''; // Clear previous results
+
+            try {
+                // Pass search query as a URL parameter
+                const searchUrl = `${googleAppsScriptUrl}?action=searchOrders&query=${encodeURIComponent(searchQuery)}`;
+                const response = await fetch(searchUrl);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.status === 'success' && result.orders && result.orders.length > 0) {
+                    let resultsHtml = `<h2 class="text-xl font-semibold mb-2">תוצאות חיפוש:</h2>`;
+                    result.orders.forEach(order => {
+                        resultsHtml += `
+                            <div class="bg-gray-50 p-4 rounded-lg shadow-sm mb-4 border border-gray-200">
+                                <p class="font-bold text-lg text-indigo-700">מספר הזמנה: ${order.orderId || 'N/A'}</p>
+                                <p><strong>תאריך:</strong> ${new Date(order.timestamp).toLocaleString('he-IL')}</p>
+                                <p><strong>שם לקוח:</strong> ${order.customer.name || 'N/A'}</p>
+                                <p><strong>כתובת:</strong> ${order.customer.address || 'N/A'}</p>
+                                <p><strong>סה"כ משקל:</strong> ${order.totalWeight || '0'} ק"ג</p>
+                                <p><strong>סה"כ פריטים:</strong> ${order.totalItems || '0'}</p>
+                                <p class="mt-2"><strong>פריטים:</strong></p>
+                                <ul class="list-disc list-inside text-sm text-gray-700">
+                                    ${order.products.map(p => `<li>${p.itemName} (כמות: ${p.quantity}, ברקוד: ${p.barcode || 'אין'})</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    });
+                    searchResultsDiv.innerHTML = resultsHtml;
+                    displayMessage(`נמצאו ${result.orders.length} הזמנות.`);
+                } else {
+                    searchResultsDiv.innerHTML = `<p class="text-gray-600 text-center py-4">לא נמצאו הזמנות תואמות לחיפוש "${searchQuery}".</p>`;
+                    displayMessage('לא נמצאו הזמנות תואמות.', true);
+                }
+            } catch (error) {
+                console.error('שגיאה בחיפוש הזמנות:', error);
+                displayMessage(`שגיאה בחיפוש הזמנות: ${error.message}. וודא שקובץ Code.gs מעודכן ומטפל בחיפוש.`, true);
+            }
+        });
+
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if the Apps Script URL is set
+            if (googleAppsScriptUrl === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                displayMessage('אנא החלף את YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE בכתובת ה-URL של ה-Web App שלך ב-Code.gs.', true);
+            } else {
+                fetchProducts(); // Fetch products when the page loads
+            }
+            renderOrderItems(); // Render initial empty table
+            calculateTotalWeightAndItems(); // Calculate initial total weight and items (should be 0)
+        });
+    </script>
+</body>
+</html>
