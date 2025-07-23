@@ -902,134 +902,164 @@
 
         // --- Add Product to Order ---
         addProductBtn.addEventListener('click', () => {
-            addProductToOrder();
+            try {
+                addProductToOrder();
+            } catch (error) {
+                console.error('Error adding product via button click:', error);
+                showFeedbackMessage('שגיאה בהוספת פריט: ' + error.message, 'error');
+            }
         });
 
         // Function to add product to order (called by button click or Enter on quantity)
         function addProductToOrder() {
-            const quantity = parseInt(quantityInput.value, 10);
-            const searchTerm = productSearchInput.value.trim();
+            try {
+                console.log('addProductToOrder called.');
+                const quantity = parseInt(quantityInput.value, 10);
+                const searchTerm = productSearchInput.value.trim();
 
-            if (searchTerm.length === 0) {
-                showFeedbackMessage('אנא הקלד או בחר שם מוצר.', 'error');
-                return;
+                if (searchTerm.length === 0) {
+                    showFeedbackMessage('אנא הקלד או בחר שם מוצר.', 'error');
+                    console.log('Add product failed: Search term is empty.');
+                    return;
+                }
+                if (isNaN(quantity) || quantity <= 0) {
+                    showFeedbackMessage('אנא הזן כמות חוקית (מספר גדול מ-0).', 'error');
+                    console.log('Add product failed: Invalid quantity.');
+                    return;
+                }
+
+                let productToAdd = selectedProductForAdd;
+                console.log('selectedProductForAdd before processing:', selectedProductForAdd);
+
+                // If no product was selected from autocomplete, use free text input
+                if (!productToAdd) {
+                    console.log('No product selected from autocomplete. Using free text.');
+                    const { unitWeight, weightNotes } = calculateProductWeight(searchTerm);
+                    productToAdd = {
+                        itemName: searchTerm,
+                        barcode: 'N/A',
+                        quantity: quantity, // This quantity is from the input, not the product data
+                        originalUnitWeight: unitWeight,
+                        userDefinedUnitWeight: null,
+                        weightNotes: weightNotes || 'פריט שהוזן ידנית',
+                        itemNotes: ''
+                    };
+                }
+                console.log('Product to add (final):', productToAdd);
+
+                // Ensure the quantity from the input is used for the item being added/updated
+                productToAdd.quantity = quantity; // This ensures the quantity from the input is always applied
+
+                // Check if product already exists in the order (by barcode for known, by name for free text)
+                const existingProductIndex = selectedProducts.findIndex(p => 
+                    p.barcode !== 'N/A' && p.barcode === productToAdd.barcode || 
+                    p.barcode === 'N/A' && p.itemName === productToAdd.itemName
+                );
+
+                if (existingProductIndex > -1) {
+                    selectedProducts[existingProductIndex].quantity += quantity;
+                    console.log('Updated existing product quantity. New selectedProducts:', selectedProducts);
+                } else {
+                    selectedProducts.push({
+                        itemName: productToAdd.itemName,
+                        barcode: productToAdd.barcode,
+                        quantity: productToAdd.quantity, // Use productToAdd.quantity here
+                        originalUnitWeight: productToAdd.originalUnitWeight,
+                        userDefinedUnitWeight: productToAdd.userDefinedUnitWeight,
+                        weightNotes: productToAdd.weightNotes,
+                        itemNotes: productToAdd.itemNotes
+                    });
+                    console.log('Added new product. New selectedProducts:', selectedProducts);
+                }
+
+                renderOrderItems();
+                calculateTotalWeight();
+                productSearchInput.value = '';
+                selectedProductForAdd = null;
+                addProductBtn.disabled = true;
+                quantityInput.value = 1;
+                productSearchInput.focus();
+                showFeedbackMessage('הפריט נוסף בהצלחה!', 'success');
+                console.log('Product added and rendered successfully.');
+            } catch (error) {
+                console.error('Runtime error in addProductToOrder:', error);
+                showFeedbackMessage('שגיאה פנימית בהוספת פריט: ' + error.message, 'error');
             }
-            if (isNaN(quantity) || quantity <= 0) {
-                showFeedbackMessage('אנא הזן כמות חוקית (מספר גדול מ-0).', 'error');
-                return;
-            }
-
-            let productToAdd = selectedProductForAdd;
-
-            // If no product was selected from autocomplete, use free text input
-            if (!productToAdd) {
-                const { unitWeight, weightNotes } = calculateProductWeight(searchTerm); // Try to calculate if matches known patterns
-                productToAdd = {
-                    itemName: searchTerm,
-                    barcode: 'N/A', // Default barcode for free text
-                    quantity: quantity,
-                    originalUnitWeight: unitWeight,
-                    userDefinedUnitWeight: null,
-                    weightNotes: weightNotes || 'פריט שהוזן ידנית', // Default notes for free text
-                    itemNotes: ''
-                };
-            }
-
-            // Check if product already exists in the order (by barcode for known, by name for free text)
-            const existingProductIndex = selectedProducts.findIndex(p => 
-                p.barcode !== 'N/A' && p.barcode === productToAdd.barcode || 
-                p.barcode === 'N/A' && p.itemName === productToAdd.itemName
-            );
-
-            if (existingProductIndex > -1) {
-                selectedProducts[existingProductIndex].quantity += quantity;
-            } else {
-                selectedProducts.push({
-                    itemName: productToAdd.itemName,
-                    barcode: productToAdd.barcode,
-                    quantity: quantity,
-                    originalUnitWeight: productToAdd.originalUnitWeight,
-                    userDefinedUnitWeight: productToAdd.userDefinedUnitWeight,
-                    weightNotes: productToAdd.weightNotes,
-                    itemNotes: productToAdd.itemNotes // Keep existing notes if any
-                });
-            }
-
-            renderOrderItems();
-            calculateTotalWeight();
-            productSearchInput.value = ''; // Clear input
-            selectedProductForAdd = null; // Clear selected product after adding
-            addProductBtn.disabled = true; // Disable add button again
-            quantityInput.value = 1; // Reset quantity
-            productSearchInput.focus(); // Return focus to product search input
-            showFeedbackMessage('הפריט נוסף בהצלחה!', 'success');
         }
 
         // --- Render Order Items Table ---
         function renderOrderItems() {
-            orderItemsTableBody.innerHTML = ''; // Clear current table content
+            try {
+                console.log('renderOrderItems called. selectedProducts:', selectedProducts);
+                orderItemsTableBody.innerHTML = ''; // Clear current table content
 
-            if (selectedProducts.length === 0) {
-                noItemsRow.style.display = 'table-row'; // Show "no items" row
-                orderItemsTableBody.appendChild(noItemsRow);
-                return;
-            } else {
-                noItemsRow.style.display = 'none'; // Hide "no items" row
+                if (selectedProducts.length === 0) {
+                    noItemsRow.style.display = 'table-row'; // Show "no items" row
+                    orderItemsTableBody.appendChild(noItemsRow);
+                    console.log('No items in selectedProducts. Showing noItemsRow.');
+                    return;
+                } else {
+                    noItemsRow.style.display = 'none'; // Hide "no items" row
+                }
+
+                selectedProducts.forEach((product, index) => {
+                    const { unitWeight: calculatedUnitWeight, weightNotes } = calculateProductWeight(product.itemName);
+                    // Use user-defined weight if available, otherwise calculated original weight
+                    const displayUnitWeight = product.userDefinedUnitWeight !== null ? product.userDefinedUnitWeight : calculatedUnitWeight;
+                    const totalProductWeight = displayUnitWeight * product.quantity;
+
+                    const row = document.createElement('tr');
+                    row.classList.add('border-b');
+                    row.innerHTML = `
+                        <td class="py-2 px-4 border-b editable-cell" data-field="itemName" data-index="${index}">
+                            <span class="display-value">${product.itemName}</span>
+                        </td>
+                        <td class="py-2 px-4 border-b editable-cell" data-field="barcode" data-index="${index}">
+                            <span class="display-value">${product.barcode}</span>
+                        </td>
+                        <td class="py-2 px-4 border-b text-center editable-cell" data-field="quantity" data-index="${index}">
+                            <span class="display-value">${product.quantity}</span>
+                        </td>
+                        <td class="py-2 px-4 border-b text-center editable-cell" data-field="unitWeight" data-index="${index}">
+                            <span class="display-value">${displayUnitWeight.toFixed(2)}</span>
+                        </td>
+                        <td class="py-2 px-4 border-b text-center">${totalProductWeight.toFixed(2)}</td>
+                        <td class="py-2 px-4 border-b">
+                            ${weightNotes}
+                            <textarea data-index="${index}" class="item-notes-input w-full mt-1 p-1 text-sm border rounded-md focus:ring-indigo-500 focus:border-indigo-500" rows="1" placeholder="הערות לפריט..." oninput="updateItemNotes(this)">${product.itemNotes || ''}</textarea>
+                        </td>
+                        <td class="py-2 px-4 border-b no-print text-center">
+                            <button data-index="${index}" class="remove-item-btn bg-red-500 hover:bg-red-700 text-white text-sm py-1 px-2 rounded-md">הסר</button>
+                        </td>
+                    `;
+                    orderItemsTableBody.appendChild(row);
+                });
+
+                // Add event listeners for remove buttons (delegated)
+                orderItemsTableBody.querySelectorAll('.remove-item-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const indexToRemove = parseInt(event.target.dataset.index, 10);
+                        selectedProducts.splice(indexToRemove, 1); // Remove item from array
+                        renderOrderItems(); // Re-render table
+                        calculateTotalWeight(); // Recalculate total weight
+                        showFeedbackMessage('הפריט הוסר בהצלחה.', 'success');
+                    });
+                });
+
+                // Add event listeners for editable cells (delegated)
+                orderItemsTableBody.querySelectorAll('.editable-cell').forEach(cell => {
+                    cell.addEventListener('click', (event) => {
+                        // Ensure we are clicking the cell itself, not an input inside it
+                        if (event.target.classList.contains('display-value') || event.target.classList.contains('editable-cell')) {
+                            makeCellEditable(cell);
+                        }
+                    });
+                });
+                console.log('renderOrderItems completed successfully.');
+            } catch (error) {
+                console.error('Runtime error in renderOrderItems:', error);
+                showFeedbackMessage('שגיאה פנימית בהצגת פריטים: ' + error.message, 'error');
             }
-
-            selectedProducts.forEach((product, index) => {
-                const { unitWeight: calculatedUnitWeight, weightNotes } = calculateProductWeight(product.itemName);
-                // Use user-defined weight if available, otherwise calculated original weight
-                const displayUnitWeight = product.userDefinedUnitWeight !== null ? product.userDefinedUnitWeight : calculatedUnitWeight;
-                const totalProductWeight = displayUnitWeight * product.quantity;
-
-                const row = document.createElement('tr');
-                row.classList.add('border-b');
-                row.innerHTML = `
-                    <td class="py-2 px-4 border-b editable-cell" data-field="itemName" data-index="${index}">
-                        <span class="display-value">${product.itemName}</span>
-                    </td>
-                    <td class="py-2 px-4 border-b editable-cell" data-field="barcode" data-index="${index}">
-                        <span class="display-value">${product.barcode}</span>
-                    </td>
-                    <td class="py-2 px-4 border-b text-center editable-cell" data-field="quantity" data-index="${index}">
-                        <span class="display-value">${product.quantity}</span>
-                    </td>
-                    <td class="py-2 px-4 border-b text-center editable-cell" data-field="unitWeight" data-index="${index}">
-                        <span class="display-value">${displayUnitWeight.toFixed(2)}</span>
-                    </td>
-                    <td class="py-2 px-4 border-b text-center">${totalProductWeight.toFixed(2)}</td>
-                    <td class="py-2 px-4 border-b">
-                        ${weightNotes}
-                        <textarea data-index="${index}" class="item-notes-input w-full mt-1 p-1 text-sm border rounded-md focus:ring-indigo-500 focus:border-indigo-500" rows="1" placeholder="הערות לפריט..." oninput="updateItemNotes(this)">${product.itemNotes || ''}</textarea>
-                    </td>
-                    <td class="py-2 px-4 border-b no-print text-center">
-                        <button data-index="${index}" class="remove-item-btn bg-red-500 hover:bg-red-700 text-white text-sm py-1 px-2 rounded-md">הסר</button>
-                    </td>
-                `;
-                orderItemsTableBody.appendChild(row);
-            });
-
-            // Add event listeners for remove buttons (delegated)
-            orderItemsTableBody.querySelectorAll('.remove-item-btn').forEach(button => {
-                button.addEventListener('click', (event) => {
-                    const indexToRemove = parseInt(event.target.dataset.index, 10);
-                    selectedProducts.splice(indexToRemove, 1); // Remove item from array
-                    renderOrderItems(); // Re-render table
-                    calculateTotalWeight(); // Recalculate total weight
-                    showFeedbackMessage('הפריט הוסר בהצלחה.', 'success');
-                });
-            });
-
-            // Add event listeners for editable cells (delegated)
-            orderItemsTableBody.querySelectorAll('.editable-cell').forEach(cell => {
-                cell.addEventListener('click', (event) => {
-                    // Ensure we are clicking the cell itself, not an input inside it
-                    if (event.target.classList.contains('display-value') || event.target.classList.contains('editable-cell')) {
-                        makeCellEditable(cell);
-                    }
-                });
-            });
         }
 
         // --- Make Table Cell Editable ---
