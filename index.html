@@ -19,10 +19,10 @@
         }
         .container {
             background-color: #ffffff; /* White background for the form container */
-            padding: 2.5rem;
-            border-radius: 1rem; /* Rounded corners */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Subtle shadow */
-            max-width: 900px; /* Increased max width for more content */
+            padding: 3rem; /* Increased padding */
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15), 0 6px 12px -3px rgba(0, 0, 0, 0.08); /* More pronounced shadow */
+            max-width: 1100px; /* Increased max width for larger page */
             width: 100%;
             text-align: right; /* Align text to the right for RTL */
         }
@@ -39,27 +39,65 @@
         }
         input[type="text"], input[type="number"], input[type="email"], select {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.85rem; /* Slightly more padding */
             margin-bottom: 1rem;
             border: 1px solid #d1d5db; /* Light gray border */
-            border-radius: 0.5rem; /* Rounded corners for inputs */
+            border-radius: 0.75rem; /* More rounded corners for inputs */
             font-size: 1rem;
             color: #4b5563; /* Darker gray for input text */
             background-color: #f9fafb; /* Slightly off-white background */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-        button {
+        input[type="text"]:focus, input[type="number"]:focus, input[type="email"]:focus, select:focus {
+            border-color: #6366f1; /* Indigo border on focus */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); /* Subtle focus ring */
+            outline: none;
+        }
+
+        /* Smart Button Styling with Shine Effect */
+        .smart-button {
+            position: relative;
+            overflow: hidden;
             background-color: #4f46e5; /* Indigo button */
             color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
+            padding: 0.9rem 2rem; /* Larger padding */
+            border-radius: 0.75rem; /* More rounded corners */
             font-weight: 600;
-            transition: background-color 0.2s ease-in-out;
+            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.1s ease-out;
             cursor: pointer;
             border: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Default shadow */
         }
-        button:hover {
+        .smart-button:hover {
             background-color: #4338ca; /* Darker indigo on hover */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08); /* Larger shadow on hover */
+            transform: translateY(-2px); /* Slight lift effect */
         }
+        .smart-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -75%; /* Start off-screen to the left */
+            width: 50%; /* Width of the shine */
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,.3) 100%); /* White to transparent gradient */
+            transform: skewX(-20deg); /* Angle the shine */
+            transition: all 0.5s ease;
+        }
+        .smart-button:hover::before {
+            left: 125%; /* Move across the button to the right */
+        }
+
+        /* Specific button colors */
+        #addProductBtn { background-color: #22c55e; } /* Green */
+        #addProductBtn:hover { background-color: #16a34a; }
+        #printOrderBtn { background-color: #4f46e5; } /* Indigo */
+        #printOrderBtn:hover { background-color: #4338ca; }
+        #whatsappShareBtn { background-color: #25d366; } /* WhatsApp Green */
+        #whatsappShareBtn:hover { background-color: #1da851; }
+        #clearFormBtn { background-color: #6b7280; } /* Gray */
+        #clearFormBtn:hover { background-color: #4b5563; }
+
         .message-box {
             background-color: #e0f2fe; /* Light blue background */
             color: #0c4a6e; /* Dark blue text */
@@ -123,8 +161,6 @@
         .autocomplete-suggestions div:hover {
             background-color: #e0f2fe;
         }
-
-        /* Print specific styles - REMOVED, now handled by new print window */
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -217,7 +253,7 @@
             <div class="flex items-center gap-4 mt-4">
                 <label for="quantity" class="mb-0">כמות:</label>
                 <input type="number" id="quantity" min="1" value="1" class="w-24">
-                <button id="addProductBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-shrink-0">
+                <button id="addProductBtn" class="smart-button flex-shrink-0">
                     הוסף פריט
                 </button>
             </div>
@@ -257,13 +293,13 @@
 
         <!-- Action Buttons -->
         <div class="mt-6 flex flex-col md:flex-row gap-4 no-print">
-            <button id="printOrderBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md flex-1">
+            <button id="printOrderBtn" class="smart-button flex-1">
                 הדפסת הזמנה
             </button>
-            <button id="whatsappShareBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md flex-1">
+            <button id="whatsappShareBtn" class="smart-button flex-1">
                 שיתוף בוואטסאפ
             </button>
-            <button id="clearFormBtn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-lg shadow-md flex-1">
+            <button id="clearFormBtn" class="smart-button flex-1">
                 ניקוי טופס
             </button>
         </div>
@@ -333,10 +369,11 @@
 
                 if (data && data.products && Array.isArray(data.products) && data.products.length > 0) {
                     allProducts = data.products; // Store all fetched products
-                    console.log('All Products fetched:', allProducts); // New debug log: Check this in browser console!
+                    console.log('All Products fetched successfully. Total products:', allProducts.length, allProducts); // New debug log
                     displayMessage('המוצרים נטענו בהצלחה!');
                 } else {
                     displayMessage('לא נמצאו מוצרים בגיליון הנתונים או שהפורמט אינו תקין.', true);
+                    console.error('No products found or invalid format:', data); // Debugging: Log the problematic data
                 }
             } catch (error) {
                 console.error('שגיאה בטעינת מוצרים:', error);
@@ -352,13 +389,20 @@
             selectedProductForAdd = null; // Reset selected product when typing
 
             if (searchTerm.length >= 2) {
-                const filteredProducts = allProducts.filter(product =>
-                    product.itemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    product.barcode.toLowerCase().includes(searchTerm.toLowerCase())
-                );
+                console.log('Autocomplete: Search Term:', searchTerm); // Debugging: Log the search term
+                console.log('Autocomplete: Total products available for filter:', allProducts.length); // Debugging: Check if allProducts is populated
 
-                console.log('Search Term:', searchTerm); // Debugging: Log the search term
-                console.log('Filtered Products:', filteredProducts); // Debugging: Log the filtered results
+                const filteredProducts = allProducts.filter(product => {
+                    const itemNameMatch = product.itemName && product.itemName.toLowerCase().includes(searchTerm.toLowerCase());
+                    const barcodeMatch = product.barcode && product.barcode.toLowerCase().includes(searchTerm.toLowerCase());
+                    
+                    // Debugging: Log each product and its match status
+                    // console.log(`  Product: ${product.itemName} (${product.barcode}), ItemName Match: ${itemNameMatch}, Barcode Match: ${barcodeMatch}`);
+                    
+                    return itemNameMatch || barcodeMatch;
+                });
+
+                console.log('Autocomplete: Filtered Products:', filteredProducts); // Debugging: Log the filtered results
 
                 if (filteredProducts.length > 0) {
                     autocompleteSuggestions.classList.remove('hidden');
@@ -373,6 +417,7 @@
                             productSearchInput.value = selectedProductData.itemName; // Set input value
                             selectedProductForAdd = selectedProductData; // Store the full product object
                             autocompleteSuggestions.classList.add('hidden'); // Hide suggestions
+                            console.log('Autocomplete: Product selected:', selectedProductForAdd); // Debugging: Confirm selection
                         });
                         autocompleteSuggestions.appendChild(suggestionDiv);
                     });
