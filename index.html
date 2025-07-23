@@ -412,72 +412,45 @@
             table {
                 border: 4px solid #000; /* Even Thicker black border for table */
                 margin: 15px auto; /* Centered and increased margin */
-                width: 80%; /* Define width to allow centering */
+                width: 80%;
                 border-collapse: collapse; /* Ensure collapse for clean lines */
             }
             th, td {
                 border: 2px solid #000; /* Thicker black border for cells */
                 padding: 8px; /* Increased padding for print */
-                text-align: right; /* Default text align right */
-                vertical-align: top; /* Align text to top in cells */
-                font-weight: 500; /* Medium font weight for cell content */
+                text-align: right;
+                vertical-align: top;
+                font-weight: 500;
             }
-            th { background-color: #f0f0f0; font-weight: 800; text-align: center; } /* Bolder and centered headers */
-            .print-table th:nth-child(1), .print-table td:nth-child(1) { text-align: right; } /* שם פריט */
-            .print-table th:nth-child(2), .print-table td:nth-child(2) { text-align: right; } /* ברקוד */
-            .print-table th:nth-child(3), .print-table td:nth-child(3) { text-align: center; } /* כמות */
-            .print-table th:nth-child(4), .print-table td:nth-child(4) { text-align: center; } /* משקל יחידה */
-            .print-table th:nth-child(5), .print-table td:nth-child(5) { text-align: center; } /* סה"כ משקל */
-            .print-table th:nth-child(6), .print-table td:nth-child(6) { text-align: right; } /* הערות משקל */
-            .item-notes-print {
-                font-size: 0.95em; /* Slightly larger font for item notes */
-                color: #333; /* Darker color */
-                margin-top: 5px; /* More spacing */
-                font-weight: 600; /* Bolder notes */
-            }
+            th { background-color: #f0f0f0; font-weight: 800; text-align: center; }
+            .text-center { text-align: center; }
+            .item-notes-print { font-size: 0.95em; color: #333; margin-top: 5px; font-weight: 600; }
 
             .summary-box-print {
-                border: 4px solid #000; /* Thicker border */
-                padding: 15px; /* Increased padding */
-                margin: 20px auto; /* Centered and increased margin */
+                border: 4px solid #000;
+                padding: 15px;
+                margin: 20px auto;
                 border-radius: 8px;
                 background-color: #fcfcfc;
-                text-align: center; /* Center summary text */
-                width: 80%; /* Define width to allow centering */
+                text-align: center;
+                width: 80%;
             }
-            .summary-box-print p {
-                margin-bottom: 0; /* No margin between lines */
-                line-height: 1.2; /* Tighter line height */
-                font-size: 1.2rem; /* Larger font size */
-                font-weight: 900; /* Extra bold */
-                text-align: center; /* Ensure text is centered */
-            }
-            .general-notes-print {
-                margin: 25px auto; /* Centered and more margin */
-                border: 4px solid #000; /* Thicker border */
-                padding: 15px; /* Increased padding */
-                border-radius: 8px;
-                background-color: #fcfcfc;
-                width: 80%; /* Define width to allow centering */
-                text-align: right; /* Align text to right */
-            }
-            .general-notes-print p {
-                margin-bottom: 0;
-                font-size: 1.1rem; /* Larger font for notes */
-            }
+            .summary-box-print p { margin-bottom: 0; line-height: 1.2; font-size: 1.2rem; font-weight: 900; text-align: center; }
+            .general-notes-print { margin: 25px auto; border: 4px solid #000; padding: 15px; border-radius: 8px; background-color: #fcfcfc; width: 80%; text-align: right; }
+            .general-notes-print p { margin-bottom: 0; font-size: 1.1rem; }
             .empty-lines-for-notes {
-                border-bottom: 2px dashed #777; /* Darker and thicker dashed line */
-                height: 1.8em; /* More height for each line */
-                margin-bottom: 0.4em; /* More spacing between lines */
+                border-bottom: 2px dashed #777;
+                height: 1.8em;
+                margin-bottom: 0.4em;
             }
             .emphasized-delivery {
-                font-weight: 900; /* Even bolder */
-                font-size: 1.3em; /* Significantly larger */
-                color: #000; /* Ensure black color */
-                background-color: #e0f2f7; /* Light blue highlight */
+                font-weight: 900;
+                font-size: 1.3em;
+                color: #000;
+                background-color: #e0f2f7;
                 padding: 3px 8px;
                 border-radius: 5px;
-                display: inline-block; /* Ensure padding applies */
+                display: inline-block;
             }
         }
 
@@ -486,15 +459,15 @@
             position: fixed;
             bottom: 1.5rem;
             right: 1.5rem;
-            background-color: #4CAF50; /* Green background */
+            background-color: #4CAF50;
             color: white;
             padding: 0.75rem 1.25rem;
             border-radius: 0.75rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
-            opacity: 0; /* Start hidden */
-            transform: translateY(20px); /* Start slightly below */
+            opacity: 0;
+            transform: translateY(20px);
             transition: opacity 0.3s ease-out, transform 0.3s ease-out;
             z-index: 1000;
         }
@@ -505,18 +478,18 @@
         #feedbackEmoji {
             font-size: 1.5rem;
             margin-left: 0.5rem;
-            animation: spin 1.5s linear infinite; /* Spinning animation */
+            animation: spin 1.5s linear infinite;
         }
         #feedbackPopup.success #feedbackEmoji {
-            animation: none; /* Stop spin on success */
-            content: '✅'; /* Checkmark emoji */
+            animation: none;
+            content: '✅';
         }
         #feedbackPopup.error {
-            background-color: #f44336; /* Red for error */
+            background-color: #f44336;
         }
         #feedbackPopup.error #feedbackEmoji {
-            animation: none; /* Stop spin on error */
-            content: '❌'; /* Cross emoji */
+            animation: none;
+            content: '❌';
         }
 
         @keyframes spin {
@@ -928,46 +901,47 @@
                     return;
                 }
 
-                let productToAdd = selectedProductForAdd;
+                let productData = selectedProductForAdd;
                 console.log('selectedProductForAdd before processing:', selectedProductForAdd);
 
-                // If no product was selected from autocomplete, use free text input
-                if (!productToAdd) {
-                    console.log('No product selected from autocomplete. Using free text.');
+                // If no product was selected from autocomplete, create a new product object
+                if (!productData) {
+                    console.log('No product selected from autocomplete. Creating new product from free text.');
                     const { unitWeight, weightNotes } = calculateProductWeight(searchTerm);
-                    productToAdd = {
+                    productData = {
                         itemName: searchTerm,
                         barcode: 'N/A',
-                        quantity: quantity, // This quantity is from the input, not the product data
                         originalUnitWeight: unitWeight,
                         userDefinedUnitWeight: null,
                         weightNotes: weightNotes || 'פריט שהוזן ידנית',
                         itemNotes: ''
                     };
                 }
-                console.log('Product to add (final):', productToAdd);
+                // This line is crucial: ensure the quantity from the input is always applied to the productData object
+                productData.quantity = quantity; 
 
-                // Ensure the quantity from the input is used for the item being added/updated
-                productToAdd.quantity = quantity; // This ensures the quantity from the input is always applied
+                console.log('Product data to process (final):', productData);
 
-                // Check if product already exists in the order (by barcode for known, by name for free text)
+                // Find if product already exists in the order
+                // For known products, match by barcode. For free-text, match by item name and barcode 'N/A'.
                 const existingProductIndex = selectedProducts.findIndex(p => 
-                    p.barcode !== 'N/A' && p.barcode === productToAdd.barcode || 
-                    p.barcode === 'N/A' && p.itemName === productToAdd.itemName
+                    (p.barcode !== 'N/A' && p.barcode === productData.barcode) || 
+                    (p.barcode === 'N/A' && p.itemName === productData.itemName)
                 );
 
                 if (existingProductIndex > -1) {
-                    selectedProducts[existingProductIndex].quantity += quantity;
+                    selectedProducts[existingProductIndex].quantity += quantity; // Add the new quantity to existing
                     console.log('Updated existing product quantity. New selectedProducts:', selectedProducts);
                 } else {
+                    // Add new product with the quantity from the input field
                     selectedProducts.push({
-                        itemName: productToAdd.itemName,
-                        barcode: productToAdd.barcode,
-                        quantity: productToAdd.quantity, // Use productToAdd.quantity here
-                        originalUnitWeight: productToAdd.originalUnitWeight,
-                        userDefinedUnitWeight: productToAdd.userDefinedUnitWeight,
-                        weightNotes: productToAdd.weightNotes,
-                        itemNotes: productToAdd.itemNotes
+                        itemName: productData.itemName,
+                        barcode: productData.barcode,
+                        quantity: productData.quantity, // Now productData.quantity holds the correct input quantity
+                        originalUnitWeight: productData.originalUnitWeight,
+                        userDefinedUnitWeight: productData.userDefinedUnitWeight,
+                        weightNotes: productData.weightNotes,
+                        itemNotes: productData.itemNotes
                     });
                     console.log('Added new product. New selectedProducts:', selectedProducts);
                 }
@@ -1003,22 +977,42 @@
                 }
 
                 selectedProducts.forEach((product, index) => {
-                    const { unitWeight: calculatedUnitWeight, weightNotes } = calculateProductWeight(product.itemName);
-                    // Use user-defined weight if available, otherwise calculated original weight
-                    const displayUnitWeight = product.userDefinedUnitWeight !== null ? product.userDefinedUnitWeight : calculatedUnitWeight;
-                    const totalProductWeight = displayUnitWeight * product.quantity;
+                    console.log(`Processing product at index ${index}:`, product);
+                    if (!product) {
+                        console.error(`Product at index ${index} is undefined or null. Skipping.`);
+                        return; // Skip this iteration if product is invalid
+                    }
+
+                    const { unitWeight: calculatedUnitWeight, weightNotes } = calculateProductWeight(product.itemName || '');
+                    console.log(`Calculated unit weight for ${product.itemName}: ${calculatedUnitWeight}, Notes: ${weightNotes}`);
+
+                    // Ensure originalUnitWeight is a number, default to 0 if not
+                    const safeOriginalUnitWeight = typeof product.originalUnitWeight === 'number' ? product.originalUnitWeight : 0;
+                    // Ensure userDefinedUnitWeight is a number or null
+                    const safeUserDefinedUnitWeight = typeof product.userDefinedUnitWeight === 'number' ? product.userDefinedUnitWeight : null;
+
+                    // Use user-defined weight if available and valid, otherwise calculated original weight, default to 0 if all else fails
+                    const displayUnitWeight = safeUserDefinedUnitWeight !== null ? safeUserDefinedUnitWeight : safeOriginalUnitWeight;
+                    console.log(`Display unit weight for ${product.itemName}: ${displayUnitWeight}`);
+
+                    // Ensure quantity is a number, default to 0 if not
+                    const safeQuantity = typeof product.quantity === 'number' ? product.quantity : 0;
+                    console.log(`Quantity for ${product.itemName}: ${safeQuantity}`);
+
+                    const totalProductWeight = displayUnitWeight * safeQuantity;
+                    console.log(`Total product weight for ${product.itemName}: ${totalProductWeight}`);
 
                     const row = document.createElement('tr');
                     row.classList.add('border-b');
                     row.innerHTML = `
                         <td class="py-2 px-4 border-b editable-cell" data-field="itemName" data-index="${index}">
-                            <span class="display-value">${product.itemName}</span>
+                            <span class="display-value">${product.itemName || ''}</span>
                         </td>
                         <td class="py-2 px-4 border-b editable-cell" data-field="barcode" data-index="${index}">
-                            <span class="display-value">${product.barcode}</span>
+                            <span class="display-value">${product.barcode || 'N/A'}</span>
                         </td>
                         <td class="py-2 px-4 border-b text-center editable-cell" data-field="quantity" data-index="${index}">
-                            <span class="display-value">${product.quantity}</span>
+                            <span class="display-value">${product.quantity || 0}</span>
                         </td>
                         <td class="py-2 px-4 border-b text-center editable-cell" data-field="unitWeight" data-index="${index}">
                             <span class="display-value">${displayUnitWeight.toFixed(2)}</span>
@@ -1426,7 +1420,7 @@
             let totalWeight = 0;
             selectedProducts.forEach(product => {
                 const unitWeightToUse = product.userDefinedUnitWeight !== null ? product.userDefinedUnitWeight : product.originalUnitWeight;
-                totalWeight += unitWeightToUse * product.quantity;
+                totalWeight += (typeof unitWeightToUse === 'number' ? unitWeightToUse : 0) * (typeof product.quantity === 'number' ? product.quantity : 0);
             });
             totalWeightDisplay.textContent = totalWeight.toFixed(2);
         }
@@ -1490,7 +1484,7 @@
 
             let totalQuantity = 0;
             selectedProducts.forEach(product => {
-                totalQuantity += product.quantity;
+                totalQuantity += (typeof product.quantity === 'number' ? product.quantity : 0);
             });
 
             const now = new Date();
@@ -1611,16 +1605,16 @@
             } else {
                 selectedProducts.forEach(product => {
                     const unitWeightToUse = product.userDefinedUnitWeight !== null ? product.userDefinedUnitWeight : product.originalUnitWeight;
-                    const totalProductWeight = unitWeightToUse * product.quantity;
+                    const totalProductWeight = (typeof unitWeightToUse === 'number' ? unitWeightToUse : 0) * (typeof product.quantity === 'number' ? product.quantity : 0);
                     orderDetailsHtml += `
                         <tr>
-                            <td>${product.itemName}</td>
-                            <td>${product.barcode}</td>
-                            <td class="text-center">${product.quantity}</td>
-                            <td class="text-center">${unitWeightToUse.toFixed(2)}</td>
+                            <td>${product.itemName || ''}</td>
+                            <td>${product.barcode || 'N/A'}</td>
+                            <td class="text-center">${product.quantity || 0}</td>
+                            <td class="text-center">${(typeof unitWeightToUse === 'number' ? unitWeightToUse : 0).toFixed(2)}</td>
                             <td class="text-center">${totalProductWeight.toFixed(2)}</td>
                             <td>
-                                ${product.weightNotes}
+                                ${product.weightNotes || ''}
                                 ${product.itemNotes ? `<div class="item-notes-print">הערה: ${product.itemNotes}</div>` : ''}
                             </td>
                         </tr>
@@ -1681,7 +1675,7 @@
 
             let totalQuantity = 0;
             selectedProducts.forEach(product => {
-                totalQuantity += product.quantity;
+                totalQuantity += (typeof product.quantity === 'number' ? product.quantity : 0);
             });
 
             const now = new Date();
@@ -1713,8 +1707,11 @@
             } else {
                 selectedProducts.forEach(product => {
                     const unitWeightToUse = product.userDefinedUnitWeight !== null ? product.userDefinedUnitWeight : product.originalUnitWeight;
-                    const totalProductWeight = unitWeightToUse * product.quantity;
-                    message += `- ${product.itemName} (ברקוד: ${product.barcode}), כמות: ${product.quantity}, משקל יחידה: ${unitWeightToUse.toFixed(2)} ק"ג, סה"כ משקל: ${totalProductWeight.toFixed(2)} ק"ג (${product.weightNotes})`;
+                    const safeUnitWeightToUse = typeof unitWeightToUse === 'number' ? unitWeightToUse : 0;
+                    const safeQuantity = typeof product.quantity === 'number' ? product.quantity : 0;
+                    const totalProductWeight = safeUnitWeightToUse * safeQuantity;
+
+                    message += `- ${product.itemName || 'פריט לא ידוע'} (ברקוד: ${product.barcode || 'N/A'}), כמות: ${product.quantity || 0}, משקל יחידה: ${safeUnitWeightToUse.toFixed(2)} ק"ג, סה"כ משקל: ${totalProductWeight.toFixed(2)} ק"ג (${product.weightNotes || ''})`;
                     if (product.itemNotes) {
                         message += ` (הערה: ${product.itemNotes})`;
                     }
