@@ -106,13 +106,14 @@
             background-color: #a0aec0; /* A neutral gray for disabled */
         }
         .smart-button:disabled:hover::before {
-            left: -75%; /* Prevent shine on disabled button */
+            content: none; /* Prevent shine on disabled button */
         }
+
 
         /* Specific button colors */
         #addProductBtn { background-color: #10b981; } /* Emerald Green */
         #addProductBtn:hover { background-color: #059669; }
-        #addProductBtn:disabled { background-color: #a0aec0; }
+        #addProductBtn:disabled { background-color: #a0aec0; } /* Disabled green */
 
         #printOrderBtn { background-color: #4f46e5; } /* Indigo */
         #printOrderBtn:hover { background-color: #4338ca; }
@@ -350,6 +351,10 @@
                     <input type="text" id="contactPerson" placeholder="הכנס שם איש קשר">
                 </div>
                 <div>
+                    <label for="mobileNumber">נייד:</label>
+                    <input type="text" id="mobileNumber" placeholder="הכנס מספר נייד">
+                </div>
+                <div>
                     <label for="street">רחוב:</label>
                     <input type="text" id="street" placeholder="הכנס שם רחוב">
                 </div>
@@ -403,7 +408,7 @@
             <div class="flex items-center gap-4 mt-4">
                 <label for="quantity" class="mb-0">כמות:</label>
                 <input type="number" id="quantity" min="1" value="1" class="w-24">
-                <button id="addProductBtn" class="smart-button flex-shrink-0">
+                <button id="addProductBtn" class="smart-button flex-shrink-0" disabled>
                     הוסף פריט
                 </button>
             </div>
@@ -553,11 +558,11 @@
 
                 if (data && data.products && Array.isArray(data.products) && data.products.length > 0) {
                     allProducts = data.products; // Store all fetched products
-                    console.log('All Products fetched successfully. Total products:', allProducts.length, allProducts);
+                    console.log('All Products fetched successfully. Total products:', allProducts.length, allProducts); // New debug log: Check this in browser console!
                     displayMessage('המוצרים נטענו בהצלחה!');
                 } else {
                     displayMessage('לא נמצאו מוצרים בגיליון הנתונים או שהפורמט אינו תקין.', true);
-                    console.error('No products found or invalid format:', data);
+                    console.error('No products found or invalid format:', data); // Debugging: Log the problematic data
                 }
             } catch (error) {
                 console.error('שגיאה בטעינת מוצרים:', error);
@@ -571,10 +576,29 @@
             autocompleteSuggestions.innerHTML = ''; // Clear previous suggestions
             autocompleteSuggestions.classList.add('hidden');
             
-            // Clear any previously selected product from autocomplete
-            productSearchInput.dataset.selectedProduct = ''; 
+            // Reset the selected product for add button logic
+            addProductBtn.disabled = true; // Disable add button by default
+            
+            // If the search term is empty, or less than 2 characters, or if it exactly matches a product,
+            // then enable the add button for free text or selected product.
+            if (searchTerm.length === 0) {
+                // If input is cleared, disable add button
+                addProductBtn.disabled = true;
+                return;
+            }
 
-            if (searchTerm.length >= 2) {
+            // Check if the current input value matches any existing product
+            const exactMatch = allProducts.find(product => 
+                String(product.itemName || '').toLowerCase().trim() === searchTerm.toLowerCase() ||
+                String(product.barcode || '').toLowerCase().trim() === searchTerm.toLowerCase()
+            );
+
+            if (exactMatch) {
+                // If there's an exact match, enable add button and store the product
+                addProductBtn.disabled = false;
+                productSearchInput.dataset.selectedProduct = JSON.stringify(exactMatch);
+            } else if (searchTerm.length >= 2) {
+                // If no exact match but enough characters for search, filter and show suggestions
                 const filteredProducts = allProducts.filter(product => {
                     const itemName = String(product.itemName || '').toLowerCase().trim();
                     const barcode = String(product.barcode || '').toLowerCase().trim();
@@ -595,10 +619,20 @@
                             productSearchInput.value = selectedProductData.itemName; // Set input value
                             productSearchInput.dataset.selectedProduct = JSON.stringify(selectedProductData); // Store selected product
                             autocompleteSuggestions.classList.add('hidden'); // Hide suggestions
+                            addProductBtn.disabled = false; // Enable add button when a product is selected
+                            console.log('Autocomplete: Product selected:', selectedProductData); // Debugging: Confirm selection
                         });
                         autocompleteSuggestions.appendChild(suggestionDiv);
                     });
+                } else {
+                    // No suggestions, but allow free text if user types something
+                    addProductBtn.disabled = false;
+                    productSearchInput.dataset.selectedProduct = ''; // Clear any previous selection
                 }
+            } else {
+                // Less than 2 characters, no suggestions, but allow free text
+                addProductBtn.disabled = false;
+                productSearchInput.dataset.selectedProduct = ''; // Clear any previous selection
             }
         });
 
@@ -640,8 +674,8 @@
 
             // Check if product already exists in the order (by barcode, or by name for free text)
             const existingProductIndex = selectedProducts.findIndex(p => 
-                (productToAdd.barcode && p.barcode === productToAdd.barcode) || 
-                (!productToAdd.barcode && p.itemName === productToAdd.itemName) // Fallback for free text without barcode
+                (productToAdd.barcode && p.barcode === productToAdd.barcode && !productToAdd.barcode.startsWith('FREE_TEXT_')) || 
+                (productToAdd.itemName === p.itemName && p.barcode.startsWith('FREE_TEXT_')) // Match free text by name
             );
 
             if (existingProductIndex > -1) {
@@ -660,6 +694,7 @@
             calculateTotalWeightAndItems(); // Updated function call
             productSearchInput.value = ''; // Clear input
             productSearchInput.dataset.selectedProduct = ''; // Clear selected product data
+            addProductBtn.disabled = true; // Disable add button again
             quantityInput.value = 1; // Reset quantity
             displayMessage('הפריט נוסף בהצלחה!');
         });
@@ -734,7 +769,6 @@
             return { unitWeight, weightNotes };
         }
 
-        // --- Calculate Total Weight and Total Items ---
         function calculateTotalWeightAndItems() {
             let totalWeight = 0;
             let totalItems = 0;
@@ -752,6 +786,7 @@
             // Clear customer details
             document.getElementById('customerName').value = '';
             document.getElementById('contactPerson').value = '';
+            document.getElementById('mobileNumber').value = ''; // Clear mobile number
             document.getElementById('street').value = '';
             document.getElementById('streetNumber').value = '';
             document.getElementById('city').value = '';
@@ -766,6 +801,7 @@
             // Clear product selection and order items
             productSearchInput.value = '';
             productSearchInput.dataset.selectedProduct = ''; // Clear selected product data
+            addProductBtn.disabled = true; // Disable add button
             quantityInput.value = 1;
             selectedProducts = [];
             renderOrderItems();
@@ -777,6 +813,7 @@
         saveOrderBtn.addEventListener('click', async () => {
             const customerName = document.getElementById('customerName').value;
             const contactPerson = document.getElementById('contactPerson').value;
+            const mobileNumber = document.getElementById('mobileNumber').value; // Get mobile number
             const street = document.getElementById('street').value;
             const streetNumber = document.getElementById('streetNumber').value;
             const city = document.getElementById('city').value;
@@ -798,6 +835,7 @@
                 customer: {
                     name: customerName,
                     contactPerson: contactPerson,
+                    mobile: mobileNumber, // Include mobile number
                     address: `${street} ${streetNumber}, ${city}`,
                     email: email
                 },
@@ -839,6 +877,7 @@
         printOrderBtn.addEventListener('click', () => {
             const customerName = document.getElementById('customerName').value;
             const contactPerson = document.getElementById('contactPerson').value;
+            const mobileNumber = document.getElementById('mobileNumber').value; // Get mobile number
             const street = document.getElementById('street').value;
             const streetNumber = document.getElementById('streetNumber').value;
             const city = document.getElementById('city').value;
@@ -862,6 +901,7 @@
                         body { font-family: 'Inter', sans-serif; margin: 20px; direction: rtl; text-align: right; color: #000; background-color: #fff; }
                         .print-header { text-align: center; margin-bottom: 20px; }
                         .print-header h1 { font-size: 24px; color: #333; margin-bottom: 10px; }
+                        .print-header p { font-size: 14px; color: #555; }
                         .print-section { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #ccc; }
                         .print-section:last-child { border-bottom: none; }
                         .print-section h2 { font-size: 18px; color: #555; margin-bottom: 10px; font-weight: bold; }
@@ -883,6 +923,7 @@
                         <h2>פרטי לקוח:</h2>
                         <p><strong>שם לקוח:</strong> ${customerName || 'לא הוזן'}</p>
                         <p><strong>איש קשר:</strong> ${contactPerson || 'לא הוזן'}</p>
+                        <p><strong>נייד:</strong> ${mobileNumber || 'לא הוזן'}</p>
                         <p><strong>כתובת:</strong> ${street || ''} ${streetNumber || ''}, ${city || 'לא הוזן'}</p>
                         <p><strong>אימייל:</strong> ${email || 'לא הוזן'}</p>
                     </div>
@@ -956,6 +997,7 @@
             // Collect all form data for the message
             const customerName = document.getElementById('customerName').value;
             const contactPerson = document.getElementById('contactPerson').value;
+            const mobileNumber = document.getElementById('mobileNumber').value; // Get mobile number
             const street = document.getElementById('street').value;
             const streetNumber = document.getElementById('streetNumber').value;
             const city = document.getElementById('city').value;
@@ -971,6 +1013,7 @@
             message += `*פרטי לקוח:*\n`;
             message += `שם לקוח: ${customerName || 'לא הוזן'}\n`;
             message += `איש קשר: ${contactPerson || 'לא הוזן'}\n`;
+            message += `נייד: ${mobileNumber || 'לא הוזן'}\n`; // Include mobile number
             message += `כתובת: ${street || ''} ${streetNumber || ''}, ${city || 'לא הוזן'}\n`;
             message += `אימייל: ${email || 'לא הוזן'}\n\n`;
 
@@ -1029,12 +1072,16 @@
                                 <p class="font-bold text-lg text-indigo-700">מספר הזמנה: ${order.orderId || 'N/A'}</p>
                                 <p><strong>תאריך:</strong> ${new Date(order.timestamp).toLocaleString('he-IL')}</p>
                                 <p><strong>שם לקוח:</strong> ${order.customer.name || 'N/A'}</p>
+                                <p><strong>איש קשר:</strong> ${order.customer.contactPerson || 'N/A'}</p>
+                                <p><strong>נייד:</strong> ${order.customer.mobile || 'N/A'}</p>
                                 <p><strong>כתובת:</strong> ${order.customer.address || 'N/A'}</p>
+                                <p><strong>אימייל:</strong> ${order.customer.email || 'N/A'}</p>
                                 <p><strong>סה"כ משקל:</strong> ${order.totalWeight || '0'} ק"ג</p>
                                 <p><strong>סה"כ פריטים:</strong> ${order.totalItems || '0'}</p>
+                                <p class="mt-2"><strong>סוגי הובלה:</strong> ${order.deliveryTypes.join(', ') || 'N/A'}</p>
                                 <p class="mt-2"><strong>פריטים:</strong></p>
                                 <ul class="list-disc list-inside text-sm text-gray-700">
-                                    ${order.products.map(p => `<li>${p.itemName} (כמות: ${p.quantity}, ברקוד: ${p.barcode || 'אין'})</li>`).join('')}
+                                    ${order.products.map(p => `<li>${p.itemName} (כמות: ${p.quantity}, ברקוד: ${p.barcode && !p.barcode.startsWith('FREE_TEXT_') ? p.barcode : 'אין'})</li>`).join('')}
                                 </ul>
                             </div>
                         `;
