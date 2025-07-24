@@ -31,6 +31,7 @@
             gap: 1.5rem; /* Space between sections */
             text-align: right; /* Align text to the right for RTL */
             min-height: calc(100vh - 4rem); /* Ensure it takes up most of the viewport height */
+            padding-bottom: 6rem; /* Add padding for fixed footer */
         }
 
         /* Card styling for sections */
@@ -522,6 +523,7 @@
                 max-width: 100%;
                 width: auto; /* Allow content to dictate width within margins */
                 text-align: center; /* Center content within container for print */
+                padding-bottom: 0; /* Remove padding for print */
             }
             .no-print {
                 display: none !important;
@@ -774,15 +776,33 @@
         }
 
         /* Dashboard specific styles */
-        #dashboardPage {
-            width: 100%; /* Ensure it takes full width */
-            max-height: calc(100vh - 4rem); /* Limit height to viewport minus padding */
-            overflow-y: auto; /* Enable scrolling for dashboard content */
-            border-radius: 1.5rem; /* Consistent with card styling */
-            box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.1), 0 6px 12px -4px rgba(0, 0, 0, 0.06); /* Add shadow for the whole dashboard page */
-            background-color: #FFFFFF; /* White background for the dashboard area */
-            padding: 2.5rem; /* Consistent padding */
+        #orderFormPage, #dashboardPage {
+            width: 100%;
+            flex-grow: 1; /* Allow content to fill available space */
+            overflow-y: auto; /* Enable scrolling for content within these pages */
+            padding-right: 1rem; /* Add padding to prevent content from touching scrollbar */
+            box-sizing: border-box; /* Include padding in width */
         }
+
+        /* Hide scrollbar for aesthetic purposes, but allow scrolling */
+        #orderFormPage::-webkit-scrollbar, #dashboardPage::-webkit-scrollbar {
+            width: 0.5rem;
+        }
+
+        #orderFormPage::-webkit-scrollbar-track, #dashboardPage::-webkit-scrollbar-track {
+            background: transparent; /* Make track transparent */
+        }
+
+        #orderFormPage::-webkit-scrollbar-thumb, #dashboardPage::-webkit-scrollbar-thumb {
+            background: #cbd5e0; /* Light gray thumb */
+            border-radius: 0.25rem;
+        }
+
+        #orderFormPage::-webkit-scrollbar-thumb:hover, #dashboardPage::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0; /* Darker gray on hover */
+        }
+
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -845,32 +865,50 @@
             background-color: #357ABD;
         }
 
-        /* Agent Login Button */
-        #agentLoginBtn {
+        /* New Fixed Navigation Footer */
+        .app-nav-footer {
             position: fixed;
-            top: 1rem;
-            left: 1rem; /* Position on the left for RTL */
-            background-color: #4A90E2; /* Blue */
-            color: white;
-            padding: 0.75rem 1.25rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #FFFFFF;
+            border-top: 1px solid #E2E8F0;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            padding: 0.75rem 0;
             display: flex;
+            justify-content: space-around;
             align-items: center;
-            font-weight: 600;
-            cursor: pointer;
-            z-index: 100; /* Ensure it's above other content */
-            transition: background-color 0.2s ease-in-out, transform 0.1s ease-out;
+            z-index: 50;
         }
-        #agentLoginBtn:hover {
-            background-color: #357ABD;
+
+        .app-nav-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1; /* Distribute space evenly */
+            padding: 0.75rem 0.5rem;
+            background-color: transparent; /* No background by default */
+            color: #4A5568; /* Gray text */
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: none;
+            border-radius: 0.75rem;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.1s ease-out;
+            cursor: pointer;
+        }
+        .app-nav-button:hover {
+            background-color: #F0F2F5; /* Light gray on hover */
+            color: #1E90FF; /* Dodger Blue on hover */
             transform: translateY(-2px);
         }
-        #agentLoginBtn:active {
-            transform: translateY(0);
+        .app-nav-button.active {
+            color: #1E90FF; /* Active color */
+            background-color: #EBF8FF; /* Light blue background for active */
+            box-shadow: 0 2px 8px rgba(30, 144, 255, 0.1);
         }
-        #agentLoginBtn svg {
-            margin-left: 0.5rem; /* Space between text and icon */
+        .app-nav-button svg {
+            margin-bottom: 0.25rem; /* Space between icon and text */
         }
 
         /* Password input specific styling */
@@ -917,14 +955,6 @@
     </style>
 </head>
 <body>
-    <!-- Agent Login Button -->
-    <button id="agentLoginBtn" class="no-print">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        כניסת נציג
-    </button>
-
     <div class="container-wrapper">
         <h1 class="text-3xl font-bold mb-6">טופס הזמנה חדשה</h1>
 
@@ -1106,7 +1136,7 @@
         <!-- Admin Dashboard Page (initially hidden) -->
         <div id="dashboardPage" class="hidden">
             <h2 class="text-xl font-semibold mb-4 text-center">לוח בקרה - ניהול הזמנות</h2>
-            <button id="backToFormBtn" class="smart-button mb-6">חזרה לטופס ההזמנה</button>
+            <button id="backToFormBtn" class="smart-button mb-6 hidden">חזרה לטופס ההזמנה</button> <!-- This button is now redundant with bottom nav -->
 
             <!-- Dashboard Summary Metrics -->
             <div class="dashboard-grid mb-6">
@@ -1308,6 +1338,23 @@
         </div>
     </div>
 
+    <!-- New Fixed Navigation Footer -->
+    <div class="app-nav-footer no-print">
+        <button id="mainPageBtn" class="app-nav-button active">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            ראשי
+        </button>
+        <button id="dashboardNavBtn" class="app-nav-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16V8l3 3m0 0l-3 3m-4-7V4a1 1 0 011-1h4a1 1 0 011 1v3M6 16V4a1 1 0 011-1h11l-3 3m-6 6h6m-3 0V9m-3 3l3 3m-3-3l3-3" />
+            </svg>
+            לוח בקרה
+        </button>
+    </div>
+
 
     <script>
         // IMPORTANT: Replace this URL with your deployed Google Apps Script Web App URL
@@ -1316,7 +1363,7 @@
         // 2. בחר 'Web app' (יישום אינטרנט) כסוג הפריסה.
         // 3. הגדר 'Execute as' (הפעל כ) ל-'Me' (אני) ו-'Who has access' (מי שיש לו גישה) ל-'Anyone' (כל אחד).
         // 4. העתק את ה-URL שיופיע לאחר הפריסה והדבק אותו כאן.
-        const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbxNaX3_HqI5_qtO2Yn0wGQEMGDVlemDh384BvCbY9U4yZPk4EBCjupdyEHuuykcKST_/exec'; 
+        const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbxNaX3_HqI5_qtO2Yn0wGQEMGDVlemDh384BfXyk1c0Jf74jxwQ41aC_5uz9YA4yZPk4EBCjupdyEHuuykcKST_/exec'; 
 
         // Global variables
         let allProducts = []; // Stores all products fetched from the sheet
@@ -1335,8 +1382,8 @@
         // DOM elements
         const orderFormPage = document.getElementById('orderFormPage');
         const dashboardPage = document.getElementById('dashboardPage');
-        const agentLoginBtn = document.getElementById('agentLoginBtn');
-        const backToFormBtn = document.getElementById('backToFormBtn');
+        // const agentLoginBtn = document.getElementById('agentLoginBtn'); // Replaced by new nav buttons
+        // const backToFormBtn = document.getElementById('backToFormBtn'); // Replaced by new nav buttons
         const passwordModal = document.getElementById('passwordModal');
         const passwordInput = document.getElementById('passwordInput');
         const submitPasswordBtn = document.getElementById('submitPasswordBtn');
@@ -1408,6 +1455,10 @@
         const totalOrdersCountDisplay = document.getElementById('totalOrdersCount');
         const overallTotalWeightDisplay = document.getElementById('overallTotalWeight');
         const averageOrderWeightDisplay = document.getElementById('averageOrderWeight');
+
+        // New Navigation Buttons
+        const mainPageBtn = document.getElementById('mainPageBtn');
+        const dashboardNavBtn = document.getElementById('dashboardNavBtn');
 
 
         // Function to display messages in the message box (old, will be replaced by feedbackPopup)
@@ -2696,8 +2747,8 @@
 
         // --- Admin Dashboard Functions ---
 
-        // Show password modal
-        agentLoginBtn.addEventListener('click', openPasswordModal);
+        // Show password modal (now triggered by dashboardNavBtn)
+        // agentLoginBtn.addEventListener('click', openPasswordModal); // Removed
 
         function openPasswordModal() {
             passwordInput.value = ''; // Clear previous input
@@ -2740,16 +2791,21 @@
             if (pageId === 'orderForm') {
                 orderFormPage.classList.remove('hidden');
                 dashboardPage.classList.add('hidden');
-                agentLoginBtn.classList.remove('hidden'); // Show agent login button
+                mainPageBtn.classList.add('active');
+                dashboardNavBtn.classList.remove('active');
             } else if (pageId === 'dashboard') {
                 orderFormPage.classList.add('hidden');
                 dashboardPage.classList.remove('hidden');
-                agentLoginBtn.classList.add('hidden'); // Hide agent login button
+                mainPageBtn.classList.remove('active');
+                dashboardNavBtn.classList.add('active');
                 fetchAndRenderDashboard(); // Load dashboard data when shown
             }
         }
 
-        backToFormBtn.addEventListener('click', () => showPage('orderForm'));
+        // Event listeners for new navigation buttons
+        mainPageBtn.addEventListener('click', () => showPage('orderForm'));
+        dashboardNavBtn.addEventListener('click', openPasswordModal); // Dashboard requires password
+
 
         // Fetch and Render Dashboard Data
         async function fetchAndRenderDashboard() {
