@@ -7,7 +7,9 @@
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts - Inter for clean typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght[300..900]&display=swap" rel="stylesheet">
+    <!-- Chart.js for professional charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* Custom styles for Inter font and general layout */
         body {
@@ -28,6 +30,8 @@
             flex-direction: column;
             gap: 1.5rem; /* Space between sections */
             text-align: right; /* Align text to the right for RTL */
+            min-height: calc(100vh - 4rem); /* Ensure it takes up most of the viewport height */
+            padding-bottom: 6rem; /* Add padding for fixed footer */
         }
 
         /* Card styling for sections */
@@ -519,6 +523,7 @@
                 max-width: 100%;
                 width: auto; /* Allow content to dictate width within margins */
                 text-align: center; /* Center content within container for print */
+                padding-bottom: 0; /* Remove padding for print */
             }
             .no-print {
                 display: none !important;
@@ -559,7 +564,7 @@
                 border: 4px solid #000; /* Even Thicker black border for table */
                 margin: 15px auto; /* Centered and increased margin */
                 width: 80%; /* Define width to allow centering */
-                border-collapse: collapse; /* Ensure collapse for clean lines */
+                border-collapse: collapse;
             }
             th, td {
                 border: 2px solid #000; /* Thicker black border for cells */
@@ -627,11 +632,12 @@
             }
         }
 
-        /* Feedback Pop-up Styles (Toast Notification) */
+        /* Feedback Pop-up Styles (Toast Notification) - NEW POSITION AND ANIMATIONS */
         #feedbackPopup {
             position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
+            top: 1.5rem; /* Position at the top */
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px); /* Start slightly above center, then slide down */
             background-color: #4CAF50; /* Green background */
             color: white;
             padding: 0.75rem 1.25rem;
@@ -640,13 +646,14 @@
             display: flex;
             align-items: center;
             opacity: 0; /* Start hidden */
-            transform: translateY(20px); /* Start slightly below */
             transition: opacity 0.4s ease-out, transform 0.4s ease-out; /* Smoother transition */
             z-index: 1000;
+            min-width: 250px; /* Ensure it's not too small */
+            justify-content: center; /* Center content */
         }
         #feedbackPopup.show {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateX(-50%) translateY(0); /* Slide down to final position */
         }
         #feedbackEmoji {
             font-size: 1.5rem;
@@ -679,53 +686,271 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Invitation Card Modal Styles */
-        #invitationCardModal {
-            transition: opacity 0.3s ease-out;
-        }
-        #invitationCardModal.hidden {
+        /* Modal Base Styles */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 50;
             opacity: 0;
             pointer-events: none; /* Disable interactions when hidden */
-        }
-        #invitationCardContent {
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-        }
-        #invitationCardModal.hidden #invitationCardContent {
-            transform: scale(0.95);
-            opacity: 0;
-        }
-        #invitationCardModal.show #invitationCardContent {
-            transform: scale(1);
-            opacity: 1;
-        }
-        .invitation-card-header {
-            background: linear-gradient(to right, #1E90FF, #007ACC); /* Dodger Blue gradient */
-        }
-        .invitation-card-icon-wrapper {
-            background-color: #FFFFFF;
-        }
-        .invitation-card-icon {
-            color: #1E90FF; /* Dodger Blue for icon */
-        }
-
-        /* WhatsApp Contact Modal Styles */
-        #whatsappContactModal {
             transition: opacity 0.3s ease-out;
         }
-        #whatsappContactModal.hidden {
-            opacity: 0;
-            pointer-events: none;
+        .modal.show {
+            opacity: 1;
+            pointer-events: auto;
         }
-        #whatsappContactContent {
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-        }
-        #whatsappContactModal.hidden #whatsappContactContent {
+        .modal-content {
+            background-color: #FFFFFF;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            padding: 2.5rem;
+            max-width: 90%; /* Responsive max width */
+            width: 500px; /* Default width */
+            text-align: center;
+            position: relative;
+            overflow: hidden;
             transform: scale(0.95);
             opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
         }
-        #whatsappContactModal.show #whatsappContactContent {
+        .modal.show .modal-content {
             transform: scale(1);
             opacity: 1;
+        }
+        .modal-close-button {
+            position: absolute;
+            top: 1rem;
+            left: 1rem; /* Position on the left for RTL */
+            background: none;
+            border: none;
+            font-size: 2rem;
+            line-height: 1;
+            color: #A0AEC0;
+            cursor: pointer;
+            transition: color 0.2s ease-in-out;
+        }
+        .modal-close-button:hover {
+            color: #4A5568;
+        }
+
+        /* Specific Modal Styles */
+        #invitationCardContent .modal-header,
+        #whatsappContactContent .modal-header,
+        #passwordModalContent .modal-header {
+            background: linear-gradient(to right, #1E90FF, #007ACC); /* Dodger Blue gradient */
+            color: white;
+            padding: 1.5rem;
+            margin: -2.5rem -2.5rem 2rem -2.5rem; /* Extend to edges, create space below */
+            border-top-left-radius: 1.25rem;
+            border-top-right-radius: 1.25rem;
+            position: relative;
+        }
+        #invitationCardContent .modal-header h2,
+        #whatsappContactContent .modal-header h2,
+        #passwordModalContent .modal-header h2 {
+            color: white; /* Ensure white text on gradient */
+            border-bottom: none; /* Remove separator */
+            margin-bottom: 0.5rem;
+            padding-bottom: 0;
+            text-align: center;
+        }
+        .modal-icon-wrapper {
+            background-color: #FFFFFF;
+            padding: 0.75rem;
+            border-radius: 9999px; /* Full circle */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 50%); /* Center and push down */
+        }
+        .modal-icon {
+            color: #1E90FF; /* Dodger Blue for icon */
+            width: 2rem;
+            height: 2rem;
+        }
+
+        /* Dashboard specific styles */
+        #orderFormPage, #dashboardPage {
+            width: 100%;
+            flex-grow: 1; /* Allow content to fill available space */
+            overflow-y: auto; /* Enable scrolling for content within these pages */
+            padding-right: 1rem; /* Add padding to prevent content from touching scrollbar */
+            box-sizing: border-box; /* Include padding in width */
+        }
+
+        /* Hide scrollbar for aesthetic purposes, but allow scrolling */
+        #orderFormPage::-webkit-scrollbar, #dashboardPage::-webkit-scrollbar {
+            width: 0.5rem;
+        }
+
+        #orderFormPage::-webkit-scrollbar-track, #dashboardPage::-webkit-scrollbar-track {
+            background: transparent; /* Make track transparent */
+        }
+
+        #orderFormPage::-webkit-scrollbar-thumb, #dashboardPage::-webkit-scrollbar-thumb {
+            background: #cbd5e0; /* Light gray thumb */
+            border-radius: 0.25rem;
+        }
+
+        #orderFormPage::-webkit-scrollbar-thumb:hover, #dashboardPage::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0; /* Darker gray on hover */
+        }
+
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .chart-container {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .chart-container h3 {
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: #2D3748;
+            font-size: 1.25rem;
+            text-align: center;
+        }
+        .dashboard-table-container {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            overflow-x: auto; /* Allow horizontal scroll for table */
+            max-height: 400px; /* Limit height of the table container */
+            overflow-y: auto; /* Add vertical scroll to table container */
+        }
+        .dashboard-table th, .dashboard-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #E2E8F0;
+            text-align: right;
+        }
+        .dashboard-table th {
+            background-color: #F7FAFC;
+            font-weight: 600;
+        }
+        .dashboard-table tr:last-child td {
+            border-bottom: none;
+        }
+        .dashboard-table select {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #CBD5E0;
+            background-color: white;
+            font-size: 0.9rem;
+        }
+        .dashboard-table button {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: white;
+            background-color: #4A90E2; /* Blue for action buttons */
+            transition: background-color 0.2s ease-in-out;
+        }
+        .dashboard-table button:hover {
+            background-color: #357ABD;
+        }
+
+        /* New Fixed Navigation Footer */
+        .app-nav-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #FFFFFF;
+            border-top: 1px solid #E2E8F0;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            padding: 0.75rem 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 50;
+        }
+
+        .app-nav-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1; /* Distribute space evenly */
+            padding: 0.75rem 0.5rem;
+            background-color: transparent; /* No background by default */
+            color: #4A5568; /* Gray text */
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: none;
+            border-radius: 0.75rem;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.1s ease-out;
+            cursor: pointer;
+        }
+        .app-nav-button:hover {
+            background-color: #F0F2F5; /* Light gray on hover */
+            color: #1E90FF; /* Dodger Blue on hover */
+            transform: translateY(-2px);
+        }
+        .app-nav-button.active {
+            color: #1E90FF; /* Active color */
+            background-color: #EBF8FF; /* Light blue background for active */
+            box-shadow: 0 2px 8px rgba(30, 144, 255, 0.1);
+        }
+        .app-nav-button svg {
+            margin-bottom: 0.25rem; /* Space between icon and text */
+        }
+
+        /* Password input specific styling */
+        #passwordModalContent {
+            padding: 2rem; /* Adjusted padding for better fit */
+        }
+        #passwordInput {
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 0.8rem;
+            border-radius: 0.75rem;
+            border: 1px solid #CBD5E0;
+            width: 80%;
+            max-width: 250px;
+            margin: 1rem auto;
+            display: block;
+        }
+        #passwordInput:focus {
+            border-color: #1E90FF;
+            box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.25);
+            outline: none;
+        }
+
+        /* Dashboard Summary Boxes */
+        .summary-box {
+            background-color: #EBF8FF; /* Light blue */
+            border: 1px solid #90CDF4;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .summary-box h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2D3748;
+            margin-bottom: 0.5rem;
+        }
+        .summary-box p {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1E90FF;
         }
     </style>
 </head>
@@ -733,201 +958,288 @@
     <div class="container-wrapper">
         <h1 class="text-3xl font-bold mb-6">טופס הזמנה חדשה</h1>
 
-        <!-- Customer Details Section -->
-        <div class="card mb-6">
-            <h2 class="text-xl font-semibold mb-4">פרטי לקוח</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div>
-                    <label for="customerName">שם לקוח:</label>
-                    <input type="text" id="customerName" placeholder="הכנס שם לקוח">
+        <!-- Order Form Page -->
+        <div id="orderFormPage">
+            <!-- Customer Details Section -->
+            <div class="card mb-6">
+                <h2 class="text-xl font-semibold mb-4">פרטי לקוח</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label for="customerName">שם לקוח:</label>
+                        <input type="text" id="customerName" placeholder="הכנס שם לקוח">
+                    </div>
+                    <div>
+                        <label for="contactPerson">איש קשר:</label>
+                        <input type="text" id="contactPerson" placeholder="הכנס שם איש קשר">
+                    </div>
+                    <div>
+                        <label for="phoneNumber">מספר נייד:</label>
+                        <input type="tel" id="phoneNumber" placeholder="הכנס מספר טלפון נייד">
+                    </div>
+                    <div>
+                        <label for="email">אימייל:</label>
+                        <input type="email" id="email" placeholder="הכנס כתובת אימייל">
+                    </div>
+                    <div>
+                        <label for="street">רחוב:</label>
+                        <input type="text" id="street" placeholder="הכנס שם רחוב">
+                    </div>
+                    <div>
+                        <label for="streetNumber">מספר רחוב:</label>
+                        <input type="text" id="streetNumber" placeholder="הכנס מספר רחוב">
+                    </div>
+                    <div>
+                        <label for="city">עיר:</label>
+                        <input type="text" id="city" placeholder="הכנס עיר">
+                    </div>
                 </div>
-                <div>
-                    <label for="contactPerson">איש קשר:</label>
-                    <input type="text" id="contactPerson" placeholder="הכנס שם איש קשר">
-                </div>
-                <div>
-                    <label for="phoneNumber">מספר נייד:</label>
-                    <input type="tel" id="phoneNumber" placeholder="הכנס מספר טלפון נייד">
-                </div>
-                <div>
-                    <label for="email">אימייל:</label>
-                    <input type="email" id="email" placeholder="הכנס כתובת אימייל">
-                </div>
-                <div>
-                    <label for="street">רחוב:</label>
-                    <input type="text" id="street" placeholder="הכנס שם רחוב">
-                </div>
-                <div>
-                    <label for="streetNumber">מספר רחוב:</label>
-                    <input type="text" id="streetNumber" placeholder="הכנס מספר רחוב">
-                </div>
-                <div>
-                    <label for="city">עיר:</label>
-                    <input type="text" id="city" placeholder="הכנס עיר">
-                </div>
-            </div>
-        </div>
-
-        <!-- Delivery Details Section -->
-        <div class="card mb-6">
-            <h2 class="text-xl font-semibold mb-4">פרטי אספקה</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label for="deliveryDate">תאריך אספקה:</label>
-                    <input type="date" id="deliveryDate">
-                </div>
-                <div>
-                    <label for="deliveryTime">שעת אספקה:</label>
-                    <input type="time" id="deliveryTime">
-                </div>
-                <div>
-                    <label for="driverName">שם נהג מתוכנן:</label>
-                    <input type="text" id="driverName" placeholder="הכנס שם נהג">
-                </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-                <div class="flex items-center">
-                    <input type="checkbox" id="manualUnloading" class="ml-2">
-                    <label for="manualUnloading" class="mb-0">פריקה ידנית</label>
-                </div>
-                <div class="flex items-center">
-                    <input type="checkbox" id="crane10m" class="ml-2">
-                    <label for="crane10m" class="mb-0">הובלת מנוף 10 מטר</label>
-                </div>
-                <div class="flex items-center">
-                    <input type="checkbox" id="crane15m" class="ml-2">
-                    <label for="crane15m" class="mb-0">הובלת מנוף 15 מטר</label>
-                </div>
-                <div class="flex items-center">
-                    <input type="checkbox" id="craneWork" class="ml-2">
-                    <label for="craneWork" class="mb-0">עבודות מנוף</label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product Selection Section -->
-        <div class="card mb-6">
-            <h2 class="text-xl font-semibold mb-4">הוספת מוצרים</h2>
-            <div class="product-input-group">
-                <label for="productSearchInput">בחר מוצר (הקלד 2 אותיות לחיפוש):</label>
-                <input type="text" id="productSearchInput" placeholder="הקלד שם מוצר או ברקוד">
-                <div id="autocompleteSuggestions" class="autocomplete-suggestions"></div>
             </div>
 
-            <div class="flex items-center gap-4 mt-4">
-                <label for="quantity" class="mb-0">כמות:</label>
-                <input type="number" id="quantity" min="1" value="1" class="w-24">
-                <button id="addProductBtn" class="smart-button flex-shrink-0" disabled>
-                    הוסף פריט
+            <!-- Delivery Details Section -->
+            <div class="card mb-6">
+                <h2 class="text-xl font-semibold mb-4">פרטי אספקה</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="deliveryDate">תאריך אספקה:</label>
+                        <input type="date" id="deliveryDate">
+                    </div>
+                    <div>
+                        <label for="deliveryTime">שעת אספקה:</label>
+                        <input type="time" id="deliveryTime">
+                    </div>
+                    <div>
+                        <label for="driverName">שם נהג מתוכנן:</label>
+                        <input type="text" id="driverName" placeholder="הכנס שם נהג">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="manualUnloading" class="ml-2">
+                        <label for="manualUnloading" class="mb-0">פריקה ידנית</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="crane10m" class="ml-2">
+                        <label for="crane10m" class="mb-0">הובלת מנוף 10 מטר</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="crane15m" class="ml-2">
+                        <label for="crane15m" class="mb-0">הובלת מנוף 15 מטר</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="craneWork" class="ml-2">
+                        <label for="craneWork" class="mb-0">עבודות מנוף</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Selection Section -->
+            <div class="card mb-6">
+                <h2 class="text-xl font-semibold mb-4">הוספת מוצרים</h2>
+                <div class="product-input-group">
+                    <label for="productSearchInput">בחר מוצר (הקלד 2 אותיות לחיפוש):</label>
+                    <input type="text" id="productSearchInput" placeholder="הקלד שם מוצר או ברקוד">
+                    <div id="autocompleteSuggestions" class="autocomplete-suggestions"></div>
+                </div>
+
+                <div class="flex items-center gap-4 mt-4">
+                    <label for="quantity" class="mb-0">כמות:</label>
+                    <input type="number" id="quantity" min="1" value="1" class="w-24">
+                    <button id="addProductBtn" class="smart-button flex-shrink-0" disabled>
+                        הוסף פריט
+                    </button>
+                </div>
+            </div>
+
+            <!-- Selected Products Table -->
+            <div class="card mb-6">
+                <h2 class="text-xl font-semibold mb-4">פריטים בהזמנה</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="py-2 px-4 border-b text-right">שם פריט</th>
+                                <th class="py-2 px-4 border-b text-right">ברקוד</th>
+                                <th class="py-2 px-4 border-b text-center">כמות</th>
+                                <th class="py-2 px-4 border-b text-center">משקל יחידה (ק"ג)</th>
+                                <th class="py-2 px-4 border-b text-center">סה"כ משקל (ק"ג)</th>
+                                <th class="py-2 px-4 border-b text-right">הערות משקל</th>
+                                <th class="py-2 px-4 border-b text-center no-print">פעולות</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderItemsTableBody">
+                            <!-- Product rows will be added here by JavaScript -->
+                            <tr id="noItemsRow">
+                                <td colspan="7" class="text-center py-4 text-gray-500">עדיין לא נוספו פריטים להזמנה.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Weight Summary -->
+            <div class="card mb-6">
+                <h2 class="text-xl font-semibold mb-4">סיכום משקלים</h2>
+                <p class="text-lg font-bold text-gray-800 text-right">
+                    סה"כ משקל הזמנה: <span id="totalWeightDisplay">0</span> ק"ג
+                </p>
+            </div>
+
+            <!-- General Notes Section -->
+            <div class="card mb-6">
+                <label for="generalNotes">הערות כלליות להזמנה:</label>
+                <textarea id="generalNotes" rows="3" placeholder="הקלד הערות כלליות להזמנה כאן..."></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 flex flex-col md:flex-row gap-4 no-print">
+                <button id="printOrderBtn" class="smart-button flex-1">
+                    הדפסת הזמנה
+                </button>
+                <button id="whatsappShareBtn" class="smart-button flex-1">
+                    שיתוף בוואטסאפ
+                </button>
+                <button id="generateInvitationBtn" class="smart-button flex-1 bg-purple-600 hover:bg-purple-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    הפק הזמנה דיגיטלית
+                </button>
+                <button id="callUsBtn" class="smart-button flex-1 contact-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    התקשר אלינו
+                </button>
+                <button id="openWhatsappContactBtn" class="smart-button flex-1 contact-button bg-green-500 hover:bg-green-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    וואטסאפ
+                </button>
+                <button id="clearFormBtn" class="smart-button flex-1">
+                    ניקוי טופס
                 </button>
             </div>
+
+            <!-- Message Box for user feedback (kept for compatibility, though feedbackPopup is preferred) -->
+            <div class="message-box mt-6" id="messageBox">
+                <p>המוצרים ייטענו אוטומטית מגיליון הנתונים. וודא שקובץ Code.gs פרוס כ-Web App.</p>
+            </div>
+
+            <!-- Raw Data for debugging (hidden by default, can be toggled) -->
+            <div class="mt-6 hidden">
+                <h2 class="text-xl font-semibold mb-2">נתוני מוצרים גולמיים (לצורך בדיקה):</h2>
+                <pre id="rawData" class="bg-gray-100 p-4 rounded-lg text-sm overflow-auto max-h-64"></pre>
+            </div>
         </div>
 
-        <!-- Selected Products Table -->
-        <div class="card mb-6">
-            <h2 class="text-xl font-semibold mb-4">פריטים בהזמנה</h2>
-            <div class="overflow-x-auto">
-                <table class="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden">
+        <!-- Admin Dashboard Page (initially hidden) -->
+        <div id="dashboardPage" class="hidden">
+            <h2 class="text-xl font-semibold mb-4 text-center">לוח בקרה - ניהול הזמנות</h2>
+            <button id="backToFormBtn" class="smart-button mb-6 hidden">חזרה לטופס ההזמנה</button> <!-- This button is now redundant with bottom nav -->
+
+            <!-- Dashboard Summary Metrics -->
+            <div class="dashboard-grid mb-6">
+                <div class="summary-box">
+                    <h3>סה"כ הזמנות</h3>
+                    <p id="totalOrdersCount">0</p>
+                </div>
+                <div class="summary-box">
+                    <h3>סה"כ משקל כללי</h3>
+                    <p id="overallTotalWeight">0 ק"ג</p>
+                </div>
+                <div class="summary-box">
+                    <h3>ממוצע משקל להזמנה</h3>
+                    <p id="averageOrderWeight">0 ק"ג</p>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="dashboard-grid mb-6">
+                <div class="chart-container">
+                    <h3>סטטוס הזמנות</h3>
+                    <canvas id="orderStatusChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>הזמנות לנהג</h3>
+                    <canvas id="ordersByDriverChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>הזמנות לפי סוג הובלה</h3>
+                    <canvas id="ordersByDeliveryTypeChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>הזמנות לפי עיר</h3>
+                    <canvas id="ordersByCityChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Orders Log Table -->
+            <div class="dashboard-table-container">
+                <h3 class="text-xl font-semibold mb-4 text-right">יומן הזמנות</h3>
+                <table class="min-w-full dashboard-table bg-white rounded-lg overflow-hidden">
                     <thead>
                         <tr class="bg-gray-100">
-                            <th class="py-2 px-4 border-b text-right">שם פריט</th>
-                            <th class="py-2 px-4 border-b text-right">ברקוד</th>
-                            <th class="py-2 px-4 border-b text-center">כמות</th>
-                            <th class="py-2 px-4 border-b text-center">משקל יחידה (ק"ג)</th>
-                            <th class="py-2 px-4 border-b text-center">סה"כ משקל (ק"ג)</th>
-                            <th class="py-2 px-4 border-b text-right">הערות משקל</th>
-                            <th class="py-2 px-4 border-b text-center no-print">פעולות</th>
+                            <th class="py-2 px-4 border-b">חותמת זמן</th>
+                            <th class="py-2 px-4 border-b">לקוח</th>
+                            <th class="py-2 px-4 border-b">טלפון</th>
+                            <th class="py-2 px-4 border-b">נהג</th>
+                            <th class="py-2 px-4 border-b">סה"כ פריטים</th>
+                            <th class="py-2 px-4 border-b">סה"כ משקל</th>
+                            <th class="py-2 px-4 border-b">סטטוס</th>
+                            <th class="py-2 px-4 border-b">פעולות</th>
                         </tr>
                     </thead>
-                    <tbody id="orderItemsTableBody">
-                        <!-- Product rows will be added here by JavaScript -->
-                        <tr id="noItemsRow">
-                            <td colspan="7" class="text-center py-4 text-gray-500">עדיין לא נוספו פריטים להזמנה.</td>
-                        </tr>
+                    <tbody id="orderLogTableBody">
+                        <tr><td colspan="8" class="text-center py-4 text-gray-500">טוען נתונים...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Weight Summary -->
-        <div class="card mb-6">
-            <h2 class="text-xl font-semibold mb-4">סיכום משקלים</h2>
-            <p class="text-lg font-bold text-gray-800 text-right">
-                סה"כ משקל הזמנה: <span id="totalWeightDisplay">0</span> ק"ג
-            </p>
-        </div>
-
-        <!-- General Notes Section -->
-        <div class="card mb-6">
-            <label for="generalNotes">הערות כלליות להזמנה:</label>
-            <textarea id="generalNotes" rows="3" placeholder="הקלד הערות כלליות להזמנה כאן..."></textarea>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="mt-6 flex flex-col md:flex-row gap-4 no-print">
-            <button id="printOrderBtn" class="smart-button flex-1">
-                הדפסת הזמנה
-            </button>
-            <button id="whatsappShareBtn" class="smart-button flex-1">
-                שיתוף בוואטסאפ
-            </button>
-            <button id="generateInvitationBtn" class="smart-button flex-1 bg-purple-600 hover:bg-purple-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-                הפק הזמנה דיגיטלית
-            </button>
-            <button id="callUsBtn" class="smart-button flex-1 contact-button">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-                התקשר אלינו
-            </button>
-            <button id="openWhatsappContactBtn" class="smart-button flex-1 contact-button bg-green-500 hover:bg-green-600">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-                וואטסאפ
-            </button>
-            <button id="clearFormBtn" class="smart-button flex-1">
-                ניקוי טופס
-            </button>
-        </div>
-
-        <!-- Message Box for user feedback -->
-        <div class="message-box mt-6" id="messageBox">
-            <p>המוצרים ייטענו אוטומטית מגיליון הנתונים. וודא שקובץ Code.gs פרוס כ-Web App.</p>
-        </div>
-
-        <!-- Raw Data for debugging (hidden by default, can be toggled) -->
-        <div class="mt-6 hidden">
-            <h2 class="text-xl font-semibold mb-2">נתוני מוצרים גולמיים (לצורך בדיקה):</h2>
-            <pre id="rawData" class="bg-gray-100 p-4 rounded-lg text-sm overflow-auto max-h-64"></pre>
-        </div>
-
     </div>
 
     <!-- Feedback Pop-up -->
-    <div id="feedbackPopup" class="fixed bottom-4 right-4 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg hidden items-center" style="z-index: 1000;">
+    <div id="feedbackPopup" class="fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg hidden items-center" style="z-index: 1000;">
         <span id="feedbackEmoji" class="ml-2"></span>
         <span id="feedbackMessage"></span>
     </div>
 
+    <!-- Password Modal -->
+    <div id="passwordModal" class="modal hidden">
+        <div class="modal-content" id="passwordModalContent">
+            <button class="modal-close-button" onclick="closePasswordModal()" aria-label="Close">&times;</button>
+            <div class="modal-header">
+                <h2 class="text-2xl font-bold">כניסת נציג</h2>
+                <p class="text-sm opacity-90">הכנס סיסמה כדי להיכנס ללוח הבקרה</p>
+                <div class="modal-icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="modal-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2v5a2 2 0 01-2 2h-5a2 2 0 01-2-2V9a2 2 0 012-2h5z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H9a2 2 0 00-2 2v2" />
+                    </svg>
+                </div>
+            </div>
+            <input type="password" id="passwordInput" placeholder="הקלד סיסמה" class="mb-4">
+            <button id="submitPasswordBtn" class="smart-button w-full">היכנס</button>
+            <p id="passwordError" class="text-red-500 text-sm mt-2 hidden">סיסמה שגויה. נסה שוב.</p>
+        </div>
+    </div>
+
     <!-- Invitation Card Modal -->
-    <div id="invitationCardModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center relative overflow-hidden transform transition-all duration-300 ease-out scale-95 opacity-0" id="invitationCardContent">
+    <div id="invitationCardModal" class="modal hidden">
+        <div class="modal-content" id="invitationCardContent">
             <!-- Close Button (X icon) -->
-            <button class="absolute top-4 left-4 text-gray-500 hover:text-gray-700 text-3xl font-light" onclick="closeInvitationCard()" aria-label="Close">
+            <button class="modal-close-button" onclick="closeInvitationCard()" aria-label="Close">
                 &times;
             </button>
 
             <!-- Card Header -->
-            <div class="invitation-card-header text-white p-6 rounded-t-2xl -mx-8 -mt-8 mb-6 relative">
+            <div class="modal-header">
                 <h2 class="text-3xl font-extrabold mb-2 leading-tight">הזמנתך בדרך אליך!</h2>
                 <p class="text-lg font-light opacity-90">עדכון סטטוס הזמנה</p>
                 <!-- Optional: Logo/Icon -->
-                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 invitation-card-icon-wrapper p-3 rounded-full shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 invitation-card-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <div class="modal-icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="modal-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 16V8l3 3m0 0l-3 3m-4-7V4a1 1 0 011-1h4a1 1 0 011 1v3M6 16V4a1 1 0 011-1h11l-3 3m-6 6h6m-3 0V9m-3 3l3 3m-3-3l3-3" />
                     </svg>
@@ -992,18 +1304,18 @@
     </div>
 
     <!-- WhatsApp Contact Modal -->
-    <div id="whatsappContactModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center relative overflow-hidden transform transition-all duration-300 ease-out scale-95 opacity-0" id="whatsappContactContent">
+    <div id="whatsappContactModal" class="modal hidden">
+        <div class="modal-content" id="whatsappContactContent">
             <!-- Close Button (X icon) -->
-            <button class="absolute top-4 left-4 text-gray-500 hover:text-gray-700 text-3xl font-light" onclick="closeWhatsappContactModal()" aria-label="Close">
+            <button class="modal-close-button" onclick="closeWhatsappContactModal()" aria-label="Close">
                 &times;
             </button>
 
-            <div class="invitation-card-header text-white p-6 rounded-t-2xl -mx-8 -mt-8 mb-6 relative">
+            <div class="modal-header">
                 <h2 class="text-3xl font-extrabold mb-2 leading-tight">שלח הודעת וואטסאפ</h2>
                 <p class="text-lg font-light opacity-90">בחר הודעה או הקלד חופשי</p>
-                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 invitation-card-icon-wrapper p-3 rounded-full shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 invitation-card-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <div class="modal-icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="modal-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                 </div>
@@ -1026,11 +1338,32 @@
         </div>
     </div>
 
+    <!-- New Fixed Navigation Footer -->
+    <div class="app-nav-footer no-print">
+        <button id="mainPageBtn" class="app-nav-button active">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            ראשי
+        </button>
+        <button id="dashboardNavBtn" class="app-nav-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16V8l3 3m0 0l-3 3m-4-7V4a1 1 0 011-1h4a1 1 0 011 1v3M6 16V4a1 1 0 011-1h11l-3 3m-6 6h6m-3 0V9m-3 3l3 3m-3-3l3-3" />
+            </svg>
+            לוח בקרה
+        </button>
+    </div>
+
 
     <script>
         // IMPORTANT: Replace this URL with your deployed Google Apps Script Web App URL
-        // הוראות לפריסה נמצאות בחלק הקודם של השיחה
-        const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbygjSL2JFpCqMBdSTWAVEeKPD8secghGUxFWNixbXyk1c0Jf74jxwQ41aC_5uz9YA4/exec'; 
+        // הוראות לפריסה נמצאות בחלק הקודם של השיחה:
+        // 1. ב-Google Apps Script, עבור אל 'Deploy' (פריסה) -> 'New deployment' (פריסה חדשה).
+        // 2. בחר 'Web app' (יישום אינטרנט) כסוג הפריסה.
+        // 3. הגדר 'Execute as' (הפעל כ) ל-'Me' (אני) ו-'Who has access' (מי שיש לו גישה) ל-'Anyone' (כל אחד).
+        // 4. העתק את ה-URL שיופיע לאחר הפריסה והדבק אותו כאן.
+        const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbxNaX3_HqI5_qtO2Yn0wGQEMGDVlemDh384BvCbY9U4yZPk4EBCjupdyEHuuykcKST_/exec'; 
 
         // Global variables
         let allProducts = []; // Stores all products fetched from the sheet
@@ -1038,8 +1371,24 @@
         let selectedProductForAdd = null; // Stores the currently selected product object from autocomplete
         let highlightedSuggestionIndex = -1; // For keyboard navigation in autocomplete (main search)
         let highlightedTableSuggestionIndex = -1; // For keyboard navigation in table cell autocomplete
+        let allOrders = []; // Stores all orders fetched for the dashboard
+
+        // Chart instances
+        let orderStatusChartInstance = null;
+        let ordersByDriverChartInstance = null;
+        let ordersByDeliveryTypeChartInstance = null; // New chart instance
+        let ordersByCityChartInstance = null; // New chart instance
 
         // DOM elements
+        const orderFormPage = document.getElementById('orderFormPage');
+        const dashboardPage = document.getElementById('dashboardPage');
+        // const agentLoginBtn = document.getElementById('agentLoginBtn'); // Replaced by new nav buttons
+        // const backToFormBtn = document.getElementById('backToFormBtn'); // Replaced by new nav buttons
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const submitPasswordBtn = document.getElementById('submitPasswordBtn');
+        const passwordError = document.getElementById('passwordError');
+
         const customerNameInput = document.getElementById('customerName');
         const contactPersonInput = document.getElementById('contactPerson');
         const phoneNumberInput = document.getElementById('phoneNumber');
@@ -1066,7 +1415,7 @@
         const whatsappShareBtn = document.getElementById('whatsappShareBtn');
         const generateInvitationBtn = document.getElementById('generateInvitationBtn'); // New button
         const clearFormBtn = document.getElementById('clearFormBtn');
-        const messageBox = document.getElementById('messageBox');
+        const messageBox = document.getElementById('messageBox'); // Kept for compatibility, though feedbackPopup is preferred
         const rawDataPre = document.getElementById('rawData'); // For debugging raw data
         const feedbackPopup = document.getElementById('feedbackPopup');
         const feedbackEmoji = document.getElementById('feedbackEmoji');
@@ -1093,10 +1442,26 @@
         const whatsappFreeMessage = document.getElementById('whatsappFreeMessage');
         const sendFreeWhatsappMessageBtn = document.getElementById('sendFreeWhatsappMessageBtn');
         const sendPredefinedWhatsappMessageBtn = document.getElementById('sendPredefinedWhatsappMessageBtn');
-        const whatsappPhoneNumber = '972508860896';
+        const whatsappPhoneNumber = '972508860896'; // The specific WhatsApp number for sending
 
 
-        // Function to display messages in the message box
+        // Dashboard elements
+        const orderLogTableBody = document.getElementById('orderLogTableBody');
+        const orderStatusChartCanvas = document.getElementById('orderStatusChart');
+        const ordersByDriverChartCanvas = document.getElementById('ordersByDriverChart');
+        const ordersByDeliveryTypeChartCanvas = document.getElementById('ordersByDeliveryTypeChart'); // New canvas
+        const ordersByCityChartCanvas = document.getElementById('ordersByCityChart'); // New canvas
+
+        const totalOrdersCountDisplay = document.getElementById('totalOrdersCount');
+        const overallTotalWeightDisplay = document.getElementById('overallTotalWeight');
+        const averageOrderWeightDisplay = document.getElementById('averageOrderWeight');
+
+        // New Navigation Buttons
+        const mainPageBtn = document.getElementById('mainPageBtn');
+        const dashboardNavBtn = document.getElementById('dashboardNavBtn');
+
+
+        // Function to display messages in the message box (old, will be replaced by feedbackPopup)
         function displayMessage(message, isError = false) {
             messageBox.textContent = message;
             messageBox.classList.remove('bg-blue-100', 'text-blue-800', 'border-blue-300', 'bg-red-100', 'text-red-800', 'border-red-300', 'error-message', 'bg-cyan-50', 'text-cyan-800', 'border-cyan-200', 'bg-red-50', 'text-red-800', 'border-red-300'); // Remove old classes
@@ -1147,6 +1512,7 @@
         async function fetchProducts() {
             showFeedbackMessage('טוען מוצרים...', 'loading');
             try {
+                console.log('Fetching products from URL:', googleAppsScriptUrl); // Log URL
                 const response = await fetch(googleAppsScriptUrl);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -1727,7 +2093,11 @@
             emailInput.value = '';
 
             // Clear delivery details
-            deliveryDateInput.value = '';
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const day = String(today.getDate()).padStart(2, '0');
+            deliveryDateInput.value = `${year}-${month}-${day}`; // Reset to today
             deliveryTimeInput.value = '';
             driverNameInput.value = '';
 
@@ -1749,8 +2119,87 @@
             showFeedbackMessage('הטופס נוקה בהצלחה.', 'success');
         });
 
+        // --- Order Logging Function ---
+        async function logOrder(actionType, orderStatus = 'חדש') {
+            // Collect all form data
+            const customerName = customerNameInput.value;
+            const contactPerson = contactPersonInput.value;
+            const phoneNumber = phoneNumberInput.value;
+            const email = emailInput.value;
+            const street = streetInput.value;
+            const streetNumber = streetNumberInput.value;
+            const city = cityInput.value;
+            const deliveryDate = deliveryDateInput.value;
+            const deliveryTime = deliveryTimeInput.value;
+            const driverName = driverNameInput.value;
+            const generalNotes = generalNotesInput.value;
+
+            const deliveryTypes = [];
+            if (manualUnloadingCheckbox.checked) deliveryTypes.push('פריקה ידנית');
+            if (crane10mCheckbox.checked) deliveryTypes.push('הובלת מנוף 10 מטר');
+            if (crane15mCheckbox.checked) deliveryTypes.push('הובלת מנוף 15 מטר');
+            if (craneWorkCheckbox.checked) deliveryTypes.push('עבודות מנוף');
+
+            let totalQuantity = 0;
+            selectedProducts.forEach(product => {
+                totalQuantity += product.quantity;
+            });
+
+            // Ensure selectedProducts is an array, even if empty
+            const productsToLog = Array.isArray(selectedProducts) ? selectedProducts : [];
+
+            const orderData = {
+                customerName,
+                contactPerson,
+                phoneNumber,
+                email,
+                street,
+                streetNumber,
+                city,
+                deliveryDate,
+                deliveryTime,
+                driverName,
+                deliveryTypes,
+                totalItems: totalQuantity,
+                totalWeight: parseFloat(totalWeightDisplay.textContent || 0), // Ensure it's a number
+                generalNotes,
+                selectedProducts: productsToLog, // Pass the array
+                action: actionType,
+                orderStatus: orderStatus
+            };
+
+            console.log('Attempting to log order. Data being sent:', orderData); // IMPORTANT: Log data before sending
+            console.log('Logging order to URL:', googleAppsScriptUrl); // Log URL
+
+            try {
+                const response = await fetch(googleAppsScriptUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(orderData),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+                const result = await response.json();
+                console.log('Order logging result:', result);
+                if (result.status === 'success') {
+                    showFeedbackMessage('ההזמנה תועדה בהצלחה!', 'success');
+                } else {
+                    showFeedbackMessage(`שגיאה בתיעוד ההזמנה: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('שגיאה בתיעוד הזמנה:', error);
+                showFeedbackMessage(`שגיאה בתיעוד הזמנה: ${error.message}`, 'error');
+            }
+        }
+
         // --- Print Order ---
-        printOrderBtn.addEventListener('click', () => {
+        printOrderBtn.addEventListener('click', async () => {
+            await logOrder('Printed'); // Log the order before printing
             // Collect all form data
             const customerName = customerNameInput.value;
             const contactPerson = contactPersonInput.value;
@@ -1923,15 +2372,14 @@
             // printWindow.close(); // Optional: Close window after printing (might be too fast)
         });
 
-        // --- WhatsApp Share ---
-        whatsappShareBtn.addEventListener('click', () => {
+        // --- WhatsApp Share (Main Button) ---
+        whatsappShareBtn.addEventListener('click', async () => {
+            await logOrder('WhatsApp Shared'); // Log the order before sharing
             shareOrderViaWhatsApp();
         });
 
-        // Function to share order via WhatsApp (main button)
-        function shareOrderViaWhatsApp() {
-            const phoneNumberWhatsapp = '972508860896'; // The specific WhatsApp number for sending
-
+        // Function to share order via WhatsApp (main button and predefined from modals)
+        function shareOrderViaWhatsApp(phoneNumberToShare = whatsappPhoneNumber) {
             // Collect all form data for the message
             const customerName = customerNameInput.value;
             const contactPerson = contactPersonInput.value;
@@ -2000,7 +2448,7 @@
 
             // Encode the message for URL
             const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/${phoneNumberWhatsapp}?text=${encodedMessage}`;
+            const whatsappUrl = `https://wa.me/${phoneNumberToShare}?text=${encodedMessage}`;
 
             // Open WhatsApp in a new tab
             window.open(whatsappUrl, '_blank');
@@ -2060,10 +2508,8 @@
         }
         window.closeInvitationCard = closeInvitationCard; // Make globally accessible for onclick
 
-        // --- WhatsApp Share Invitation ---
+        // --- WhatsApp Share Invitation (from Invitation Card Modal) ---
         whatsappShareInvitationBtn.addEventListener('click', () => {
-            const phoneNumberWhatsapp = '972508860896'; // The specific WhatsApp number for sending
-
             const customerName = customerNameInput.value || 'לקוח יקר';
             const deliveryDate = deliveryDateInput.value || 'לא הוזן';
             const deliveryTime = deliveryTimeInput.value || 'לא הוזן';
@@ -2105,7 +2551,7 @@
 
 
             const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/${whatsappPhoneNumber}?text=${encodedMessage}`;
+            const whatsappUrl = `https://wa.me/${phoneNumberToShare}?text=${encodedMessage}`;
             window.open(whatsappUrl, '_blank');
         });
 
@@ -2132,6 +2578,11 @@
             whatsappContactModal.classList.remove('hidden');
             whatsappContactModal.classList.add('show');
             whatsappContactContent.classList.add('show');
+
+            // Set data attributes for sending messages
+            whatsappContactContent.dataset.customerPhone = phoneNumberInput.value; // Use current form's phone number
+            whatsappContactContent.dataset.customerName = customerNameInput.value; // Use current form's customer name
+            whatsappContactContent.dataset.orderStatus = 'לא ידוע'; // Default status for general contact
         }
 
         function closeWhatsappContactModal() {
@@ -2146,22 +2597,48 @@
         // --- Send Free WhatsApp Message ---
         sendFreeWhatsappMessageBtn.addEventListener('click', () => {
             const message = whatsappFreeMessage.value.trim();
-            if (message) {
+            const customerPhone = whatsappContactContent.dataset.customerPhone;
+            if (message && customerPhone) {
                 const encodedMessage = encodeURIComponent(message);
-                const whatsappUrl = `https://wa.me/${whatsappPhoneNumber}?text=${encodedMessage}`;
+                const whatsappUrl = `https://wa.me/${customerPhone}?text=${encodedMessage}`;
                 window.open(whatsappUrl, '_blank');
                 closeWhatsappContactModal();
                 showFeedbackMessage('הודעת וואטסאפ נשלחה.', 'success');
             } else {
-                showFeedbackMessage('אנא הקלד הודעה לשליחה.', 'error');
+                showFeedbackMessage('אנא הקלד הודעה לשליחה או וודא שיש מספר טלפון.', 'error');
             }
         });
 
         // --- Send Predefined WhatsApp Message ---
         sendPredefinedWhatsappMessageBtn.addEventListener('click', () => {
-            shareOrderViaWhatsApp(); // Reuse the existing function for predefined message
-            closeWhatsappContactModal();
-            showFeedbackMessage('סיכום הזמנה נשלח בוואטסאפ.', 'success');
+            const customerPhone = whatsappContactContent.dataset.customerPhone;
+            const customerName = whatsappContactContent.dataset.customerName;
+            const orderStatus = whatsappContactContent.dataset.orderStatus;
+
+            let predefinedMessage = '';
+            if (orderStatus === 'חדש') {
+                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך התקבלה בהצלחה. מספר הזמנה: [מספר הזמנה - ניתן להוסיף אם יש בגיליון].`;
+            } else if (orderStatus === 'בטיפול') {
+                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך בטיפול במחסן ומוכנה לאיסוף/לשליחה.`;
+            } else if (orderStatus === 'נשלח') {
+                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך נשלחה בדרכה אליך. הנהג יצור איתך קשר לפני ההגעה.`;
+            } else if (orderStatus === 'הושלם') {
+                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך הושלמה בהצלחה. תודה שבחרת בנו!`;
+            } else if (orderStatus === 'בוטל') {
+                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך בוטלה לבקשתך.`;
+            } else {
+                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! עדכון סטטוס הזמנה: ${orderStatus}.`;
+            }
+
+            if (customerPhone) {
+                const encodedMessage = encodeURIComponent(predefinedMessage);
+                const whatsappUrl = `https://wa.me/${customerPhone}?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
+                closeWhatsappContactModal();
+                showFeedbackMessage('הודעת וואטסאפ מובנית נשלחה.', 'success');
+            } else {
+                showFeedbackMessage('לא ניתן לשלוח הודעה, חסר מספר טלפון ללקוח.', 'error');
+            }
         });
 
 
@@ -2210,12 +2687,554 @@
             }
         });
 
+        // --- CRM Functionality: Fetch Latest Order by Customer ---
+        async function fetchLatestOrderByCustomer() {
+            const customerIdentifier = customerNameInput.value.trim() || phoneNumberInput.value.trim();
+            if (customerIdentifier.length < 2) { // Only search if enough characters
+                return;
+            }
+
+            showFeedbackMessage('מחפש הזמנה אחרונה...', 'loading');
+            try {
+                console.log('Fetching latest order for identifier:', customerIdentifier, 'from URL:', googleAppsScriptUrl); // Log URL
+                const response = await fetch(`${googleAppsScriptUrl}?action=getLatestOrder&identifier=${encodeURIComponent(customerIdentifier)}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (data.latestOrder) {
+                    const order = data.latestOrder;
+                    customerNameInput.value = order['Customer Name'] || '';
+                    contactPersonInput.value = order['Contact Person'] || '';
+                    phoneNumberInput.value = order['Phone Number'] || '';
+                    emailInput.value = order['Email'] || '';
+                    streetInput.value = order['Street'] || '';
+                    streetNumberInput.value = order['Street Number'] || '';
+                    cityInput.value = order['City'] || '';
+                    deliveryDateInput.value = order['Delivery Date'] || '';
+                    deliveryTimeInput.value = order['Delivery Time'] || '';
+                    driverNameInput.value = order['Driver Name'] || '';
+                    generalNotesInput.value = order['General Notes'] || '';
+
+                    // Handle checkboxes
+                    const deliveryTypes = (order['Delivery Types'] || '').split(', ').map(s => s.trim());
+                    manualUnloadingCheckbox.checked = deliveryTypes.includes('פריקה ידנית');
+                    crane10mCheckbox.checked = deliveryTypes.includes('הובלת מנוף 10 מטר');
+                    crane15mCheckbox.checked = deliveryTypes.includes('הובלת מנוף 15 מטר');
+                    craneWorkCheckbox.checked = deliveryTypes.includes('עבודות מנוף');
+
+                    // Handle selected products
+                    selectedProducts = order['Order Items (JSON)'] || [];
+                    renderOrderItems();
+                    calculateTotalWeight();
+
+                    showFeedbackMessage('הזמנה אחרונה נטענה בהצלחה!', 'success');
+                } else {
+                    showFeedbackMessage('לא נמצאה הזמנה קודמת עבור לקוח זה.', 'info');
+                }
+            } catch (error) {
+                console.error('שגיאה בשליפת הזמנה אחרונה:', error);
+                showFeedbackMessage(`שגיאה בשליפת הזמנה אחרונה: ${error.message}`, 'error');
+            } finally {
+                hideFeedbackMessage();
+            }
+        }
+
+        customerNameInput.addEventListener('blur', fetchLatestOrderByCustomer);
+        phoneNumberInput.addEventListener('blur', fetchLatestOrderByCustomer);
+
+
+        // --- Admin Dashboard Functions ---
+
+        // Show password modal (now triggered by dashboardNavBtn)
+        // agentLoginBtn.addEventListener('click', openPasswordModal); // Removed
+
+        function openPasswordModal() {
+            passwordInput.value = ''; // Clear previous input
+            passwordError.classList.add('hidden'); // Hide error message
+            passwordModal.classList.remove('hidden');
+            passwordModal.classList.add('show');
+            passwordModal.querySelector('.modal-content').classList.add('show');
+            passwordInput.focus();
+        }
+
+        function closePasswordModal() {
+            passwordModal.querySelector('.modal-content').classList.remove('show');
+            passwordModal.classList.remove('show');
+            setTimeout(() => {
+                passwordModal.classList.add('hidden');
+            }, 300);
+        }
+
+        submitPasswordBtn.addEventListener('click', checkPassword);
+        passwordInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        function checkPassword() {
+            const correctPassword = '1125'; // Simple password for demonstration
+            if (passwordInput.value === correctPassword) {
+                closePasswordModal();
+                showPage('dashboard');
+                showFeedbackMessage('ברוך הבא ללוח הבקרה!', 'success');
+            } else {
+                passwordError.classList.remove('hidden');
+                showFeedbackMessage('סיסמה שגויה.', 'error');
+            }
+        }
+
+        // Switch between pages
+        function showPage(pageId) {
+            if (pageId === 'orderForm') {
+                orderFormPage.classList.remove('hidden');
+                dashboardPage.classList.add('hidden');
+                mainPageBtn.classList.add('active');
+                dashboardNavBtn.classList.remove('active');
+            } else if (pageId === 'dashboard') {
+                orderFormPage.classList.add('hidden');
+                dashboardPage.classList.remove('hidden');
+                mainPageBtn.classList.remove('active');
+                dashboardNavBtn.classList.add('active');
+                fetchAndRenderDashboard(); // Load dashboard data when shown
+            }
+        }
+
+        // Event listeners for new navigation buttons
+        mainPageBtn.addEventListener('click', () => showPage('orderForm'));
+        dashboardNavBtn.addEventListener('click', openPasswordModal); // Dashboard requires password
+
+
+        // Fetch and Render Dashboard Data
+        async function fetchAndRenderDashboard() {
+            showFeedbackMessage('טוען נתוני לוח בקרה...', 'loading');
+            try {
+                console.log('Fetching all orders for dashboard from URL:', googleAppsScriptUrl); // Log URL
+                const response = await fetch(`${googleAppsScriptUrl}?action=getAllOrders`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (data.orders) {
+                    allOrders = data.orders;
+                    renderDashboardMetrics(); // Render new summary metrics
+                    renderOrderLogTable();
+                    renderCharts();
+                    showFeedbackMessage('נתוני לוח בקרה נטענו בהצלחה!', 'success');
+                } else {
+                    showFeedbackMessage('לא נמצאו נתוני הזמנות עבור לוח הבקרה.', 'error');
+                    orderLogTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-500">לא נמצאו נתוני הזמנות.</td></tr>';
+                }
+            } catch (error) {
+                console.error('שגיאה בטעינת נתוני לוח בקרה:', error);
+                showFeedbackMessage(`שגיאה בטעינת לוח בקרה: ${error.message}`, 'error');
+            } finally {
+                hideFeedbackMessage();
+            }
+        }
+
+        // Render Dashboard Summary Metrics
+        function renderDashboardMetrics() {
+            totalOrdersCountDisplay.textContent = allOrders.length;
+
+            let overallWeight = 0;
+            let totalOrderItems = 0;
+            allOrders.forEach(order => {
+                overallWeight += parseFloat(order['Total Weight'] || 0);
+                totalOrderItems += parseInt(order['Total Items'] || 0); // Sum total items from each order
+            });
+            overallTotalWeightDisplay.textContent = `${overallWeight.toFixed(2)} ק"ג`;
+
+            const averageWeight = allOrders.length > 0 ? overallWeight / allOrders.length : 0;
+            averageOrderWeightDisplay.textContent = `${averageWeight.toFixed(2)} ק"ג`;
+        }
+
+        // Render Order Log Table in Dashboard
+        function renderOrderLogTable() {
+            orderLogTableBody.innerHTML = ''; // Clear existing rows
+
+            if (allOrders.length === 0) {
+                orderLogTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-500">אין הזמנות מתועדות.</td></tr>';
+                return;
+            }
+
+            allOrders.forEach((order, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="py-2 px-4 border-b">${order.Timestamp}</td>
+                    <td class="py-2 px-4 border-b">${order['Customer Name']}</td>
+                    <td class="py-2 px-4 border-b">${order['Phone Number']}</td>
+                    <td class="py-2 px-4 border-b">${order['Driver Name'] || '-'}</td>
+                    <td class="py-2 px-4 border-b">${order['Total Items'] || 0}</td> <!-- Display total items -->
+                    <td class="py-2 px-4 border-b">${parseFloat(order['Total Weight'] || 0).toFixed(2)}</td>
+                    <td class="py-2 px-4 border-b">
+                        <select data-order-id="${order.Timestamp}" data-current-status="${order['Order Status']}" onchange="updateOrderStatusFromDashboard(this)">
+                            <option value="חדש" ${order['Order Status'] === 'חדש' ? 'selected' : ''}>חדש</option>
+                            <option value="בטיפול" ${order['Order Status'] === 'בטיפול' ? 'selected' : ''}>בטיפול</option>
+                            <option value="נשלח" ${order['Order Status'] === 'נשלח' ? 'selected' : ''}>נשלח</option>
+                            <option value="הושלם" ${order['Order Status'] === 'הושלם' ? 'selected' : ''}>הושלם</option>
+                            <option value="בוטל" ${order['Order Status'] === 'בוטל' ? 'selected' : ''}>בוטל</option>
+                        </select>
+                    </td>
+                    <td class="py-2 px-4 border-b">
+                        <button class="smart-button bg-green-500 hover:bg-green-600 text-white text-sm py-1 px-2 rounded-md" 
+                                onclick="openWhatsappContactModalFromDashboard('${order['Phone Number']}', '${order['Customer Name']}', '${order['Order Status']}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            שלח וואטסאפ
+                        </button>
+                    </td>
+                `;
+                orderLogTableBody.appendChild(row);
+            });
+        }
+
+        // Update Order Status from Dashboard
+        async function updateOrderStatusFromDashboard(selectElement) {
+            const orderId = selectElement.dataset.orderId; // Using Timestamp as ID
+            const newStatus = selectElement.value;
+            const currentStatus = selectElement.dataset.currentStatus;
+
+            if (newStatus === currentStatus) {
+                return; // No change, do nothing
+            }
+
+            showFeedbackMessage('מעדכן סטטוס הזמנה...', 'loading');
+            try {
+                console.log('Updating order status for ID:', orderId, 'to status:', newStatus, 'at URL:', googleAppsScriptUrl); // Log URL
+                const response = await fetch(googleAppsScriptUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action: 'updateOrderStatus', orderId: orderId, newStatus: newStatus }),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+                const result = await response.json();
+                if (result.status === 'success') {
+                    showFeedbackMessage('סטטוס עודכן בהצלחה!', 'success');
+                    // Re-fetch and render dashboard to reflect changes
+                    fetchAndRenderDashboard();
+                } else {
+                    showFeedbackMessage(`שגיאה בעדכון סטטוס: ${result.message}`, 'error');
+                    // Revert select to old value if update failed
+                    selectElement.value = currentStatus;
+                }
+            } catch (error) {
+                console.error('שגיאה בעדכון סטטוס:', error);
+                showFeedbackMessage(`שגיאה בעדכון סטטוס: ${error.message}`, 'error');
+                selectElement.value = currentStatus; // Revert on error
+            } finally {
+                hideFeedbackMessage();
+            }
+        }
+        window.updateOrderStatusFromDashboard = updateOrderStatusFromDashboard; // Make global
+
+        // Open WhatsApp Contact Modal from Dashboard
+        function openWhatsappContactModalFromDashboard(customerPhone, customerName, orderStatus) {
+            whatsappFreeMessage.value = ''; // Clear previous message
+            whatsappContactModal.classList.remove('hidden');
+            whatsappContactModal.classList.add('show');
+            whatsappContactContent.classList.add('show');
+
+            // Set data attributes for sending messages
+            whatsappContactContent.dataset.customerPhone = customerPhone;
+            whatsappContactContent.dataset.customerName = customerName;
+            whatsappContactContent.dataset.orderStatus = orderStatus;
+        }
+
+        // Send Free WhatsApp Message from Dashboard
+        sendFreeWhatsappMessageBtn.addEventListener('click', () => {
+            const message = whatsappFreeMessage.value.trim();
+            const customerPhone = whatsappContactContent.dataset.customerPhone;
+            if (message && customerPhone) {
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/${customerPhone}?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
+                closeWhatsappContactModal();
+                showFeedbackMessage('הודעת וואטסאפ נשלחה.', 'success');
+            } else {
+                showFeedbackMessage('אנא הקלד הודעה לשליחה או וודא שיש מספר טלפון.', 'error');
+            }
+        });
+
+        // Send Predefined WhatsApp Message from Dashboard
+        sendPredefinedWhatsappMessageBtn.addEventListener('click', () => {
+            const customerPhone = whatsappContactContent.dataset.customerPhone;
+            const customerName = whatsappContactContent.dataset.customerName;
+            const orderStatus = whatsappContactContent.dataset.orderStatus;
+
+            let predefinedMessage = '';
+            if (orderStatus === 'חדש') {
+                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך התקבלה בהצלחה. מספר הזמנה: [מספר הזמנה - ניתן להוסיף אם יש בגיליון].`;
+            } else if (orderStatus === 'בטיפול') {
+                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך בטיפול במחסן ומוכנה לאיסוף/לשליחה.`;
+            } else if (orderStatus === 'נשלח') {
+                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך נשלחה בדרכה אליך. הנהג יצור איתך קשר לפני ההגעה.`;
+            } else if (orderStatus === 'הושלם') {
+                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך הושלמה בהצלחה. תודה שבחרת בנו!`;
+            } else if (orderStatus === 'בוטל') {
+                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך בוטלה לבקשתך.`;
+            } else {
+                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! עדכון סטטוס הזמנה: ${orderStatus}.`;
+            }
+
+            if (customerPhone) {
+                const encodedMessage = encodeURIComponent(predefinedMessage);
+                const whatsappUrl = `https://wa.me/${customerPhone}?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
+                closeWhatsappContactModal();
+                showFeedbackMessage('הודעת וואטסאפ מובנית נשלחה.', 'success');
+            } else {
+                showFeedbackMessage('לא ניתן לשלוח הודעה, חסר מספר טלפון ללקוח.', 'error');
+            }
+        });
+
+
+        // --- Chart Rendering Functions ---
+        function renderCharts() {
+            // Destroy existing charts if they exist
+            if (orderStatusChartInstance) {
+                orderStatusChartInstance.destroy();
+            }
+            if (ordersByDriverChartInstance) {
+                ordersByDriverChartInstance.destroy();
+            }
+            if (ordersByDeliveryTypeChartInstance) { // Destroy new chart
+                ordersByDeliveryTypeChartInstance.destroy();
+            }
+            if (ordersByCityChartInstance) { // Destroy new chart
+                ordersByCityChartInstance.destroy();
+            }
+
+            // Prepare data for Order Status Chart
+            const statusCounts = {};
+            allOrders.forEach(order => {
+                const status = order['Order Status'] || 'לא ידוע';
+                statusCounts[status] = (statusCounts[status] || 0) + 1;
+            });
+
+            const statusLabels = Object.keys(statusCounts);
+            const statusData = Object.values(statusCounts);
+            const statusColors = [
+                '#48BB78', // חדש (Green)
+                '#4299E1', // בטיפול (Blue)
+                '#ECC94B', // נשלח (Yellow)
+                '#38A169', // הושלם (Dark Green)
+                '#F56565', // בוטל (Red)
+                '#A0AEC0'  // לא ידוע (Gray)
+            ];
+
+            orderStatusChartInstance = new Chart(orderStatusChartCanvas, {
+                type: 'pie',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        data: statusData,
+                        backgroundColor: statusColors.slice(0, statusLabels.length),
+                        borderColor: '#FFFFFF',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    family: 'Inter',
+                                    size: 14
+                                }
+                            }
+                        },
+                        title: {
+                            display: false, // Title handled by H3 tag
+                        }
+                    }
+                }
+            });
+
+            // Prepare data for Orders By Driver Chart
+            const driverCounts = {};
+            allOrders.forEach(order => {
+                const driver = order['Driver Name'] || 'נהג לא ידוע';
+                driverCounts[driver] = (driverCounts[driver] || 0) + 1;
+            });
+
+            const driverLabels = Object.keys(driverCounts);
+            const driverData = Object.values(driverCounts);
+            const driverColors = [
+                '#6366F1', '#8B5CF6', '#EC4899', '#F97316', '#10B981', '#EF4444'
+            ]; // Various colors
+
+            ordersByDriverChartInstance = new Chart(ordersByDriverChartCanvas, {
+                type: 'bar',
+                data: {
+                    labels: driverLabels,
+                    datasets: [{
+                        label: 'מספר הזמנות',
+                        data: driverData,
+                        backgroundColor: driverColors.slice(0, driverLabels.length),
+                        borderColor: '#FFFFFF',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false // No legend needed for single bar dataset
+                        },
+                        title: {
+                            display: false, // Title handled by H3 tag
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0, // Ensure integer ticks for count
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Prepare data for Orders By Delivery Type Chart (New Chart)
+            const deliveryTypeCounts = {};
+            allOrders.forEach(order => {
+                const types = (order['Delivery Types'] || '').split(',').map(s => s.trim()).filter(Boolean);
+                if (types.length === 0) {
+                    deliveryTypeCounts['ללא סוג הובלה'] = (deliveryTypeCounts['ללא סוג הובלה'] || 0) + 1;
+                } else {
+                    types.forEach(type => {
+                        deliveryTypeCounts[type] = (deliveryTypeCounts[type] || 0) + 1;
+                    });
+                }
+            });
+
+            const deliveryTypeLabels = Object.keys(deliveryTypeCounts);
+            const deliveryTypeData = Object.values(deliveryTypeCounts);
+            const deliveryTypeColors = [
+                '#F6AD55', '#4FD1C5', '#81E6D9', '#D53F8C', '#6B46C1', '#ED8936'
+            ]; // More diverse colors
+
+            ordersByDeliveryTypeChartInstance = new Chart(ordersByDeliveryTypeChartCanvas, {
+                type: 'bar',
+                data: {
+                    labels: deliveryTypeLabels,
+                    datasets: [{
+                        label: 'מספר הזמנות',
+                        data: deliveryTypeData,
+                        backgroundColor: deliveryTypeColors.slice(0, deliveryTypeLabels.length),
+                        borderColor: '#FFFFFF',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0,
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Prepare data for Orders By City Chart (New Chart)
+            const cityCounts = {};
+            allOrders.forEach(order => {
+                const city = order['City'] || 'עיר לא ידועה';
+                cityCounts[city] = (cityCounts[city] || 0) + 1;
+            });
+
+            const cityLabels = Object.keys(cityCounts);
+            const cityData = Object.values(cityCounts);
+            const cityColors = [
+                '#9F7AEA', '#667EEA', '#ED8936', '#4FD1C5', '#F6E05E', '#FC8181'
+            ]; // Even more diverse colors
+
+            ordersByCityChartInstance = new Chart(ordersByCityChartCanvas, {
+                type: 'doughnut',
+                data: {
+                    labels: cityLabels,
+                    datasets: [{
+                        data: cityData,
+                        backgroundColor: cityColors.slice(0, cityLabels.length),
+                        borderColor: '#FFFFFF',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    family: 'Inter',
+                                    size: 14
+                                }
+                            }
+                        },
+                        title: {
+                            display: false,
+                        }
+                    }
+                }
+            });
+        }
+
 
         // --- Initial Load ---
         document.addEventListener('DOMContentLoaded', () => {
             // Check if the Apps Script URL is set
             if (googleAppsScriptUrl === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
-                displayMessage('אנא החלף את YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE בכתובת ה-URL של ה-Web App שלך ב-Code.gs.', true);
+                showFeedbackMessage('אנא החלף את YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE בכתובת ה-URL של ה-Web App שלך ב-Code.gs. וודא שהסקריפט פרוס עם גישה ל"כל אחד".', 'error');
             } else {
                 fetchProducts(); // Fetch products when the page loads
             }
@@ -2239,6 +3258,9 @@
                     }
                 });
             });
+
+            // Initially show the order form page
+            showPage('orderForm');
         });
     </script>
 </body>
