@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>טופס הזמנה חדשה - עיצוב מחודש</title>
+    <title>טופס הזמנה חדשה - תיקון גלילה</title>
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts - Inter for clean typography -->
@@ -16,12 +16,13 @@
             font-family: 'Inter', sans-serif;
             background-color: #F0F2F5; /* Light gray background */
             display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Align to top for better content flow */
+            flex-direction: column; /* Allow content to stack vertically */
+            justify-content: flex-start; /* Align to top */
             min-height: 100vh; /* Full viewport height */
             padding: 2rem; /* Padding around the content */
             direction: rtl; /* Ensure RTL for the entire body */
             color: #212529; /* Dark gray for primary text */
+            box-sizing: border-box; /* Include padding in total height */
         }
         .container-wrapper {
             max-width: 1200px; /* Increased max width for larger page */
@@ -30,8 +31,10 @@
             flex-direction: column;
             gap: 1.5rem; /* Space between sections */
             text-align: right; /* Align text to the right for RTL */
-            min-height: calc(100vh - 4rem); /* Ensure it takes up most of the viewport height */
+            flex-grow: 1; /* Allow container to grow and take available space */
+            overflow: hidden; /* Hide overflow for the wrapper itself */
             padding-bottom: 6rem; /* Add padding for fixed footer */
+            box-sizing: border-box;
         }
 
         /* Card styling for sections */
@@ -782,6 +785,7 @@
             overflow-y: auto; /* Enable scrolling for content within these pages */
             padding-right: 1rem; /* Add padding to prevent content from touching scrollbar */
             box-sizing: border-box; /* Include padding in width */
+            height: calc(100vh - 4rem - 6rem - 2rem); /* Full height minus body padding, footer height, and h1 margin */
         }
 
         /* Hide scrollbar for aesthetic purposes, but allow scrolling */
@@ -2616,363 +2620,6 @@
         });
 
         // --- Send Predefined WhatsApp Message ---
-        sendPredefinedWhatsappMessageBtn.addEventListener('click', () => {
-            const customerPhone = whatsappContactContent.dataset.customerPhone;
-            const customerName = whatsappContactContent.dataset.customerName;
-            const orderStatus = whatsappContactContent.dataset.orderStatus;
-
-            let predefinedMessage = '';
-            if (orderStatus === 'חדש') {
-                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך התקבלה בהצלחה. מספר הזמנה: [מספר הזמנה - ניתן להוסיף אם יש בגיליון].`;
-            } else if (orderStatus === 'בטיפול') {
-                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך בטיפול במחסן ומוכנה לאיסוף/לשליחה.`;
-            } else if (orderStatus === 'נשלח') {
-                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך נשלחה בדרכה אליך. הנהג יצור איתך קשר לפני ההגעה.`;
-            } else if (orderStatus === 'הושלם') {
-                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך הושלמה בהצלחה. תודה שבחרת בנו!`;
-            } else if (orderStatus === 'בוטל') {
-                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! ההזמנה שלך בוטלה לבקשתך.`;
-            } else {
-                predefinedMessage = `שלום ${customerName || 'לקוח יקר'}! עדכון סטטוס הזמנה: ${orderStatus}.`;
-            }
-
-            if (customerPhone) {
-                const encodedMessage = encodeURIComponent(predefinedMessage);
-                const whatsappUrl = `https://wa.me/${customerPhone}?text=${encodedMessage}`;
-                window.open(whatsappUrl, '_blank');
-                closeWhatsappContactModal();
-                showFeedbackMessage('הודעת וואטסאפ מובנית נשלחה.', 'success');
-            } else {
-                showFeedbackMessage('לא ניתן לשלוח הודעה, חסר מספר טלפון ללקוח.', 'error');
-            }
-        });
-
-
-        // --- Enter Key Navigation (General Form Fields) ---
-        document.addEventListener('keydown', (event) => {
-            // Check if the currently focused element is an input, select, or textarea
-            const isInput = event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'TEXTAREA';
-
-            if (event.key === 'Enter') {
-                // If Enter is pressed on the quantity input, add the product
-                if (document.activeElement === quantityInput) {
-                    event.preventDefault(); // Prevent default form submission
-                    addProductToOrder();
-                    return; // Stop further processing
-                }
-
-                // If Enter is pressed on a general input field, move to the next focusable element
-                if (isInput && !event.target.classList.contains('autocomplete-input-in-table')) { // Exclude table autocomplete input
-                    event.preventDefault(); // Prevent default Enter behavior (e.g., form submission)
-                    const focusableElements = Array.from(
-                        document.querySelectorAll(
-                            'input:not([type="hidden"]):not([disabled]):not(.autocomplete-input-in-table), select:not([disabled]), textarea:not([disabled]), button:not([disabled])'
-                        )
-                    );
-                    const currentFocusedElement = document.activeElement;
-                    const currentIndex = focusableElements.indexOf(currentFocusedElement);
-
-                    if (currentIndex > -1) {
-                        let nextIndex = currentIndex + 1;
-                        // Skip the "Add Product" button if no product is selected
-                        if (currentFocusedElement === quantityInput && !selectedProductForAdd) {
-                            let tempIndex = focusableElements.indexOf(addProductBtn);
-                            if (tempIndex > -1) {
-                                nextIndex = tempIndex + 1;
-                            }
-                        }
-
-                        if (nextIndex < focusableElements.length) {
-                            focusableElements[nextIndex].focus();
-                        } else {
-                            // If at the end, focus on the first element
-                            focusableElements[0].focus();
-                        }
-                    }
-                }
-            }
-        });
-
-        // --- CRM Functionality: Fetch Latest Order by Customer ---
-        async function fetchLatestOrderByCustomer() {
-            const customerIdentifier = customerNameInput.value.trim() || phoneNumberInput.value.trim();
-            if (customerIdentifier.length < 2) { // Only search if enough characters
-                return;
-            }
-
-            showFeedbackMessage('מחפש הזמנה אחרונה...', 'loading');
-            try {
-                console.log('Fetching latest order for identifier:', customerIdentifier, 'from URL:', googleAppsScriptUrl); // Log URL
-                const response = await fetch(`${googleAppsScriptUrl}?action=getLatestOrder&identifier=${encodeURIComponent(customerIdentifier)}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-
-                if (data.latestOrder) {
-                    const order = data.latestOrder;
-                    customerNameInput.value = order['Customer Name'] || '';
-                    contactPersonInput.value = order['Contact Person'] || '';
-                    phoneNumberInput.value = order['Phone Number'] || '';
-                    emailInput.value = order['Email'] || '';
-                    streetInput.value = order['Street'] || '';
-                    streetNumberInput.value = order['Street Number'] || '';
-                    cityInput.value = order['City'] || '';
-                    deliveryDateInput.value = order['Delivery Date'] || '';
-                    deliveryTimeInput.value = order['Delivery Time'] || '';
-                    driverNameInput.value = order['Driver Name'] || '';
-                    generalNotesInput.value = order['General Notes'] || '';
-
-                    // Handle checkboxes
-                    const deliveryTypes = (order['Delivery Types'] || '').split(', ').map(s => s.trim());
-                    manualUnloadingCheckbox.checked = deliveryTypes.includes('פריקה ידנית');
-                    crane10mCheckbox.checked = deliveryTypes.includes('הובלת מנוף 10 מטר');
-                    crane15mCheckbox.checked = deliveryTypes.includes('הובלת מנוף 15 מטר');
-                    craneWorkCheckbox.checked = deliveryTypes.includes('עבודות מנוף');
-
-                    // Handle selected products
-                    selectedProducts = order['Order Items (JSON)'] || [];
-                    renderOrderItems();
-                    calculateTotalWeight();
-
-                    showFeedbackMessage('הזמנה אחרונה נטענה בהצלחה!', 'success');
-                } else {
-                    showFeedbackMessage('לא נמצאה הזמנה קודמת עבור לקוח זה.', 'info');
-                }
-            } catch (error) {
-                console.error('שגיאה בשליפת הזמנה אחרונה:', error);
-                showFeedbackMessage(`שגיאה בשליפת הזמנה אחרונה: ${error.message}`, 'error');
-            } finally {
-                hideFeedbackMessage();
-            }
-        }
-
-        customerNameInput.addEventListener('blur', fetchLatestOrderByCustomer);
-        phoneNumberInput.addEventListener('blur', fetchLatestOrderByCustomer);
-
-
-        // --- Admin Dashboard Functions ---
-
-        function openPasswordModal() {
-            passwordInput.value = ''; // Clear previous input
-            passwordError.classList.add('hidden'); // Hide error message
-            passwordModal.classList.remove('hidden');
-            passwordModal.classList.add('show');
-            passwordModal.querySelector('.modal-content').classList.add('show');
-            passwordInput.focus();
-            // No timeout for password modal for security reasons
-        }
-
-        function closePasswordModal() {
-            passwordModal.querySelector('.modal-content').classList.remove('show');
-            passwordModal.classList.remove('show');
-            setTimeout(() => {
-                passwordModal.classList.add('hidden');
-            }, 300);
-        }
-        window.closePasswordModal = closePasswordModal; // Make globally accessible for onclick
-
-        submitPasswordBtn.addEventListener('click', checkPassword);
-        passwordInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                checkPassword();
-            }
-        });
-
-        function checkPassword() {
-            const correctPassword = '1125'; // Simple password for demonstration
-            if (passwordInput.value === correctPassword) {
-                closePasswordModal();
-                showPage('dashboard');
-                showFeedbackMessage('ברוך הבא ללוח הבקרה!', 'success');
-            } else {
-                passwordError.classList.remove('hidden');
-                showFeedbackMessage('סיסמה שגויה.', 'error');
-            }
-        }
-
-        // Switch between pages
-        function showPage(pageId) {
-            if (pageId === 'orderForm') {
-                orderFormPage.classList.remove('hidden');
-                dashboardPage.classList.add('hidden');
-                mainPageBtn.classList.add('active');
-                dashboardNavBtn.classList.remove('active');
-            } else if (pageId === 'dashboard') {
-                orderFormPage.classList.add('hidden');
-                dashboardPage.classList.remove('hidden');
-                mainPageBtn.classList.remove('active');
-                dashboardNavBtn.classList.add('active');
-                fetchAndRenderDashboard(); // Load dashboard data when shown
-            }
-        }
-
-        // Event listeners for new navigation buttons
-        mainPageBtn.addEventListener('click', () => showPage('orderForm'));
-        dashboardNavBtn.addEventListener('click', openPasswordModal); // Dashboard requires password
-
-
-        // Fetch and Render Dashboard Data
-        async function fetchAndRenderDashboard() {
-            showFeedbackMessage('טוען נתוני לוח בקרה...', 'loading');
-            try {
-                console.log('Fetching all orders for dashboard from URL:', googleAppsScriptUrl); // Log URL
-                const response = await fetch(`${googleAppsScriptUrl}?action=getAllOrders`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-
-                if (data.orders) {
-                    allOrders = data.orders;
-                    renderDashboardMetrics(); // Render new summary metrics
-                    renderOrderLogTable();
-                    renderCharts();
-                    showFeedbackMessage('נתוני לוח בקרה נטענו בהצלחה!', 'success');
-                } else {
-                    showFeedbackMessage('לא נמצאו נתוני הזמנות עבור לוח הבקרה.', 'error');
-                    orderLogTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-500">לא נמצאו נתוני הזמנות.</td></tr>';
-                }
-            } catch (error) {
-                console.error('שגיאה בטעינת נתוני לוח בקרה:', error);
-                showFeedbackMessage(`שגיאה בטעינת לוח בקרה: ${error.message}`, 'error');
-            } finally {
-                hideFeedbackMessage();
-            }
-        }
-
-        // Render Dashboard Summary Metrics
-        function renderDashboardMetrics() {
-            totalOrdersCountDisplay.textContent = allOrders.length;
-
-            let overallWeight = 0;
-            let totalOrderItems = 0;
-            allOrders.forEach(order => {
-                overallWeight += parseFloat(order['Total Weight'] || 0);
-                totalOrderItems += parseInt(order['Total Items'] || 0); // Sum total items from each order
-            });
-            overallTotalWeightDisplay.textContent = `${overallWeight.toFixed(2)} ק"ג`;
-
-            const averageWeight = allOrders.length > 0 ? overallWeight / allOrders.length : 0;
-            averageOrderWeightDisplay.textContent = `${averageWeight.toFixed(2)} ק"ג`;
-        }
-
-        // Render Order Log Table in Dashboard
-        function renderOrderLogTable() {
-            orderLogTableBody.innerHTML = ''; // Clear existing rows
-
-            if (allOrders.length === 0) {
-                orderLogTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-500">אין הזמנות מתועדות.</td></tr>';
-                return;
-            }
-
-            allOrders.forEach((order, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="py-2 px-4 border-b">${order.Timestamp}</td>
-                    <td class="py-2 px-4 border-b">${order['Customer Name']}</td>
-                    <td class="py-2 px-4 border-b">${order['Phone Number']}</td>
-                    <td class="py-2 px-4 border-b">${order['Driver Name'] || '-'}</td>
-                    <td class="py-2 px-4 border-b">${order['Total Items'] || 0}</td> <!-- Display total items -->
-                    <td class="py-2 px-4 border-b">${parseFloat(order['Total Weight'] || 0).toFixed(2)}</td>
-                    <td class="py-2 px-4 border-b">
-                        <select data-order-id="${order.Timestamp}" data-current-status="${order['Order Status']}" onchange="updateOrderStatusFromDashboard(this)">
-                            <option value="חדש" ${order['Order Status'] === 'חדש' ? 'selected' : ''}>חדש</option>
-                            <option value="בטיפול" ${order['Order Status'] === 'בטיפול' ? 'selected' : ''}>בטיפול</option>
-                            <option value="נשלח" ${order['Order Status'] === 'נשלח' ? 'selected' : ''}>נשלח</option>
-                            <option value="הושלם" ${order['Order Status'] === 'הושלם' ? 'selected' : ''}>הושלם</option>
-                            <option value="בוטל" ${order['Order Status'] === 'בוטל' ? 'selected' : ''}>בוטל</option>
-                        </select>
-                    </td>
-                    <td class="py-2 px-4 border-b">
-                        <button class="smart-button bg-green-500 hover:bg-green-600 text-white text-sm py-1 px-2 rounded-md" 
-                                onclick="openWhatsappContactModalFromDashboard('${order['Phone Number']}', '${order['Customer Name']}', '${order['Order Status']}')">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                            שלח וואטסאפ
-                        </button>
-                    </td>
-                `;
-                orderLogTableBody.appendChild(row);
-            });
-        }
-
-        // Update Order Status from Dashboard
-        async function updateOrderStatusFromDashboard(selectElement) {
-            const orderId = selectElement.dataset.orderId; // Using Timestamp as ID
-            const newStatus = selectElement.value;
-            const currentStatus = selectElement.dataset.currentStatus;
-
-            if (newStatus === currentStatus) {
-                return; // No change, do nothing
-            }
-
-            showFeedbackMessage('מעדכן סטטוס הזמנה...', 'loading');
-            try {
-                console.log('Updating order status for ID:', orderId, 'to status:', newStatus, 'at URL:', googleAppsScriptUrl); // Log URL
-                const response = await fetch(googleAppsScriptUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ action: 'updateOrderStatus', orderId: orderId, newStatus: newStatus }),
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-                }
-                const result = await response.json();
-                if (result.status === 'success') {
-                    showFeedbackMessage('סטטוס עודכן בהצלחה!', 'success');
-                    // Re-fetch and render dashboard to reflect changes
-                    fetchAndRenderDashboard();
-                } else {
-                    showFeedbackMessage(`שגיאה בעדכון סטטוס: ${result.message}`, 'error');
-                    // Revert select to old value if update failed
-                    selectElement.value = currentStatus;
-                }
-            } catch (error) {
-                console.error('שגיאה בעדכון סטטוס:', error);
-                showFeedbackMessage(`שגיאה בעדכון סטטוס: ${error.message}`, 'error');
-                selectElement.value = currentStatus; // Revert on error
-            } finally {
-                hideFeedbackMessage();
-            }
-        }
-        window.updateOrderStatusFromDashboard = updateOrderStatusFromDashboard; // Make global
-
-        // Open WhatsApp Contact Modal from Dashboard
-        function openWhatsappContactModalFromDashboard(customerPhone, customerName, orderStatus) {
-            whatsappFreeMessage.value = ''; // Clear previous message
-            whatsappContactModal.classList.remove('hidden');
-            whatsappContactModal.classList.add('show');
-            whatsappContactContent.classList.add('show');
-
-            // Set data attributes for sending messages
-            whatsappContactContent.dataset.customerPhone = customerPhone;
-            whatsappContactContent.dataset.customerName = customerName;
-            whatsappContactContent.dataset.orderStatus = orderStatus;
-            resetModalTimeout(whatsappContactModal, closeWhatsappContactModal); // Start timeout
-        }
-
-        // Send Free WhatsApp Message from Dashboard
-        sendFreeWhatsappMessageBtn.addEventListener('click', () => {
-            const message = whatsappFreeMessage.value.trim();
-            const customerPhone = whatsappContactContent.dataset.customerPhone;
-            if (message && customerPhone) {
-                const encodedMessage = encodeURIComponent(message);
-                const whatsappUrl = `https://wa.me/${customerPhone}?text=${encodedMessage}`;
-                window.open(whatsappUrl, '_blank');
-                closeWhatsappContactModal();
-                showFeedbackMessage('הודעת וואטסאפ נשלחה.', 'success');
-            } else {
-                showFeedbackMessage('אנא הקלד הודעה לשליחה או וודא שיש מספר טלפון.', 'error');
-            }
-        });
-
-        // Send Predefined WhatsApp Message from Dashboard
         sendPredefinedWhatsappMessageBtn.addEventListener('click', () => {
             const customerPhone = whatsappContactContent.dataset.customerPhone;
             const customerName = whatsappContactContent.dataset.customerName;
