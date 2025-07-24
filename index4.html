@@ -7,7 +7,7 @@
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts - Inter for clean typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght[300..900]&display=swap" rel="stylesheet">
     <!-- Chart.js for professional charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -30,6 +30,7 @@
             flex-direction: column;
             gap: 1.5rem; /* Space between sections */
             text-align: right; /* Align text to the right for RTL */
+            min-height: calc(100vh - 4rem); /* Ensure it takes up most of the viewport height */
         }
 
         /* Card styling for sections */
@@ -775,8 +776,12 @@
         /* Dashboard specific styles */
         #dashboardPage {
             width: 100%; /* Ensure it takes full width */
-            /* min-height: calc(100vh - 4rem); /* Adjust based on body padding */
-            /* overflow-y: auto; /* Allow scrolling if content overflows */
+            max-height: calc(100vh - 4rem); /* Limit height to viewport minus padding */
+            overflow-y: auto; /* Enable scrolling for dashboard content */
+            border-radius: 1.5rem; /* Consistent with card styling */
+            box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.1), 0 6px 12px -4px rgba(0, 0, 0, 0.06); /* Add shadow for the whole dashboard page */
+            background-color: #FFFFFF; /* White background for the dashboard area */
+            padding: 2.5rem; /* Consistent padding */
         }
         .dashboard-grid {
             display: grid;
@@ -806,6 +811,8 @@
             border-radius: 1rem;
             box-shadow: 0 4px 8px rgba(0,0,0,0.05);
             overflow-x: auto; /* Allow horizontal scroll for table */
+            max-height: 400px; /* Limit height of the table container */
+            overflow-y: auto; /* Add vertical scroll to table container */
         }
         .dashboard-table th, .dashboard-table td {
             padding: 0.75rem;
@@ -867,6 +874,9 @@
         }
 
         /* Password input specific styling */
+        #passwordModalContent {
+            padding: 2rem; /* Adjusted padding for better fit */
+        }
         #passwordInput {
             text-align: center;
             font-size: 1.2rem;
@@ -882,6 +892,27 @@
             border-color: #1E90FF;
             box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.25);
             outline: none;
+        }
+
+        /* Dashboard Summary Boxes */
+        .summary-box {
+            background-color: #EBF8FF; /* Light blue */
+            border: 1px solid #90CDF4;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .summary-box h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2D3748;
+            margin-bottom: 0.5rem;
+        }
+        .summary-box p {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1E90FF;
         }
     </style>
 </head>
@@ -1077,6 +1108,22 @@
             <h2 class="text-xl font-semibold mb-4 text-center">לוח בקרה - ניהול הזמנות</h2>
             <button id="backToFormBtn" class="smart-button mb-6">חזרה לטופס ההזמנה</button>
 
+            <!-- Dashboard Summary Metrics -->
+            <div class="dashboard-grid mb-6">
+                <div class="summary-box">
+                    <h3>סה"כ הזמנות</h3>
+                    <p id="totalOrdersCount">0</p>
+                </div>
+                <div class="summary-box">
+                    <h3>סה"כ משקל כללי</h3>
+                    <p id="overallTotalWeight">0 ק"ג</p>
+                </div>
+                <div class="summary-box">
+                    <h3>ממוצע משקל להזמנה</h3>
+                    <p id="averageOrderWeight">0 ק"ג</p>
+                </div>
+            </div>
+
             <!-- Charts Section -->
             <div class="dashboard-grid mb-6">
                 <div class="chart-container">
@@ -1086,6 +1133,14 @@
                 <div class="chart-container">
                     <h3>הזמנות לנהג</h3>
                     <canvas id="ordersByDriverChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>הזמנות לפי סוג הובלה</h3>
+                    <canvas id="ordersByDeliveryTypeChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>הזמנות לפי עיר</h3>
+                    <canvas id="ordersByCityChart"></canvas>
                 </div>
             </div>
 
@@ -1099,13 +1154,14 @@
                             <th class="py-2 px-4 border-b">לקוח</th>
                             <th class="py-2 px-4 border-b">טלפון</th>
                             <th class="py-2 px-4 border-b">נהג</th>
+                            <th class="py-2 px-4 border-b">סה"כ פריטים</th>
                             <th class="py-2 px-4 border-b">סה"כ משקל</th>
                             <th class="py-2 px-4 border-b">סטטוס</th>
                             <th class="py-2 px-4 border-b">פעולות</th>
                         </tr>
                     </thead>
                     <tbody id="orderLogTableBody">
-                        <tr><td colspan="7" class="text-center py-4 text-gray-500">טוען נתונים...</td></tr>
+                        <tr><td colspan="8" class="text-center py-4 text-gray-500">טוען נתונים...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -1260,7 +1316,7 @@
         // 2. בחר 'Web app' (יישום אינטרנט) כסוג הפריסה.
         // 3. הגדר 'Execute as' (הפעל כ) ל-'Me' (אני) ו-'Who has access' (מי שיש לו גישה) ל-'Anyone' (כל אחד).
         // 4. העתק את ה-URL שיופיע לאחר הפריסה והדבק אותו כאן.
-        const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbxNaX3_HqI5_qtO2Yn0wGQEMGDVlemDh384BvCbY9U4yZPk4EBCjupdyEHuuykcKST_/exec'; 
+        const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbygjSL2JFpCqMBdSTWAVEeKPD8secghGUFwVw8BfXyk1c0Jf74jxwQ41aC_5uz9YA4/exec'; 
 
         // Global variables
         let allProducts = []; // Stores all products fetched from the sheet
@@ -1273,6 +1329,8 @@
         // Chart instances
         let orderStatusChartInstance = null;
         let ordersByDriverChartInstance = null;
+        let ordersByDeliveryTypeChartInstance = null; // New chart instance
+        let ordersByCityChartInstance = null; // New chart instance
 
         // DOM elements
         const orderFormPage = document.getElementById('orderFormPage');
@@ -1344,6 +1402,12 @@
         const orderLogTableBody = document.getElementById('orderLogTableBody');
         const orderStatusChartCanvas = document.getElementById('orderStatusChart');
         const ordersByDriverChartCanvas = document.getElementById('ordersByDriverChart');
+        const ordersByDeliveryTypeChartCanvas = document.getElementById('ordersByDeliveryTypeChart'); // New canvas
+        const ordersByCityChartCanvas = document.getElementById('ordersByCityChart'); // New canvas
+
+        const totalOrdersCountDisplay = document.getElementById('totalOrdersCount');
+        const overallTotalWeightDisplay = document.getElementById('overallTotalWeight');
+        const averageOrderWeightDisplay = document.getElementById('averageOrderWeight');
 
 
         // Function to display messages in the message box (old, will be replaced by feedbackPopup)
@@ -1978,7 +2042,11 @@
             emailInput.value = '';
 
             // Clear delivery details
-            deliveryDateInput.value = '';
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const day = String(today.getDate()).padStart(2, '0');
+            deliveryDateInput.value = `${year}-${month}-${day}`; // Reset to today
             deliveryTimeInput.value = '';
             driverNameInput.value = '';
 
@@ -2696,12 +2764,13 @@
 
                 if (data.orders) {
                     allOrders = data.orders;
+                    renderDashboardMetrics(); // Render new summary metrics
                     renderOrderLogTable();
                     renderCharts();
                     showFeedbackMessage('נתוני לוח בקרה נטענו בהצלחה!', 'success');
                 } else {
                     showFeedbackMessage('לא נמצאו נתוני הזמנות עבור לוח הבקרה.', 'error');
-                    orderLogTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-500">לא נמצאו נתוני הזמנות.</td></tr>';
+                    orderLogTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-500">לא נמצאו נתוני הזמנות.</td></tr>';
                 }
             } catch (error) {
                 console.error('שגיאה בטעינת נתוני לוח בקרה:', error);
@@ -2711,12 +2780,28 @@
             }
         }
 
+        // Render Dashboard Summary Metrics
+        function renderDashboardMetrics() {
+            totalOrdersCountDisplay.textContent = allOrders.length;
+
+            let overallWeight = 0;
+            let totalOrderItems = 0;
+            allOrders.forEach(order => {
+                overallWeight += parseFloat(order['Total Weight'] || 0);
+                totalOrderItems += parseInt(order['Total Items'] || 0); // Sum total items from each order
+            });
+            overallTotalWeightDisplay.textContent = `${overallWeight.toFixed(2)} ק"ג`;
+
+            const averageWeight = allOrders.length > 0 ? overallWeight / allOrders.length : 0;
+            averageOrderWeightDisplay.textContent = `${averageWeight.toFixed(2)} ק"ג`;
+        }
+
         // Render Order Log Table in Dashboard
         function renderOrderLogTable() {
             orderLogTableBody.innerHTML = ''; // Clear existing rows
 
             if (allOrders.length === 0) {
-                orderLogTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-500">אין הזמנות מתועדות.</td></tr>';
+                orderLogTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-500">אין הזמנות מתועדות.</td></tr>';
                 return;
             }
 
@@ -2727,6 +2812,7 @@
                     <td class="py-2 px-4 border-b">${order['Customer Name']}</td>
                     <td class="py-2 px-4 border-b">${order['Phone Number']}</td>
                     <td class="py-2 px-4 border-b">${order['Driver Name'] || '-'}</td>
+                    <td class="py-2 px-4 border-b">${order['Total Items'] || 0}</td> <!-- Display total items -->
                     <td class="py-2 px-4 border-b">${parseFloat(order['Total Weight'] || 0).toFixed(2)}</td>
                     <td class="py-2 px-4 border-b">
                         <select data-order-id="${order.Timestamp}" data-current-status="${order['Order Status']}" onchange="updateOrderStatusFromDashboard(this)">
@@ -2866,6 +2952,12 @@
             if (ordersByDriverChartInstance) {
                 ordersByDriverChartInstance.destroy();
             }
+            if (ordersByDeliveryTypeChartInstance) { // Destroy new chart
+                ordersByDeliveryTypeChartInstance.destroy();
+            }
+            if (ordersByCityChartInstance) { // Destroy new chart
+                ordersByCityChartInstance.destroy();
+            }
 
             // Prepare data for Order Status Chart
             const statusCounts = {};
@@ -2968,6 +3060,113 @@
                                     family: 'Inter'
                                 }
                             }
+                        }
+                    }
+                }
+            });
+
+            // Prepare data for Orders By Delivery Type Chart (New Chart)
+            const deliveryTypeCounts = {};
+            allOrders.forEach(order => {
+                const types = (order['Delivery Types'] || '').split(',').map(s => s.trim()).filter(Boolean);
+                if (types.length === 0) {
+                    deliveryTypeCounts['ללא סוג הובלה'] = (deliveryTypeCounts['ללא סוג הובלה'] || 0) + 1;
+                } else {
+                    types.forEach(type => {
+                        deliveryTypeCounts[type] = (deliveryTypeCounts[type] || 0) + 1;
+                    });
+                }
+            });
+
+            const deliveryTypeLabels = Object.keys(deliveryTypeCounts);
+            const deliveryTypeData = Object.values(deliveryTypeCounts);
+            const deliveryTypeColors = [
+                '#F6AD55', '#4FD1C5', '#81E6D9', '#D53F8C', '#6B46C1', '#ED8936'
+            ]; // More diverse colors
+
+            ordersByDeliveryTypeChartInstance = new Chart(ordersByDeliveryTypeChartCanvas, {
+                type: 'bar',
+                data: {
+                    labels: deliveryTypeLabels,
+                    datasets: [{
+                        label: 'מספר הזמנות',
+                        data: deliveryTypeData,
+                        backgroundColor: deliveryTypeColors.slice(0, deliveryTypeLabels.length),
+                        borderColor: '#FFFFFF',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0,
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Prepare data for Orders By City Chart (New Chart)
+            const cityCounts = {};
+            allOrders.forEach(order => {
+                const city = order['City'] || 'עיר לא ידועה';
+                cityCounts[city] = (cityCounts[city] || 0) + 1;
+            });
+
+            const cityLabels = Object.keys(cityCounts);
+            const cityData = Object.values(cityCounts);
+            const cityColors = [
+                '#9F7AEA', '#667EEA', '#ED8936', '#4FD1C5', '#F6E05E', '#FC8181'
+            ]; // Even more diverse colors
+
+            ordersByCityChartInstance = new Chart(ordersByCityChartCanvas, {
+                type: 'doughnut',
+                data: {
+                    labels: cityLabels,
+                    datasets: [{
+                        data: cityData,
+                        backgroundColor: cityColors.slice(0, cityLabels.length),
+                        borderColor: '#FFFFFF',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    family: 'Inter',
+                                    size: 14
+                                }
+                            }
+                        },
+                        title: {
+                            display: false,
                         }
                     }
                 }
