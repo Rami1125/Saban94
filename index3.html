@@ -11,29 +11,39 @@
     <!-- Chart.js for professional charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* Base styles for HTML and Body to enable full-height flex layout */
+        html, body {
+            height: 100%; /* Ensure html and body take full viewport height */
+            margin: 0;
+            padding: 0; /* Reset default padding */
+        }
+
         /* Custom styles for Inter font and general layout */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #F0F2F5; /* Light gray background */
             display: flex;
-            flex-direction: column; /* Allow content to stack vertically */
-            justify-content: flex-start; /* Align to top */
-            min-height: 100vh; /* Full viewport height */
-            padding: 2rem; /* Padding around the content */
-            direction: rtl; /* Ensure RTL for the entire body */
+            flex-direction: column; /* Stack children vertically */
+            justify-content: flex-start; /* Align content to the top */
             color: #212529; /* Dark gray for primary text */
-            box-sizing: border-box; /* Include padding in total height */
+            box-sizing: border-box;
+            padding: 2rem; /* Overall padding for the app */
+            direction: rtl; /* Ensure RTL for the entire body */
+            overflow: hidden; /* Prevent body from scrolling, main scrollbar will be on container-wrapper */
+            padding-bottom: calc(2rem + 4rem); /* Add padding for the fixed footer (2rem body padding + 4rem footer height) */
         }
         .container-wrapper {
             max-width: 1200px; /* Increased max width for larger page */
             width: 100%;
+            margin: 0 auto; /* Center horizontally */
             display: flex;
-            flex-direction: column; /* Make container-wrapper a flex container for its children */
+            flex-direction: column;
             gap: 1.5rem; /* Space between sections */
             text-align: right; /* Align text to the right for RTL */
             flex-grow: 1; /* Allow container to grow and take available space */
-            overflow: hidden; /* Hide overflow for the wrapper itself */
-            padding-bottom: 6rem; /* Add padding for fixed footer */
+            overflow-y: auto; /* This is the main scrollable area for content */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            padding-bottom: 2rem; /* Add some padding at the bottom of the scrollable area */
             box-sizing: border-box;
         }
 
@@ -439,6 +449,7 @@
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
+                padding-bottom: calc(1rem + 4rem); /* Adjust padding for smaller screens */
             }
             h1 {
                 font-size: 1.75rem;
@@ -783,28 +794,28 @@
         /* Dashboard specific styles */
         #orderFormPage, #dashboardPage {
             width: 100%;
-            flex-grow: 1; /* Allow content to fill available space */
-            overflow-y: auto; /* Enable scrolling for content within these pages */
-            padding-right: 1rem; /* Add padding to prevent content from touching scrollbar */
-            box-sizing: border-box; /* Include padding in width */
-            /* Removed fixed height calc to rely on flex-grow */
+            flex-grow: 1; /* Allow content to fill available space within container-wrapper */
+            /* Removed overflow-y: auto here, as container-wrapper handles it */
+            /* Removed padding-right: 1rem; if the main scrollbar is on container-wrapper */
+            /* Removed height: calc(...) */
         }
 
         /* Hide scrollbar for aesthetic purposes, but allow scrolling */
-        #orderFormPage::-webkit-scrollbar, #dashboardPage::-webkit-scrollbar {
+        /* These styles apply to the main scrollable area (.container-wrapper) */
+        .container-wrapper::-webkit-scrollbar {
             width: 0.5rem;
         }
 
-        #orderFormPage::-webkit-scrollbar-track, #dashboardPage::-webkit-scrollbar-track {
+        .container-wrapper::-webkit-scrollbar-track {
             background: transparent; /* Make track transparent */
         }
 
-        #orderFormPage::-webkit-scrollbar-thumb, #dashboardPage::-webkit-scrollbar-thumb {
+        .container-wrapper::-webkit-scrollbar-thumb {
             background: #cbd5e0; /* Light gray thumb */
             border-radius: 0.25rem;
         }
 
-        #orderFormPage::-webkit-scrollbar-thumb:hover, #dashboardPage::-webkit-scrollbar-thumb:hover {
+        .container-wrapper::-webkit-scrollbar-thumb:hover {
             background: #a0aec0; /* Darker gray on hover */
         }
 
@@ -885,6 +896,8 @@
             justify-content: space-around;
             align-items: center;
             z-index: 50;
+            height: 4rem; /* Fixed height for footer */
+            flex-shrink: 0; /* Prevent shrinking */
         }
 
         .app-nav-button {
