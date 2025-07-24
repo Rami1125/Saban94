@@ -45,6 +45,7 @@
             overflow-x: hidden; /* Prevent horizontal scroll */
             padding-bottom: 2rem; /* Add some padding at the bottom of the scrollable area */
             box-sizing: border-box;
+            max-height: calc(100vh - 4rem - 4rem); /* 4rem for footer, 4rem for body's top/bottom padding */
         }
 
         h1 {
@@ -451,6 +452,9 @@
                 padding: 1rem;
                 padding-bottom: calc(1rem + 4rem); /* Adjust padding for smaller screens */
             }
+            .container-wrapper {
+                max-height: calc(100vh - 4rem - 2rem); /* 4rem for footer, 2rem for body's top/bottom padding */
+            }
             h1 {
                 font-size: 1.75rem;
             }
@@ -800,6 +804,7 @@
             /* Removed height: calc(...) */
         }
 
+
         /* Hide scrollbar for aesthetic purposes, but allow scrolling */
         /* These styles apply to the main scrollable area (.container-wrapper) */
         .container-wrapper::-webkit-scrollbar {
@@ -825,6 +830,9 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
             margin-bottom: 1.5rem;
+            overflow-y: auto; /* Allow dashboard grid to scroll if content is too tall */
+            max-height: 60vh; /* Limit height of the dashboard grid itself */
+            padding-bottom: 1rem; /* Add padding for scrollbar */
         }
         .chart-container {
             background-color: white;
