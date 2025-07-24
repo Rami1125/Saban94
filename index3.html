@@ -840,8 +840,11 @@
             border-radius: 1rem;
             box-shadow: 0 4px 8px rgba(0,0,0,0.05);
             display: flex;
-            flex-direction: column;
+            flex-direction: column; /* Arrange content vertically */
             align-items: center;
+            max-height: 30vh; /* Limit height of each chart container */
+            overflow: hidden; /* Hide overflow if content exceeds max-height */
+            justify-content: space-between; /* Distribute space between items */
         }
         .chart-container h3 {
             margin-bottom: 1rem;
@@ -849,6 +852,11 @@
             color: #2D3748;
             font-size: 1.25rem;
             text-align: center;
+            flex-shrink: 0; /* Prevent title from shrinking */
+        }
+        .chart-container canvas {
+            flex-grow: 1; /* Allow canvas to grow and take available space */
+            max-height: 100%; /* Ensure canvas doesn't exceed its container's height */
         }
         .dashboard-table-container {
             background-color: white;
