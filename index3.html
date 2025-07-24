@@ -227,10 +227,13 @@
             opacity: 0;
             transform: translateY(10px);
             transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+            /* Added for consistent visibility control */
+            visibility: hidden;
         }
         .autocomplete-suggestions.show {
             opacity: 1;
             transform: translateY(0);
+            visibility: visible; /* Show when 'show' class is present */
         }
         .autocomplete-suggestions div {
             padding: 0.75rem 1rem;
@@ -337,10 +340,13 @@
             opacity: 0;
             transform: translateY(10px);
             transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+            /* Added for consistent visibility control */
+            visibility: hidden;
         }
         .autocomplete-suggestions-in-table.show {
             opacity: 1;
             transform: translateY(0);
+            visibility: visible; /* Show when 'show' class is present */
         }
         .autocomplete-suggestions-in-table div {
             padding: 0.5rem 0.75rem;
@@ -539,10 +545,6 @@
                 width: 80%; /* Define width to allow centering */
                 text-align: right; /* Ensure text inside is right-aligned */
             }
-            .order-header-print p {
-                margin-bottom: 4px; /* Tighter spacing inside */
-                line-height: 1.3;
-            }
             .order-header-print p strong {
                 display: inline-block;
                 min-width: 90px; /* Adjusted min-width for alignment */
@@ -557,8 +559,8 @@
             th, td {
                 border: 2px solid #000; /* Thicker black border for cells */
                 padding: 8px; /* Increased padding for print */
-                text-align: right; /* Default text align right */
-                vertical-align: top; /* Align text to top in cells */
+                text-align: right;
+                vertical-align: top;
                 font-weight: 500; /* Medium font weight for cell content */
             }
             th { background-color: #f0f0f0; font-weight: 800; text-align: center; } /* Bolder and centered headers */
@@ -613,7 +615,7 @@
                 font-weight: 900; /* Even bolder */
                 font-size: 1.3em; /* Significantly larger */
                 color: #000; /* Ensure black color */
-                background-color: #e0f2f7; /* Light blue highlight */
+                background-color: #e0f2f7;
                 padding: 3px 8px;
                 border-radius: 5px;
                 display: inline-block; /* Ensure padding applies */
@@ -784,7 +786,7 @@
             <div class="product-input-group">
                 <label for="productSearchInput">בחר מוצר (הקלד 2 אותיות לחיפוש):</label>
                 <input type="text" id="productSearchInput" placeholder="הקלד שם מוצר או ברקוד">
-                <div id="autocompleteSuggestions" class="autocomplete-suggestions hidden"></div>
+                <div id="autocompleteSuggestions" class="autocomplete-suggestions"></div>
             </div>
 
             <div class="flex items-center gap-4 mt-4">
@@ -877,8 +879,8 @@
     <!-- Invitation Card Modal -->
     <div id="invitationCardModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center relative overflow-hidden transform transition-all duration-300 ease-out scale-95 opacity-0" id="invitationCardContent">
-            <!-- Close Button -->
-            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-light" onclick="closeInvitationCard()">
+            <!-- Close Button (X icon) -->
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-light" onclick="closeInvitationCard()" aria-label="Close">
                 &times;
             </button>
 
@@ -1293,7 +1295,7 @@
                 inputElement.placeholder = 'הקלד לחיפוש...';
                 
                 const suggestionsDiv = document.createElement('div');
-                suggestionsDiv.classList.add('autocomplete-suggestions-in-table', 'hidden');
+                suggestionsDiv.classList.add('autocomplete-suggestions-in-table'); /* Removed 'hidden' here */
                 cell.appendChild(inputElement);
                 cell.appendChild(suggestionsDiv);
 
