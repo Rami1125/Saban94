@@ -561,7 +561,7 @@
                 border: 4px solid #000; /* Even Thicker black border for table */
                 margin: 15px auto; /* Centered and increased margin */
                 width: 80%; /* Define width to allow centering */
-                border-collapse: collapse; /* Ensure collapse for clean lines */
+                border-collapse: collapse;
             }
             th, td {
                 border: 2px solid #000; /* Thicker black border for cells */
@@ -1060,7 +1060,7 @@
                 </button>
             </div>
 
-            <!-- Message Box for user feedback -->
+            <!-- Message Box for user feedback (kept for compatibility, though feedbackPopup is preferred) -->
             <div class="message-box mt-6" id="messageBox">
                 <p>המוצרים ייטענו אוטומטית מגיליון הנתונים. וודא שקובץ Code.gs פרוס כ-Web App.</p>
             </div>
@@ -1114,7 +1114,7 @@
     </div>
 
     <!-- Feedback Pop-up -->
-    <div id="feedbackPopup" class="fixed bottom-4 right-4 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg hidden items-center" style="z-index: 1000;">
+    <div id="feedbackPopup" class="fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg hidden items-center" style="z-index: 1000;">
         <span id="feedbackEmoji" class="ml-2"></span>
         <span id="feedbackMessage"></span>
     </div>
@@ -1255,8 +1255,12 @@
 
     <script>
         // IMPORTANT: Replace this URL with your deployed Google Apps Script Web App URL
-        // הוראות לפריסה נמצאות בחלק הקודם של השיחה
-        const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbygjSL2JFpCqMBdSTWAVEeKPD8secghGUFwVw8BfXyk1c0Jf74jxwQ41aC_5uz9YA4/exec'; 
+        // הוראות לפריסה נמצאות בחלק הקודם של השיחה:
+        // 1. ב-Google Apps Script, עבור אל 'Deploy' (פריסה) -> 'New deployment' (פריסה חדשה).
+        // 2. בחר 'Web app' (יישום אינטרנט) כסוג הפריסה.
+        // 3. הגדר 'Execute as' (הפעל כ) ל-'Me' (אני) ו-'Who has access' (מי שיש לו גישה) ל-'Anyone' (כל אחד).
+        // 4. העתק את ה-URL שיופיע לאחר הפריסה והדבק אותו כאן.
+        const googleAppsScriptUrl = 'https://script.google.com/macros/s/AKfycbxNaX3_HqI5_qtO2Yn0wGQEMGDVlemDh384BvCbY9U4yZPk4EBCjupdyEHuuykcKST_/exec'; 
 
         // Global variables
         let allProducts = []; // Stores all products fetched from the sheet
@@ -1306,7 +1310,7 @@
         const whatsappShareBtn = document.getElementById('whatsappShareBtn');
         const generateInvitationBtn = document.getElementById('generateInvitationBtn'); // New button
         const clearFormBtn = document.getElementById('clearFormBtn');
-        const messageBox = document.getElementById('messageBox');
+        const messageBox = document.getElementById('messageBox'); // Kept for compatibility, though feedbackPopup is preferred
         const rawDataPre = document.getElementById('rawData'); // For debugging raw data
         const feedbackPopup = document.getElementById('feedbackPopup');
         const feedbackEmoji = document.getElementById('feedbackEmoji');
@@ -1334,6 +1338,7 @@
         const sendFreeWhatsappMessageBtn = document.getElementById('sendFreeWhatsappMessageBtn');
         const sendPredefinedWhatsappMessageBtn = document.getElementById('sendPredefinedWhatsappMessageBtn');
         const whatsappPhoneNumber = '972508860896'; // The specific WhatsApp number for sending
+
 
         // Dashboard elements
         const orderLogTableBody = document.getElementById('orderLogTableBody');
@@ -1392,6 +1397,7 @@
         async function fetchProducts() {
             showFeedbackMessage('טוען מוצרים...', 'loading');
             try {
+                console.log('Fetching products from URL:', googleAppsScriptUrl); // Log URL
                 const response = await fetch(googleAppsScriptUrl);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -2044,6 +2050,7 @@
             };
 
             console.log('Attempting to log order. Data being sent:', orderData); // IMPORTANT: Log data before sending
+            console.log('Logging order to URL:', googleAppsScriptUrl); // Log URL
 
             try {
                 const response = await fetch(googleAppsScriptUrl, {
@@ -2425,7 +2432,7 @@
 
 
             const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/${whatsappPhoneNumber}?text=${encodedMessage}`;
+            const whatsappUrl = `https://wa.me/${phoneNumberToShare}?text=${encodedMessage}`;
             window.open(whatsappUrl, '_blank');
         });
 
@@ -2452,6 +2459,11 @@
             whatsappContactModal.classList.remove('hidden');
             whatsappContactModal.classList.add('show');
             whatsappContactContent.classList.add('show');
+
+            // Set data attributes for sending messages
+            whatsappContactContent.dataset.customerPhone = phoneNumberInput.value; // Use current form's phone number
+            whatsappContactContent.dataset.customerName = customerNameInput.value; // Use current form's customer name
+            whatsappContactContent.dataset.orderStatus = 'לא ידוע'; // Default status for general contact
         }
 
         function closeWhatsappContactModal() {
@@ -2565,6 +2577,7 @@
 
             showFeedbackMessage('מחפש הזמנה אחרונה...', 'loading');
             try {
+                console.log('Fetching latest order for identifier:', customerIdentifier, 'from URL:', googleAppsScriptUrl); // Log URL
                 const response = await fetch(`${googleAppsScriptUrl}?action=getLatestOrder&identifier=${encodeURIComponent(customerIdentifier)}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -2674,6 +2687,7 @@
         async function fetchAndRenderDashboard() {
             showFeedbackMessage('טוען נתוני לוח בקרה...', 'loading');
             try {
+                console.log('Fetching all orders for dashboard from URL:', googleAppsScriptUrl); // Log URL
                 const response = await fetch(`${googleAppsScriptUrl}?action=getAllOrders`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -2749,6 +2763,7 @@
 
             showFeedbackMessage('מעדכן סטטוס הזמנה...', 'loading');
             try {
+                console.log('Updating order status for ID:', orderId, 'to status:', newStatus, 'at URL:', googleAppsScriptUrl); // Log URL
                 const response = await fetch(googleAppsScriptUrl, {
                     method: 'POST',
                     headers: {
@@ -2964,7 +2979,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Check if the Apps Script URL is set
             if (googleAppsScriptUrl === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
-                displayMessage('אנא החלף את YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE בכתובת ה-URL של ה-Web App שלך ב-Code.gs.', true);
+                showFeedbackMessage('אנא החלף את YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE בכתובת ה-URL של ה-Web App שלך ב-Code.gs. וודא שהסקריפט פרוס עם גישה ל"כל אחד".', 'error');
             } else {
                 fetchProducts(); // Fetch products when the page loads
             }
